@@ -70,6 +70,7 @@ next-env.d.ts
 !/tmp/storage/.keep
 
 /public/assets
+out/*
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
