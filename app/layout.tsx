@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { DM_Sans } from 'next/font/google';
 import './globals.css';
 
@@ -44,6 +44,14 @@ export const metadata: Metadata = {
       'No embedded UI, no per-MAU billing. Clowk brokers OAuth and returns a signed JWT. SDKs for React, Next.js, Express, Hono, and Rails.',
     images: [OG_IMAGE],
   },
+  appleWebApp: {
+    capable: true,
+    title: 'Clowk',
+    statusBarStyle: 'black-translucent',
+  },
+  other: {
+    'mobile-web-app-capable': 'yes',
+  },
   robots: {
     index: true,
     follow: true,
@@ -55,6 +63,17 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FFFFFF' },
+    { media: '(prefers-color-scheme: dark)', color: '#0C0014' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
