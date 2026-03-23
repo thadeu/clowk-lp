@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 320" width="280" height="320" fill="none">
+  <defs>
+    <linearGradient id="wL1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.85"/><stop offset="100%" stop-color="#fff" stop-opacity="0.65"/></linearGradient>
+    <linearGradient id="wL2" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.7"/><stop offset="100%" stop-color="#fff" stop-opacity="0.5"/></linearGradient>
+    <linearGradient id="wD1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.55"/><stop offset="100%" stop-color="#fff" stop-opacity="0.35"/></linearGradient>
+    <linearGradient id="wD2" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0.45"/><stop offset="100%" stop-color="#fff" stop-opacity="0.28"/></linearGradient>
+  </defs>
+  <!-- Amber background -->
+  <rect width="280" height="320" rx="0" fill="#E8930C"/>
+  <polygon points="44,28 140,28 140,58 90,58" fill="url(#wL1)"/>
+  <polygon points="140,28 236,28 190,58 140,58" fill="url(#wD1)"/>
+  <polygon points="44,28 30,58 90,58" fill="url(#wL2)"/>
+  <polygon points="236,28 250,58 190,58" fill="url(#wD2)"/>
+  <polygon points="90,58 190,58 140,68" fill="#fff" opacity="0.85"/>
+  <polygon points="30,58 38,170 88,160 90,58" fill="url(#wL1)"/>
+  <polygon points="90,58 88,160 140,160 140,58" fill="url(#wL1)"/>
+  <polygon points="140,58 140,160 192,160 190,58" fill="url(#wD1)"/>
+  <polygon points="190,58 192,160 242,170 250,58" fill="url(#wD2)"/>
+  <polygon points="38,170 72,240 88,160" fill="url(#wL2)"/>
+  <polygon points="88,160 72,240 140,282 140,160" fill="url(#wL1)" opacity="0.82"/>
+  <polygon points="140,160 140,282 208,240 192,160" fill="url(#wD1)" opacity="0.78"/>
+  <polygon points="192,160 208,240 242,170" fill="url(#wD2)"/>
+  <polygon points="72,240 140,282 208,240" fill="#fff" opacity="0.65"/>
+  <g opacity="0.8">
+    <path d="M122,143 V125 A18,18 0 0,1 158,125 V143" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="9" stroke-linecap="round"/>
+    <rect x="110" y="140" width="60" height="52" rx="5" fill="rgba(255,255,255,0.8)" stroke="#fff" stroke-width="3"/>
+    <circle cx="140" cy="161" r="7" fill="#1A0E02"/>
+    <polygon points="136,161 140,180 144,161" fill="#1A0E02"/>
+  </g>
+</svg>

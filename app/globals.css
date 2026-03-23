@@ -1,0 +1,52 @@
+@import 'tailwindcss';
+
+@theme inline {
+  /* Coral - primary brand */
+  --color-coral-50: #fef2f4;
+  --color-coral-100: #fde6e9;
+  --color-coral-200: #fbccd3;
+  --color-coral-300: #f89daa;
+  --color-coral-400: #f43f5e;
+  --color-coral-500: #e8385a;
+  --color-coral-600: #d1354f;
+  --color-coral-700: #c33049;
+  --color-coral-800: #ab2a3e;
+  --color-coral-900: #8b1a2b;
+
+  /* Amber - accent */
+  --color-clowk-amber-50: #fef7ec;
+  --color-clowk-amber-100: #fcefd9;
+  --color-clowk-amber-200: #f9dfb3;
+  --color-clowk-amber-300: #f2c06c;
+  --color-clowk-amber-400: #e8930c;
+
+  /* Neutrals */
+  --color-dark: #0c0014;
+  --color-surface: #18181b;
+  --color-clowk-muted: #71717a;
+  --color-border: #e4e4e7;
+
+  /* Font */
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: #ffffff;
+    color: #18181b;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    -webkit-user-select: none;
+    tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}

@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" width="240" height="320" fill="none">
+  <defs>
+    <linearGradient id="gL1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#D1354F"/></linearGradient>
+    <linearGradient id="gL2" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8385A"/><stop offset="100%" stop-color="#BE2E45"/></linearGradient>
+    <linearGradient id="gL3" x1="0" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#C33049"/></linearGradient>
+    <linearGradient id="gD1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#C33049"/><stop offset="100%" stop-color="#9E2438"/></linearGradient>
+    <linearGradient id="gD2" x1="1" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#AB2A3E"/><stop offset="100%" stop-color="#8B1A2B"/></linearGradient>
+    <linearGradient id="gD3" x1="0.5" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#BE2E45"/><stop offset="100%" stop-color="#8B1A2B"/></linearGradient>
+    <linearGradient id="gM1" x1="0" y1="0" x2="1" y2="0.5"><stop offset="0%" stop-color="#F43F5E"/><stop offset="100%" stop-color="#D1354F"/></linearGradient>
+    <linearGradient id="gM2" x1="1" y1="0" x2="0" y2="0.5"><stop offset="0%" stop-color="#E8385A"/><stop offset="100%" stop-color="#C33049"/></linearGradient>
+  </defs>
+  <!-- Dark background -->
+  <!-- <rect width="240" height="320" rx="0" fill="#0C0014"/> -->
+  <polygon points="120,18 78,58 104,64" fill="url(#gL1)"/>
+  <polygon points="120,18 162,58 136,64" fill="url(#gD1)"/>
+  <polygon points="78,58 86,82 104,64" fill="url(#gL2)"/>
+  <polygon points="162,58 154,82 136,64" fill="url(#gD2)"/>
+  <polygon points="104,64 136,64 120,72" fill="#F43F5E"/>
+  <polygon points="104,64 136,64 154,82 142,94 98,94 86,82" fill="#08010240"/>
+  <circle cx="108" cy="84" r="3.5" fill="#F43F5E"/>
+  <circle cx="132" cy="84" r="3.5" fill="#F43F5E"/>
+  <polygon points="78,58 44,88 68,78 86,82" fill="url(#gL3)"/>
+  <polygon points="44,88 52,96 86,82" fill="url(#gD3)"/>
+  <polygon points="162,58 196,88 172,78 154,82" fill="url(#gD1)"/>
+  <polygon points="196,88 188,96 154,82" fill="url(#gD2)"/>
+  <polygon points="44,88 52,96 48,158 30,170" fill="url(#gL2)"/>
+  <polygon points="30,170 48,158 38,230 20,248" fill="url(#gL3)" opacity="0.85"/>
+  <polygon points="52,96 86,82 74,158 48,158" fill="url(#gM1)"/>
+  <polygon points="48,158 74,158 64,240 38,230" fill="url(#gL1)" opacity="0.9"/>
+  <polygon points="86,82 98,94 88,158 74,158" fill="url(#gM2)"/>
+  <polygon points="74,158 88,158 80,250 64,240" fill="url(#gL2)" opacity="0.92"/>
+  <polygon points="98,94 142,94 148,158 92,158" fill="url(#gL1)"/>
+  <polygon points="92,158 148,158 138,270 102,270" fill="#F43F5E"/>
+  <line x1="120" y1="94" x2="120" y2="270" stroke="#D1354F" stroke-width="0.8" opacity="0.35"/>
+  <polygon points="142,94 154,82 166,158 148,158" fill="url(#gD1)"/>
+  <polygon points="148,158 166,158 160,250 138,270" fill="url(#gD1)" opacity="0.88"/>
+  <polygon points="154,82 188,96 192,158 166,158" fill="url(#gD3)"/>
+  <polygon points="166,158 192,158 184,240 160,250" fill="url(#gD2)" opacity="0.85"/>
+  <polygon points="188,96 196,88 210,170 192,158" fill="url(#gD2)"/>
+  <polygon points="210,170 192,158 202,230 220,248" fill="url(#gD3)" opacity="0.8"/>
+  <polygon points="20,248 38,230 30,260" fill="url(#gL3)" opacity="0.6"/>
+  <polygon points="38,230 64,240 52,262" fill="url(#gL2)" opacity="0.7"/>
+  <polygon points="64,240 80,250 72,268" fill="url(#gM1)" opacity="0.65"/>
+  <polygon points="80,250 102,270 92,278" fill="url(#gL1)" opacity="0.75"/>
+  <polygon points="102,270 138,270 120,290" fill="#F43F5E" opacity="0.85"/>
+  <polygon points="138,270 160,250 148,268" fill="url(#gD1)" opacity="0.7"/>
+  <polygon points="160,250 184,240 172,262" fill="url(#gD2)" opacity="0.65"/>
+  <polygon points="184,240 202,230 194,258" fill="url(#gD3)" opacity="0.6"/>
+  <polygon points="202,230 220,248 210,260" fill="url(#gD2)" opacity="0.55"/>
+  <polygon points="52,76 38,92 56,88" fill="url(#gL1)" opacity="0.7"/>
+  <polygon points="188,76 202,92 184,88" fill="url(#gD1)" opacity="0.65"/>
+  <line x1="48" y1="158" x2="192" y2="158" stroke="#8B1A2B" stroke-width="0.5" opacity="0.2"/>
+</svg>

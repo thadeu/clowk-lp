@@ -1,0 +1,111 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<EOF
+Usage: scripts/hls --name <name> --path <source>
+
+Generate HLS segments, mp4 fallback, and poster from a source video.
+
+Options:
+  --name   Output name (used for folder and filenames)
+  --path   Path to the source video file
+
+Example:
+  scripts/hls --name demo --path ~/Downloads/walkthrough.mov
+
+Output (public/videos/<name>/):
+  <name>.m3u8          HLS playlist
+  <name>_000.ts ...    HLS segments (6s each)
+  <name>.mp4           MP4 fallback (H.264 + AAC)
+  <name>-poster.jpg    Poster frame (from 1s mark)
+EOF
+  exit 1
+}
+
+# ---------------------------------------------------------------------------
+# Parse args
+# ---------------------------------------------------------------------------
+NAME=""
+SOURCE=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --name) NAME="$2"; shift 2 ;;
+    --path) SOURCE="$2"; shift 2 ;;
+    *) echo "Unknown option: $1"; usage ;;
+  esac
+done
+
+[[ -z "$NAME" ]] && { echo "Error: --name is required"; usage; }
+[[ -z "$SOURCE" ]] && { echo "Error: --path is required"; usage; }
+[[ ! -f "$SOURCE" ]] && { echo "Error: file not found: $SOURCE"; exit 1; }
+
+command -v ffmpeg >/dev/null 2>&1 || { echo "Error: ffmpeg is not installed"; exit 1; }
+
+# ---------------------------------------------------------------------------
+# Setup
+# ---------------------------------------------------------------------------
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+OUT_DIR="$PROJECT_DIR/public/videos"
+
+mkdir -p "$OUT_DIR"
+
+echo "==> Source:  $SOURCE"
+echo "==> Output:  $OUT_DIR/$NAME.*"
+echo ""
+
+# ---------------------------------------------------------------------------
+# 1. MP4 fallback (H.264 + AAC, web-optimized)
+# ---------------------------------------------------------------------------
+echo "[1/3] Generating MP4 fallback..."
+ffmpeg -y -i "$SOURCE" \
+  -c:v libx264 -preset slow -crf 23 \
+  -c:a aac -b:a 128k \
+  -movflags +faststart \
+  -vf "scale='min(1920,iw)':-2" \
+  "$OUT_DIR/$NAME.mp4" \
+  2>&1 | tail -1
+
+echo "      Done: $NAME.mp4"
+
+# ---------------------------------------------------------------------------
+# 2. HLS segments
+# ---------------------------------------------------------------------------
+echo "[2/3] Generating HLS segments..."
+ffmpeg -y -i "$OUT_DIR/$NAME.mp4" \
+  -codec copy \
+  -start_number 0 \
+  -hls_time 6 \
+  -hls_list_size 0 \
+  -hls_segment_filename "$OUT_DIR/${NAME}_%03d.ts" \
+  "$OUT_DIR/$NAME.m3u8" \
+  2>&1 | tail -1
+
+SEGMENTS=$(ls "$OUT_DIR"/${NAME}_*.ts 2>/dev/null | wc -l | tr -d ' ')
+echo "      Done: $NAME.m3u8 ($SEGMENTS segments)"
+
+# ---------------------------------------------------------------------------
+# 3. Poster image
+# ---------------------------------------------------------------------------
+echo "[3/3] Generating poster..."
+ffmpeg -y -i "$OUT_DIR/$NAME.mp4" \
+  -ss 00:00:01 -frames:v 1 \
+  -q:v 2 \
+  "$OUT_DIR/$NAME-poster.jpg" \
+  2>&1 | tail -1
+
+echo "      Done: $NAME-poster.jpg"
+
+# ---------------------------------------------------------------------------
+# Summary
+# ---------------------------------------------------------------------------
+echo ""
+echo "==> All done! Files in $OUT_DIR/:"
+ls -lh "$OUT_DIR/$NAME"* | awk '{print "    " $NF " (" $5 ")"}'
+echo ""
+echo "Update VideoBlock.tsx constants if needed:"
+echo "  const VIDEO_HLS = '/videos/$NAME.m3u8';"
+echo "  const VIDEO_MP4 = '/videos/$NAME.mp4';"
+echo "  poster=\"/videos/$NAME-poster.jpg\""
