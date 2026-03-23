@@ -1,16 +1,16 @@
 ---
 title: Search Sessions
-description: Search sessions by email
+description: Search sessions using field operators with wildcards, negation, and date comparisons
 ---
 
 ## GET /api/v1/sessions/search
 
-Searches sessions in the instance by the user's email address using a case-insensitive partial match.
+Searches sessions in the instance using a structured query language. Supports the same operator syntax as [Search Users](/docs/api/search-users).
 
 ## Request
 
 ```bash
-curl "https://myapp.clowk.dev/api/v1/sessions/search?email=jane%40example.com" \
+curl "https://myapp.clowk.dev/api/v1/sessions/search?query=provider:google%20-email:*test*" \
   -H "X-Clowk-Secret-Key: sk_live_..."
 ```
 
@@ -22,9 +22,86 @@ curl "https://myapp.clowk.dev/api/v1/sessions/search?email=jane%40example.com" \
 
 ### Query parameters
 
-| Parameter | Type | Required | Description |
-|-----------|------|----------|-------------|
-| `email` | `string` | No | Email to search for (case-insensitive, partial match) |
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `query` | `string` | Space-separated search tokens |
+
+See the full [Search Operators reference](/docs/api/search-operators) for all supported syntax.
+
+## Query syntax
+
+### Operators
+
+| Syntax | Behavior | Example |
+|--------|----------|---------|
+| `field:value` | Exact match | `provider:google` |
+| `field:value*` | Starts with | `ip_address:192.168*` |
+| `field:*value` | Ends with | `email:*@gmail.com` |
+| `field:*value*` | Contains | `email:*gmail*` |
+| `field>value` | Greater than | `logged_in_at>2026-01-01` |
+| `field<value` | Less than | `last_signin_at<2026-03-01` |
+| `field>=value` | Greater than or equal | `logged_in_at>=2026-01-01` |
+| `field<=value` | Less than or equal | `logged_in_at<=2026-03-01` |
+| `-field:value` | Negation (NOT) | `-provider:twitter` |
+
+### OR — same field repeated
+
+Repeating the same field produces an `OR` between the values:
+
+```
+provider:google provider:github
+```
+
+→ returns sessions from either provider.
+
+### Supported fields
+
+Any column on the `sessions` table can be used as a filter.
+
+| Field | Type | Notes |
+|-------|------|-------|
+| `email` | string | Supports wildcards |
+| `name` | string | Supports wildcards |
+| `provider` | string | `google`, `github`, `twitter`, `password` |
+| `ip_address` | string | Supports wildcards, e.g. `ip_address:10.0.*` |
+| `logged_in_at` | datetime | Initial sign-in timestamp |
+| `last_signin_at` | datetime | Most recent sign-in timestamp |
+| `revoked_at` | datetime | Filter revoked sessions by date |
+| `created_at` | datetime | Record creation timestamp |
+
+> `provider` is a string column — partial matches work with wildcards: `provider:git*` matches `github`.
+
+## Examples
+
+**All Google sessions:**
+```
+?query=provider:google
+```
+
+**Google or GitHub sessions:**
+```
+?query=provider:google provider:github
+```
+
+**Active Gmail sessions signed in after March 2026:**
+```
+?query=email:*@gmail.com last_signin_at>2026-03-01
+```
+
+**Exclude revoked Twitter sessions:**
+```
+?query=-provider:twitter
+```
+
+**Sessions from a specific IP subnet:**
+```
+?query=ip_address:192.168.*
+```
+
+**Sessions from a user by partial email:**
+```
+?query=email:alice*
+```
 
 ## Response
 
@@ -65,11 +142,23 @@ Returns an empty array `[]` when no sessions match the query.
 ## SDK usage
 
 ```ruby
-# Ruby
-client.sessions.search(email: "jane@example.com")
+# Ruby — exact provider match
+client.sessions.search(provider: "google")
+
+# Ruby — raw query string
+client.sessions.search("provider:google provider:github last_signin_at>2026-03-01")
+
+# Ruby — exclude twitter
+client.sessions.search("-provider:twitter email:*@gmail.com")
 ```
 
 ```typescript
-// JavaScript
-await client.sessions.search('jane@example.com')
+// JavaScript — exact provider match
+await client.sessions.search({ provider: 'google' })
+
+// JavaScript — raw query string
+await client.sessions.search('provider:google provider:github last_signin_at>2026-03-01')
+
+// JavaScript — exclude twitter
+await client.sessions.search('-provider:twitter email:*@gmail.com')
 ```

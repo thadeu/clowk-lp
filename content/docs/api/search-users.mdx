@@ -1,16 +1,16 @@
 ---
 title: Search Users
-description: Search users by field using key:value operators
+description: Search users using field operators with wildcards, negation, and date comparisons
 ---
 
 ## GET /api/v1/users/search
 
-Searches users in the instance using field-based query operators.
+Searches users in the instance using a structured query language. Filters are space-separated tokens and support exact match, wildcards, negation, OR logic, and date range comparisons.
 
 ## Request
 
 ```bash
-curl "https://myapp.clowk.dev/api/v1/users/search?query=email:jane%40example.com" \
+curl "https://myapp.clowk.dev/api/v1/users/search?query=email:*%40gmail.com%20-email:*test*" \
   -H "X-Clowk-Secret-Key: sk_live_..."
 ```
 
@@ -24,20 +24,75 @@ curl "https://myapp.clowk.dev/api/v1/users/search?query=email:jane%40example.com
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `query` | `string` | Space-separated `field:value` filters |
+| `query` | `string` | Space-separated search tokens |
+
+See the full [Search Operators reference](/docs/api/search-operators) for all supported syntax.
+
+## Query syntax
+
+### Operators
+
+| Syntax | Behavior | Example |
+|--------|----------|---------|
+| `field:value` | Exact match | `email:jane@example.com` |
+| `field:value*` | Starts with | `email:jane*` |
+| `field:*value` | Ends with | `email:*@gmail.com` |
+| `field:*value*` | Contains | `email:*gmail*` |
+| `field>value` | Greater than | `created_at>2026-01-01` |
+| `field<value` | Less than | `created_at<2026-01-01` |
+| `field>=value` | Greater than or equal | `created_at>=2026-01-01` |
+| `field<=value` | Less than or equal | `created_at<=2026-01-01` |
+| `-field:value` | Negation (NOT) | `-email:*test*` |
+
+### OR — same field repeated
+
+Repeating the same field produces an `OR` between the values:
+
+```
+email:alice@example.com email:bob@example.com
+```
+
+→ returns users matching either email.
 
 ### Supported fields
 
-| Field | Match type | Example |
-|-------|-----------|---------|
-| `email` | Case-insensitive partial | `email:jane` |
-| `name` | Case-insensitive partial | `name:Doe` |
-| `provider` | Exact | `provider:google` |
+Any column on the `users` table can be used as a filter. Sensitive fields like `password_digest` are always excluded.
 
-Multiple filters can be combined:
+| Field | Type | Notes |
+|-------|------|-------|
+| `email` | string | Supports wildcards |
+| `name` | string | Supports wildcards |
+| `created_at` | datetime | Supports `>`, `<`, `>=`, `<=` |
+| `updated_at` | datetime | Supports `>`, `<`, `>=`, `<=` |
+| `email_verified_at` | datetime | Filter by verification date |
 
+> Spaces are token separators. Multi-word values require wildcards — use `name:*Doe*` instead of `name:Jane Doe`.
+
+## Examples
+
+**Exact email match:**
 ```
-?query=email:jane provider:google
+?query=email:jane@example.com
+```
+
+**All Gmail users:**
+```
+?query=email:*@gmail.com
+```
+
+**Users whose name contains "Silva":**
+```
+?query=name:*Silva*
+```
+
+**Gmail or Yahoo users created after January 2026:**
+```
+?query=email:*@gmail.com email:*@yahoo.com created_at>2026-01-01
+```
+
+**Exclude test/staging emails:**
+```
+?query=-email:*test* -email:*staging*
 ```
 
 ## Response
@@ -64,3 +119,33 @@ Returns a filtered array. Same shape as [List Users](/docs/api/list-users).
 ```
 
 Returns an empty array `[]` when no users match the query.
+
+### 401 — Unauthorized
+
+```json
+{ "error": "Unauthorized" }
+```
+
+## SDK usage
+
+```ruby
+# Ruby — exact match via hash
+client.users.search(email: "jane@example.com")
+
+# Ruby — raw query string
+client.users.search("email:*@gmail.com created_at>2026-01-01")
+
+# Ruby — exclude test emails
+client.users.search("-email:*test*")
+```
+
+```typescript
+// JavaScript — exact match via object
+await client.users.search({ email: 'jane@example.com' })
+
+// JavaScript — raw query string
+await client.users.search('email:*@gmail.com created_at>2026-01-01')
+
+// JavaScript — exclude test emails
+await client.users.search('-email:*test*')
+```
