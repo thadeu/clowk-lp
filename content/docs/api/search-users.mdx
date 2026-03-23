@@ -1,0 +1,66 @@
+---
+title: Search Users
+description: Search users by field using key:value operators
+---
+
+## GET /api/v1/users/search
+
+Searches users in the instance using field-based query operators.
+
+## Request
+
+```bash
+curl "https://myapp.clowk.dev/api/v1/users/search?query=email:jane%40example.com" \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Yes | Your instance secret key |
+
+### Query parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `query` | `string` | Space-separated `field:value` filters |
+
+### Supported fields
+
+| Field | Match type | Example |
+|-------|-----------|---------|
+| `email` | Case-insensitive partial | `email:jane` |
+| `name` | Case-insensitive partial | `name:Doe` |
+| `provider` | Exact | `provider:google` |
+
+Multiple filters can be combined:
+
+```
+?query=email:jane provider:google
+```
+
+## Response
+
+### 200 — Success
+
+Returns a filtered array. Same shape as [List Users](/docs/api/list-users).
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "resource": "user",
+    "data": {
+      "email": "jane@example.com",
+      "name": "Jane Doe",
+      "avatar_url": "https://lh3.googleusercontent.com/...",
+      "email_verified": true,
+      "providers": ["google"],
+      "created_at": "2026-03-20T10:30:00Z"
+    }
+  }
+]
+```
+
+Returns an empty array `[]` when no users match the query.

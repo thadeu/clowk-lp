@@ -1,0 +1,44 @@
+---
+title: Delete User
+description: Permanently delete a user from an instance
+---
+
+## DELETE /api/v1/users/:id
+
+Permanently deletes a user and all associated identities. This action cannot be undone.
+
+## Request
+
+```bash
+curl -X DELETE https://myapp.clowk.dev/api/v1/users/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Yes | Your instance secret key |
+
+### Path parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | `string` | User UUID |
+
+## Response
+
+### 200 — Deleted
+
+```json
+{
+  "deleted": true,
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+```
+
+### 404 — User not found
+
+```json
+{ "error": "User not found" }
+```

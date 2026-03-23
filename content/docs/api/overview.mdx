@@ -59,12 +59,53 @@ Each instance gets its own subdomain (`myapp.clowk.dev`) and its own key pair. T
 
 Data is fully isolated between instances. A user in `staging.clowk.dev` is a completely separate record from a user with the same email in `production.clowk.dev`.
 
+## Response format
+
+All successful responses follow the same envelope:
+
+```json
+{
+  "id": "uuid",
+  "resource": "user | token | instance",
+  "data": {}
+}
+```
+
+Collection endpoints return an array of items with the same shape:
+
+```json
+[
+  { "id": "uuid", "resource": "user", "data": { ... } }
+]
+```
+
+Errors are flat — no envelope:
+
+```json
+{ "error": "Missing token" }
+```
+
 ## Endpoints
+
+### Bootstrap — `api.clowk.dev`
+
+Accessible without knowing the instance subdomain. Authenticates via `X-Clowk-Publishable-Key` or `X-Clowk-Secret-Key`.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/api/v1/instances/search` | Resolve subdomain URL from a publishable key |
+
+### Instance API — `{{subdomain}}.clowk.dev`
+
+All endpoints require `X-Clowk-Secret-Key`.
 
 | Method | Path | Description |
 |--------|------|-------------|
 | `POST` | `/api/v1/tokens/verify` | Verify a JWT and return the user |
+| `GET` | `/api/v1/users` | List all users in the instance |
 | `GET` | `/api/v1/users/:id` | Get a user by ID |
+| `GET` | `/api/v1/users/search` | Search users by field |
+| `DELETE` | `/api/v1/users/:id` | Delete a user |
 
 ## Error format
 
