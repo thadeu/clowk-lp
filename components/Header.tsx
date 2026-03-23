@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const navLinks = [
-  { label: 'Docs', href: 'https://docs.clowk.in' },
+  { label: 'Docs', href: '/docs' },
   { label: 'Pricing', href: '#' },
   { label: 'Blog', href: '#' },
 ];

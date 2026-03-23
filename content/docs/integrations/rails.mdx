@@ -1,0 +1,175 @@
+---
+title: Ruby on Rails
+description: Full integration guide for Clowk with Ruby on Rails
+---
+
+## Install
+
+Add Clowk to your Gemfile:
+
+```ruby
+gem 'clowk'
+```
+
+```bash
+bundle install
+```
+
+Requires Ruby >= 3.3 and Rails >= 7.0.
+
+## Configure
+
+Create an initializer with your keys:
+
+```ruby title="config/initializers/clowk.rb"
+Clowk.configure do |config|
+  config.publishable_key = ENV['CLOWK_PUBLISHABLE_KEY']
+  config.secret_key      = ENV['CLOWK_SECRET_KEY']
+end
+```
+
+### All configuration options
+
+| Option | Default | Description |
+|--------|---------|-------------|
+| `publishable_key` | `nil` | Your instance publishable key |
+| `secret_key` | `nil` | Your instance secret key (for JWT verification) |
+| `mount_path` | `'/clowk'` | Path where the engine is mounted |
+| `callback_path` | `'/clowk/oauth/callback'` | OAuth callback path |
+| `cookie_key` | `'clowk_token'` | Cookie name for the JWT |
+| `session_key` | `:clowk` | Session key for storing auth data |
+| `token_param` | `:token` | Query parameter name for the token |
+| `issuer` | `'clowk'` | Expected JWT issuer claim |
+| `prefix_by` | `:clowk` | Prefix for generated helper methods |
+| `after_sign_in_path` | `'/'` | Redirect path after sign-in |
+| `after_sign_out_path` | `'/'` | Redirect path after sign-out |
+| `app_base_url` | `'https://app.clowk.in'` | Clowk app URL |
+| `api_base_url` | `'https://api.clowk.dev/client/v1'` | Clowk API URL |
+
+## Mount the engine
+
+```ruby title="config/routes.rb"
+Rails.application.routes.draw do
+  mount Clowk::Engine => '/clowk'
+end
+```
+
+This adds four routes:
+
+| Path | Description |
+|------|-------------|
+| `/clowk/sign_in` | Redirects to the Clowk sign-in page |
+| `/clowk/sign_up` | Redirects to the Clowk sign-up page |
+| `/clowk/sign_out` | Clears session and cookie |
+| `/clowk/oauth/callback` | Receives the JWT from Clowk |
+
+## Include Authenticable
+
+Add the `Clowk::Authenticable` module to your `ApplicationController`:
+
+```ruby title="app/controllers/application_controller.rb"
+class ApplicationController < ActionController::Base
+  include Clowk::Authenticable
+end
+```
+
+This gives you three helper methods:
+
+| Method | Description |
+|--------|-------------|
+| `current_clowk` | Returns a `Clowk::Current` object or `nil` |
+| `authenticate_clowk!` | Requires authentication — redirects to sign-in or returns 401 for JSON |
+| `clowk_signed_in?` | Returns `true` if authenticated |
+
+## Protect controllers
+
+```ruby title="app/controllers/dashboard_controller.rb"
+class DashboardController < ApplicationController
+  before_action :authenticate_clowk!
+
+  def index
+    @user = current_clowk
+  end
+end
+```
+
+## The `Clowk::Current` object
+
+`current_clowk` returns a `Clowk::Current` instance with these accessors:
+
+```ruby
+current_clowk.id           # User UUID (from "sub" claim)
+current_clowk.email        # "jane@example.com"
+current_clowk.name         # "Jane Doe"
+current_clowk.avatar_url   # "https://lh3.googleusercontent.com/..."
+current_clowk.provider     # "google"
+current_clowk.instance_id  # "inst_abc123"
+current_clowk.app_id       # "app_xyz789"
+current_clowk[:custom]     # Access any JWT claim by key
+current_clowk.to_h         # Full payload as hash
+```
+
+## Protect specific actions
+
+```ruby title="app/controllers/posts_controller.rb"
+class PostsController < ApplicationController
+  before_action :authenticate_clowk!, only: [:create, :update, :destroy]
+
+  def index
+    @posts = Post.all
+  end
+
+  def create
+    @post = Post.create!(
+      title: params[:title],
+      author_email: current_clowk.email,
+      author_id: current_clowk.id
+    )
+
+    redirect_to @post
+  end
+end
+```
+
+## API-only controllers
+
+For API-only apps, `authenticate_clowk!` returns a JSON 401 response instead of redirecting:
+
+```ruby title="app/controllers/api/v1/base_controller.rb"
+class Api::V1::BaseController < ActionController::API
+  include Clowk::Authenticable
+
+  before_action :authenticate_clowk!
+end
+```
+
+The middleware extracts the token from (in order):
+1. Query parameter (`?token=eyJ...`)
+2. Authorization header (`Bearer eyJ...`)
+3. Cookie (`clowk_token`)
+
+## Views with Hotwire & Turbo
+
+```erb title="app/views/layouts/application.html.erb"
+<nav>
+  <% if clowk_signed_in? %>
+    <span>Hello, <%= current_clowk.name %></span>
+    <%= link_to "Sign out", clowk.sign_out_path, data: { turbo_method: :delete } %>
+  <% else %>
+    <%= link_to "Sign in", clowk.sign_in_path %>
+    <%= link_to "Sign up", clowk.sign_up_path %>
+  <% end %>
+</nav>
+```
+
+## SDK Client
+
+Use `Clowk::SDK::Client` to interact with the Clowk API from your backend:
+
+```ruby
+client = Clowk::SDK::Client.new
+
+client.tokens.verify(token: "eyJ...")
+client.users.find("user-uuid")
+client.users.search(email: "jane@example.com")
+```

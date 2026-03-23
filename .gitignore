@@ -70,7 +70,7 @@ next-env.d.ts
 !/tmp/storage/.keep
 
 /public/assets
-out/*
+/out/**/**
 
 # Ignore key files for decrypting credentials and more.
 /config/*.key
@@ -85,3 +85,4 @@ out/*
 pnpm-lock.yaml
 package-lock.json
 .wrangler
+.source

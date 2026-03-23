@@ -1,0 +1,69 @@
+---
+title: Hono
+description: Add authentication to your Hono app with Clowk
+---
+
+## Install
+
+```bash
+pnpm add @clowk/hono @clowk/core
+```
+
+## Configure
+
+```typescript title="src/index.ts"
+import { Hono } from 'hono'
+import { clowkMiddleware, requireAuth } from '@clowk/hono'
+
+const app = new Hono()
+```
+
+## Protect all routes
+
+Apply the middleware globally. The decoded JWT is available via `c.get('auth')`:
+
+```typescript
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/me', (c) => {
+  const auth = c.get('auth')
+
+  return c.json({ user: auth })
+})
+
+export default app
+```
+
+## Protect specific routes
+
+Use `requireAuth()` to gate routes — returns 401 if no valid token:
+
+```typescript
+app.get('/public', (c) => {
+  return c.json({ message: 'This is public' })
+})
+
+app.get('/dashboard', requireAuth(), (c) => {
+  const auth = c.get('auth')
+
+  return c.json({ user: auth })
+})
+```
+
+## Runtimes
+
+Hono + Clowk works on every runtime. `@clowk/core` uses native `fetch` and Web Crypto APIs — no Node.js-specific dependencies.
+
+| Runtime | Deploy target |
+|---------|--------------|
+| Cloudflare Workers | `wrangler deploy` |
+| Bun | `bun run src/index.ts` |
+| Deno | `deno run src/index.ts` |
+| Node.js | `node src/index.ts` |
+
+## Next steps
+
+- [Express quickstart](/docs/quickstart/express) — if you need Express compatibility
+- [Full Hono integration](/docs/integrations/hono) — complete API reference

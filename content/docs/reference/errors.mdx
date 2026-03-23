@@ -1,0 +1,76 @@
+---
+title: Errors
+description: Clowk error codes and how to resolve them
+---
+
+## Error hierarchy
+
+All Clowk errors extend from `ClowkError`:
+
+```
+ClowkError
+├── ConfigurationError
+├── InvalidStateError
+└── InvalidTokenError
+```
+
+## ConfigurationError
+
+Thrown when the SDK is not configured correctly.
+
+```
+ConfigurationError: Missing publishableKey
+```
+
+**Fix:** Call `configure()` with your keys before using any Clowk function, or set the environment variables.
+
+## InvalidStateError
+
+Thrown when the OAuth state parameter doesn't match.
+
+```
+InvalidStateError: State mismatch
+```
+
+**Fix:** This usually means the user's session expired during the OAuth flow. Ask them to try signing in again.
+
+## InvalidTokenError
+
+Thrown when JWT verification fails.
+
+```
+InvalidTokenError: Token expired
+InvalidTokenError: Invalid signature
+InvalidTokenError: Invalid issuer
+```
+
+**Fix:**
+
+- **Token expired** — the JWT has passed its expiration time. The user needs to sign in again.
+- **Invalid signature** — the token was signed with a different secret key. Check that your `secretKey` matches the one in your Clowk dashboard.
+- **Invalid issuer** — the token was issued by a different Clowk project.
+
+## HTTP error codes
+
+| Code | Meaning |
+|------|---------|
+| `401` | Unauthorized — missing or invalid token |
+| `403` | Forbidden — valid token but insufficient permissions |
+| `429` | Too Many Requests — rate limit exceeded |
+| `500` | Internal Server Error — unexpected error on Clowk's side |
+
+## Handling errors
+
+```typescript
+import { ClowkError, InvalidTokenError } from '@clowk/core'
+
+try {
+  const user = await verifyToken(token)
+} catch (err) {
+  if (err instanceof InvalidTokenError) {
+    // Token expired or invalid — redirect to sign-in
+  } else if (err instanceof ClowkError) {
+    // Other Clowk error
+  }
+}
+```

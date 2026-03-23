@@ -1,0 +1,111 @@
+---
+title: Express
+description: Full integration guide for Clowk with Express
+---
+
+## Install
+
+```bash
+pnpm add @clowk/express @clowk/core
+```
+
+## Configure
+
+```typescript title="app.ts"
+import express from 'express'
+import { clowkMiddleware, requireAuth } from '@clowk/express'
+
+const app = express()
+```
+
+## Protect all routes
+
+Apply `clowkMiddleware` globally to decode the JWT on every request. The decoded payload is available on `req.auth`:
+
+```typescript
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/dashboard', (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+### Middleware options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `secretKey` | `string` | Secret key for JWT verification |
+| `tokenParam` | `string` | Query param name (default: `"token"`) |
+| `cookieKey` | `string` | Cookie name (default: `"clowk_token"`) |
+
+## Protect specific routes
+
+Use `requireAuth()` to gate individual routes. It returns 401 if no valid token is found:
+
+```typescript
+app.get('/public', (req, res) => {
+  res.json({ message: 'This is public' })
+})
+
+app.get('/dashboard', requireAuth(), (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+## `req.auth` type
+
+When a valid token is present, `req.auth` contains the decoded JWT payload:
+
+```typescript
+interface JwtPayload {
+  iss?: string       // "clowk"
+  sub?: string       // User UUID
+  email?: string     // "jane@example.com"
+  name?: string      // "Jane Doe"
+  avatar_url?: string
+  provider?: string  // "google" | "github" | "twitter" | "email"
+  instance_id?: string
+  app_id?: string
+  iat?: number
+  exp?: number
+}
+```
+
+With `clowkMiddleware`, `req.auth` is `null` if no token is found (soft auth). With `requireAuth`, the request is rejected with 401 before reaching your handler.
+
+## Token extraction
+
+The middleware extracts the JWT from (in order):
+
+1. **Query parameter** — `?token=eyJ...`
+2. **Authorization header** — `Bearer eyJ...`
+3. **Cookie** — `clowk_token`
+
+## Full example
+
+```typescript title="app.ts"
+import express from 'express'
+import { clowkMiddleware, requireAuth } from '@clowk/express'
+
+const app = express()
+
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/', (req, res) => {
+  res.json({ authenticated: !!req.auth })
+})
+
+app.get('/profile', requireAuth(), (req, res) => {
+  res.json({
+    id: req.auth?.sub,
+    email: req.auth?.email,
+    name: req.auth?.name,
+  })
+})
+
+app.listen(3000)
+```

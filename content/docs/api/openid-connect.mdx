@@ -1,0 +1,64 @@
+---
+title: OpenID Connect
+description: OIDC discovery endpoint for Clowk
+---
+
+## GET /.well-known/openid-configuration
+
+Clowk exposes a basic OpenID Connect discovery endpoint. This allows OIDC-compatible tools to discover Clowk's authentication endpoints automatically.
+
+## Request
+
+```bash
+curl https://myapp.clowk.dev/.well-known/openid-configuration
+```
+
+No authentication is required.
+
+## Response
+
+```json
+{
+  "issuer": "https://myapp.clowk.dev",
+  "authorization_endpoint": "https://myapp.clowk.dev/oauth/authorize",
+  "token_endpoint": "https://myapp.clowk.dev/api/v1/tokens/verify",
+  "userinfo_endpoint": "https://myapp.clowk.dev/api/v1/users",
+  "response_types_supported": ["code"],
+  "subject_types_supported": ["public"],
+  "id_token_signing_alg_values_supported": ["HS256"]
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `issuer` | The Clowk base URL |
+| `authorization_endpoint` | Where to start the OAuth flow |
+| `token_endpoint` | Where to verify tokens |
+| `userinfo_endpoint` | Where to fetch user data |
+| `response_types_supported` | Only authorization code flow is supported |
+| `id_token_signing_alg_values_supported` | Tokens are signed with HS256 |
+
+## OAuth flow
+
+Clowk uses the authorization code flow:
+
+1. Redirect the user to `/oauth/authorize` with a `provider` and `redirect_uri`
+2. Clowk handles the OAuth dance with the provider (Google, GitHub, Twitter)
+3. On success, Clowk redirects back to your `redirect_uri` with a `token` query parameter
+4. Verify the token with `POST /api/v1/tokens/verify` or decode it locally using your secret key
+
+```
+GET /oauth/authorize?provider=google&redirect_uri=https://app.example.com/auth/callback
+```
+
+### Supported providers
+
+| Provider | Scopes |
+|----------|--------|
+| Google | `openid`, `email`, `profile` |
+| GitHub | `user:email`, `read:user` |
+| Twitter | `tweet.read`, `users.read`, `offline.access` |
+
+### State parameter
+
+Each OAuth request generates a unique `state` value to prevent CSRF attacks. The state token expires after 10 minutes. Twitter flows also use PKCE (code challenge and verifier).

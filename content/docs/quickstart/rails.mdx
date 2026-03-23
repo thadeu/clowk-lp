@@ -1,0 +1,121 @@
+---
+title: Ruby on Rails
+description: Add authentication to your Rails app with Clowk in 5 minutes
+---
+
+## Install the gem
+
+```ruby
+gem 'clowk'
+```
+
+```bash
+bundle install
+```
+
+## Configure
+
+```ruby title="config/initializers/clowk.rb"
+Clowk.configure do |config|
+  config.publishable_key = ENV['CLOWK_PUBLISHABLE_KEY']
+  config.secret_key      = ENV['CLOWK_SECRET_KEY']
+end
+```
+
+```bash title=".env"
+CLOWK_PUBLISHABLE_KEY=pk_live_...
+CLOWK_SECRET_KEY=sk_live_...
+```
+
+## Mount the engine
+
+```ruby title="config/routes.rb"
+Rails.application.routes.draw do
+  mount Clowk::Engine => '/clowk'
+end
+```
+
+This adds `/clowk/sign_in`, `/clowk/sign_up`, `/clowk/sign_out`, and `/clowk/oauth/callback`.
+
+## Include Authenticable
+
+```ruby title="app/controllers/application_controller.rb"
+class ApplicationController < ActionController::Base
+  include Clowk::Authenticable
+end
+```
+
+## Protect your controllers
+
+```ruby title="app/controllers/dashboard_controller.rb"
+class DashboardController < ApplicationController
+  before_action :authenticate_clowk!
+
+  def index
+    @user = current_clowk
+  end
+end
+```
+
+`authenticate_clowk!` verifies the JWT from the session. If invalid, it redirects to the Clowk sign-in page (or returns 401 for JSON requests).
+
+`current_clowk` returns a `Clowk::Current` object:
+
+```ruby
+current_clowk.id          # User UUID
+current_clowk.email       # "jane@example.com"
+current_clowk.name        # "Jane Doe"
+current_clowk.avatar_url  # "https://..."
+current_clowk.provider    # "google"
+```
+
+## Protect specific actions
+
+```ruby title="app/controllers/posts_controller.rb"
+class PostsController < ApplicationController
+  before_action :authenticate_clowk!, only: [:create, :update, :destroy]
+
+  def index
+    @posts = Post.all
+  end
+
+  def create
+    @post = Post.create!(
+      title: params[:title],
+      author_email: current_clowk.email,
+      author_id: current_clowk.id
+    )
+
+    redirect_to @post
+  end
+end
+```
+
+## API-only controllers
+
+```ruby title="app/controllers/api/v1/base_controller.rb"
+class Api::V1::BaseController < ActionController::API
+  include Clowk::Authenticable
+
+  before_action :authenticate_clowk!
+end
+```
+
+## Views with Hotwire & Turbo
+
+```erb title="app/views/layouts/application.html.erb"
+<nav>
+  <% if clowk_signed_in? %>
+    <span>Hello, <%= current_clowk.name %></span>
+    <%= link_to "Sign out", clowk.sign_out_path, data: { turbo_method: :delete } %>
+  <% else %>
+    <%= link_to "Sign in", clowk.sign_in_path %>
+    <%= link_to "Sign up", clowk.sign_up_path %>
+  <% end %>
+</nav>
+```
+
+## Next steps
+
+- [Full Rails integration](/docs/integrations/rails) — all configuration options, SDK client, and advanced usage
+- [How authentication works](/docs/authentication/how-it-works) — the OAuth flow in detail

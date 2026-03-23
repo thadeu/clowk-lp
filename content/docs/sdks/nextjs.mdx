@@ -1,0 +1,105 @@
+---
+title: "@clowk/nextjs"
+description: Next.js integration for Clowk authentication
+---
+
+## Install
+
+```bash
+npm install @clowk/nextjs @clowk/core
+```
+
+## Overview
+
+Full Next.js integration with App Router support. Provides middleware, server components, and client hooks.
+
+**What it provides:**
+
+- `clowkMiddleware()` — Next.js middleware for route protection
+- `currentUser()` — server-side function to get the authenticated user
+- `ClowkProvider` — client-side provider (re-exported from `@clowk/react`)
+- `useUser()`, `useAuth()` — client hooks (re-exported from `@clowk/react`)
+
+## Middleware
+
+Protect routes with Next.js middleware:
+
+```typescript title="middleware.ts"
+import { clowkMiddleware } from '@clowk/nextjs/server'
+
+export default clowkMiddleware()
+
+export const config = {
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+  ],
+}
+```
+
+### Custom middleware logic
+
+```typescript title="middleware.ts"
+import { clowkMiddleware } from '@clowk/nextjs/server'
+
+export default clowkMiddleware((auth, req) => {
+  const { userId } = auth()
+
+  if (!userId && req.nextUrl.pathname.startsWith('/dashboard')) {
+    return auth().redirectToSignIn()
+  }
+})
+```
+
+## Server Components
+
+Access the user in server components:
+
+```typescript title="app/dashboard/page.tsx"
+import { currentUser } from '@clowk/nextjs/server'
+
+export default async function DashboardPage() {
+  const user = await currentUser()
+
+  if (!user) return <div>Not signed in</div>
+
+  return <div>Welcome, {user.name}</div>
+}
+```
+
+## Client Components
+
+Use hooks in client components:
+
+```tsx title="components/user-button.tsx"
+'use client'
+
+import { useUser, useAuth } from '@clowk/nextjs'
+
+export function UserButton() {
+  const { user } = useUser()
+  const { signOut } = useAuth()
+
+  if (!user) return null
+
+  return (
+    <button onClick={signOut}>
+      {user.name} — Sign out
+    </button>
+  )
+}
+```
+
+## Environment variables
+
+```bash title=".env.local"
+NEXT_PUBLIC_CLOWK_PUBLISHABLE_KEY=pk_live_...
+CLOWK_SECRET_KEY=sk_live_...
+```
+
+The Next.js package reads these automatically — no `configure()` call needed.
+
+## Next steps
+
+- [Next.js quickstart](/docs/quickstart/nextjs) — getting started guide
+- [@clowk/react reference](/docs/sdks/react) — client hooks and components
+- [@clowk/core reference](/docs/sdks/core) — foundation package

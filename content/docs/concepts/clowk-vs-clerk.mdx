@@ -1,0 +1,57 @@
+---
+title: Clowk vs Clerk
+description: Understanding the difference between an authentication broker and an authentication provider
+---
+
+## The core difference
+
+**Clerk** is an authentication provider — it owns your sign-in UI, embeds components into your app, and charges per monthly active user (MAU).
+
+**Clowk** is an authentication broker — it handles the OAuth handshake through a redirect flow and returns a signed JWT. Your app controls the entire UI.
+
+## Comparison
+
+| | Clowk | Clerk |
+|---|---|---|
+| **Model** | Broker (redirect flow) | Provider (embedded UI) |
+| **UI ownership** | You own 100% | Clerk components |
+| **Pricing** | Free forever + PRO plan | Per-MAU billing |
+| **Frontend lock-in** | None | Clerk React components |
+| **JWT** | Standard HS256 signed JWT | Clerk session tokens |
+| **Token expiry** | 1 hour | Session-based |
+| **Self-hosted** | No — managed service | No — managed service |
+| **Open source** | No | Partial |
+| **Supported frameworks** | Rails, React, Next.js, Express, Hono | React, Next.js, Remix |
+| **Offline verification** | Yes — verify JWTs locally | Requires Clerk API |
+
+## How Clowk works
+
+1. Your app redirects to `yourapp.clowk.in/sign-in`
+2. User authenticates with Google, GitHub, Twitter, or email/password
+3. Clowk redirects back with a signed JWT (`?token=eyJ...`)
+4. Your backend verifies the JWT locally with your secret key
+
+No vendor JavaScript. No embedded iframes. No per-MAU costs.
+
+## How Clerk works
+
+1. You add `<SignIn />` component to your React app
+2. Clerk renders its own UI inside your app
+3. Clerk manages the session on their servers
+4. You access the user via Clerk's SDK
+
+Clerk controls the sign-in experience. You customize it through their dashboard.
+
+## When to choose Clowk
+
+- You want full control over sign-in/sign-up UI
+- You don't want per-MAU pricing
+- You need a simple OAuth broker, not a full identity platform
+- You're building with Rails, Hono, or any non-React stack
+- You want tokens that work offline (verify locally without calling an API)
+
+## When to choose Clerk
+
+- You want pre-built UI components
+- You need organization management, RBAC, or advanced features
+- You prefer a batteries-included approach

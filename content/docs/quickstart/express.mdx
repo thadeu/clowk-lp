@@ -1,0 +1,62 @@
+---
+title: Express
+description: Add authentication to your Express app with Clowk
+---
+
+## Install
+
+```bash
+pnpm add @clowk/express @clowk/core
+```
+
+## Configure
+
+```typescript title="app.ts"
+import express from 'express'
+import { clowkMiddleware, requireAuth } from '@clowk/express'
+
+const app = express()
+```
+
+## Protect all routes
+
+Apply the middleware globally. The decoded JWT is available on `req.auth`:
+
+```typescript
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/dashboard', (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+## Protect specific routes
+
+Use `requireAuth()` to gate individual routes — returns 401 if no valid token:
+
+```typescript
+app.get('/public', (req, res) => {
+  res.json({ message: 'This is public' })
+})
+
+app.get('/protected', requireAuth(), (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+## How it works
+
+The middleware extracts and verifies the JWT from (in order):
+
+1. **Query parameter** — `?token=eyJ...`
+2. **Authorization header** — `Bearer eyJ...`
+3. **Cookie** — `clowk_token`
+
+With `clowkMiddleware`, `req.auth` is `null` if no token is found (soft auth). With `requireAuth`, the request is rejected with 401 before reaching your handler.
+
+## Next steps
+
+- [Hono quickstart](/docs/quickstart/hono) — for Workers, Bun, Deno
+- [Full Express integration](/docs/integrations/express) — complete API reference

@@ -1,0 +1,54 @@
+---
+title: Documentation
+description: Learn how to integrate Clowk into your application
+---
+
+## What is Clowk?
+
+Clowk is an **authentication broker** — not an authentication UI provider.
+
+Most auth solutions (Clerk, Auth0) own the sign-in UI — they render forms, inputs, and social buttons inside your app. Clowk takes a different approach: it brokers the authentication between your app and OAuth providers through a redirect flow.
+
+```
+Your App → Clowk (handles OAuth) → Your App (receives signed JWT)
+```
+
+## How it works
+
+1. User clicks a sign-in button in your app
+2. Browser redirects to `https://{subdomain}.clowk.dev/sign-in`
+3. User authenticates (OAuth or email/password)
+4. Clowk redirects back to your app with `?token=eyJ...`
+5. Your app captures the JWT, verifies it, and has the user
+
+No embedded forms. No iframes. No third-party UI in your DOM.
+
+## Quickstarts
+
+Get up and running in minutes:
+
+- [Ruby on Rails](/docs/quickstart/rails)
+- [React](/docs/quickstart/react)
+- [Next.js](/docs/quickstart/nextjs)
+- [Express](/docs/quickstart/express)
+- [Hono](/docs/quickstart/hono)
+
+## SDKs
+
+- [@clowk/core](/docs/sdks/core) — Runtime-agnostic foundation
+- [@clowk/sdk](/docs/sdks/sdk) — User-facing convenience package
+- [@clowk/react](/docs/sdks/react) — Provider, hooks, redirect buttons
+- [@clowk/nextjs](/docs/sdks/nextjs) — Middleware + auth() + React re-exports
+- [@clowk/express](/docs/sdks/express) — Express middleware
+- [@clowk/hono](/docs/sdks/hono) — Hono middleware
+
+## Configuration
+
+Every integration needs at minimum:
+
+| Key | Where | Description |
+|-----|-------|-------------|
+| `publishableKey` | Frontend (`pk_...`) | Identifies the Clowk instance, safe to expose |
+| `secretKey` | Backend (`sk_...`) | Used to verify JWT signatures, never expose to the client |
+
+Get your keys at [app.clowk.in](https://app.clowk.in).

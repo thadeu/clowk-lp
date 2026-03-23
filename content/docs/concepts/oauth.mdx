@@ -1,0 +1,125 @@
+---
+title: OAuth
+description: How Clowk handles the OAuth flow from redirect to JWT
+---
+
+## Overview
+
+Clowk acts as an OAuth proxy. Your app never talks to Google, GitHub, or Twitter directly. Clowk handles the authorization request, token exchange, profile fetching, and user creation — then returns a signed JWT.
+
+## The full flow
+
+```
+1. Your app redirects the user to Clowk:
+   GET https://yourapp.clowk.in/sign-in?redirect_uri=https://yourapp.com/callback
+
+2. Clowk generates a state token (CSRF protection) and redirects to the provider:
+   GET https://accounts.google.com/o/oauth2/v2/auth?
+     client_id=...&scope=openid+email+profile&state=...&redirect_uri=https://clowk.in/oauth/google/callback
+
+3. User authenticates with the provider
+
+4. Provider redirects back to Clowk with an authorization code:
+   GET https://clowk.in/oauth/google/callback?code=...&state=...
+
+5. Clowk validates the state, exchanges the code for tokens, fetches the user profile
+
+6. Clowk creates or finds the user, generates a JWT
+
+7. Clowk redirects back to your app with the token:
+   GET https://yourapp.com/callback?token=eyJ...
+```
+
+## State parameter (CSRF protection)
+
+Every OAuth request creates an `OAuthState` record with:
+
+- A unique `state` value (`SecureRandom.hex(32)` — 64 hex characters)
+- The `redirect_uri` your app provided
+- The `provider` being used
+- An expiration of **10 minutes**
+
+When the provider redirects back, Clowk validates that the `state` parameter matches a valid, non-expired record. If it doesn't match, the request is rejected.
+
+## PKCE (Twitter)
+
+Twitter requires PKCE (Proof Key for Code Exchange). Clowk handles this automatically:
+
+1. Generates a `code_verifier` (random 32 bytes)
+2. Computes a `code_challenge` (SHA-256 hash, base64url encoded)
+3. Sends the `code_challenge` in the authorization request
+4. Sends the `code_verifier` when exchanging the authorization code
+
+The `code_verifier` is stored in the `OAuthState` record alongside the `state` token.
+
+## Provider scopes
+
+| Provider | Scopes | What Clowk receives |
+|----------|--------|---------------------|
+| Google | `openid`, `email`, `profile` | Email, name, profile picture |
+| GitHub | `user:email`, `read:user` | Email (primary verified), name, avatar |
+| Twitter | `tweet.read`, `users.read` | Username, name, profile picture (no email) |
+
+## Token exchange
+
+After the user authorizes, the provider redirects back to Clowk with an authorization code. Clowk exchanges this code for access tokens:
+
+| Provider | Token endpoint |
+|----------|----------------|
+| Google | `https://oauth2.googleapis.com/token` |
+| GitHub | `https://github.com/login/oauth/access_token` |
+| Twitter | `https://api.twitter.com/2/oauth2/token` |
+
+## Profile fetching
+
+With the access token, Clowk fetches the user's profile:
+
+| Provider | Profile endpoint |
+|----------|-----------------|
+| Google | `https://www.googleapis.com/oauth2/v3/userinfo` |
+| GitHub | `https://api.github.com/user` + `https://api.github.com/user/emails` |
+| Twitter | `https://api.twitter.com/2/users/me` |
+
+All profiles are normalized to: `uid`, `email`, `name`, `avatar_url`.
+
+## User creation
+
+After fetching the profile, Clowk:
+
+1. Looks for an existing identity (provider + UID) within your instance
+2. If found — updates the user's name and avatar, refreshes tokens
+3. If not found — creates a new user (or links to an existing user with the same email)
+4. Stores the identity with `access_token`, `refresh_token`, and `token_expires_at`
+
+Users are scoped to your instance. The same email in two different instances creates two separate users.
+
+## Email handling
+
+- **Google** — always returns a verified email
+- **GitHub** — Clowk fetches the primary verified email via the `/user/emails` endpoint
+- **Twitter** — does not return an email. Clowk generates a placeholder: `{twitter_uid}@clowk.noemail`
+
+## Custom credentials
+
+Each instance can use its own OAuth credentials per provider. Configure them in the Clowk dashboard under **SSO Connections**. If no custom credentials are set, Clowk falls back to global credentials.
+
+## JWT generation
+
+After successful authentication, Clowk generates a JWT signed with your instance's secret key:
+
+```json
+{
+  "iss": "clowk",
+  "iat": 1711152000,
+  "exp": 1711155600,
+  "sub": "user-uuid",
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "avatar_url": "https://...",
+  "provider": "google",
+  "instance_id": "inst_abc123",
+  "app_id": "app_xyz789"
+}
+```
+
+The token expires in **1 hour**. It's signed with **HS256** and can be verified locally using your secret key.

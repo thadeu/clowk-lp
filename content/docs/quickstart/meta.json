@@ -1,0 +1,5 @@
+{
+  "title": "Quickstart",
+  "icon": "Rocket",
+  "pages": ["rails", "react", "nextjs", "express", "hono"]
+}

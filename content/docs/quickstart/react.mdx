@@ -1,0 +1,90 @@
+---
+title: React
+description: Add authentication to your React app with Clowk
+---
+
+## Install
+
+```bash
+pnpm add @clowk/react
+```
+
+## Set your publishable key
+
+```bash title=".env"
+VITE_CLOWK_PUBLISHABLE_KEY=pk_live_...
+```
+
+## Add ClowkProvider
+
+Wrap your app with `ClowkProvider` at the entry point:
+
+```tsx title="src/main.tsx"
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { ClowkProvider } from '@clowk/react'
+import App from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ClowkProvider publishableKey={import.meta.env.VITE_CLOWK_PUBLISHABLE_KEY}>
+      <App />
+    </ClowkProvider>
+  </StrictMode>
+)
+```
+
+## Use authentication
+
+```tsx title="src/App.tsx"
+import { SignInButton, SignUpButton, SignOutButton, useAuth } from '@clowk/react'
+
+function App() {
+  const { user, signedIn, isLoading } = useAuth()
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (!signedIn) {
+    return (
+      <div>
+        <h1>Welcome to my app</h1>
+        <SignInButton />
+        <SignUpButton />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <p>Hello, {user?.name}</p>
+      <SignOutButton />
+    </div>
+  )
+}
+
+export default App
+```
+
+## Available components
+
+| Component | Description |
+|-----------|-------------|
+| `<ClowkProvider>` | Context provider — captures `?token=` callback and manages auth state |
+| `<SignInButton>` | Redirects to the Clowk sign-in page |
+| `<SignUpButton>` | Redirects to the Clowk sign-up page |
+| `<SignOutButton>` | Clears auth state and cookie |
+
+## Available hooks
+
+| Hook | Returns |
+|------|---------|
+| `useAuth()` | `{ user, token, signedIn, isLoading, signOut }` |
+| `useClowk()` | A `ClowkClient` instance for API calls |
+| `useToken()` | The raw JWT string |
+
+These components trigger redirects — they don't render auth UI. Your Clowk instance handles the sign-in page.
+
+## Next steps
+
+- [Next.js quickstart](/docs/quickstart/nextjs) — server-side middleware and `auth()` helper
+- [Full React integration](/docs/integrations/react) — complete API reference

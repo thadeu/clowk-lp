@@ -1,0 +1,40 @@
+---
+title: Security
+description: How Clowk keeps your authentication secure
+---
+
+## JWT signing
+
+All tokens are signed with HS256 using a secret key unique to your project. The key is generated when you create a project and can be rotated from the dashboard.
+
+## Token expiration
+
+JWTs expire after 24 hours by default. You can configure the expiration time in your project settings.
+
+## HTTPS only
+
+All communication between your app, Clowk, and OAuth providers happens over HTTPS. Tokens are never transmitted over unencrypted connections.
+
+## No plaintext passwords
+
+Passwords are hashed with bcrypt (cost factor 12) before storage. Clowk never stores or logs plaintext passwords.
+
+## OAuth state parameter
+
+Clowk uses the OAuth `state` parameter to prevent CSRF attacks during the authentication flow. Each request generates a unique state value that is validated on callback.
+
+## Rate limiting
+
+Authentication endpoints are rate-limited to prevent brute-force attacks:
+
+- Sign-in: 10 attempts per minute per IP
+- Sign-up: 5 attempts per minute per IP
+- Password reset: 3 attempts per minute per email
+
+## Data isolation
+
+Each project has its own database partition. User data from one project is never accessible from another.
+
+## Reporting vulnerabilities
+
+If you discover a security vulnerability, please email [security@clowk.in](mailto:security@clowk.in). Do not open a public issue.

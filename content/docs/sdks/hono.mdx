@@ -1,0 +1,102 @@
+---
+title: "@clowk/hono"
+description: Hono middleware for Clowk authentication
+---
+
+## Install
+
+```bash
+npm install @clowk/hono @clowk/core
+```
+
+## Overview
+
+Hono middleware that verifies JWTs and sets the authenticated user on the context. Works on every runtime Hono supports: Cloudflare Workers, Bun, Deno, and Node.js.
+
+**What it provides:**
+
+- `clowkAuth()` — middleware factory
+- `c.get('clowkUser')` — the decoded user after verification
+
+## clowkAuth
+
+```typescript
+import { clowkAuth } from '@clowk/hono'
+
+app.use('*', clowkAuth())
+```
+
+### Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `onError` | `(err, c) => Response` | Returns 401 JSON | Custom error handler |
+| `extractToken` | `(c) => string \| null` | Auto-detect | Custom token extractor |
+
+### Token extraction order
+
+The middleware looks for the JWT in this order:
+
+1. Query parameter: `?token=eyJ...`
+2. Cookie: `clowk_token`
+3. Authorization header: `Bearer eyJ...`
+
+## Context variables
+
+After successful verification:
+
+```typescript
+app.get('/me', (c) => {
+  const user = c.get('clowkUser')
+  // => { id, email, name, provider, iat, exp }
+
+  return c.json({ user })
+})
+```
+
+### User type
+
+```typescript
+interface ClowkUser {
+  id: string
+  email: string
+  name: string
+  provider: string
+  iat: number
+  exp: number
+}
+```
+
+## Error handling
+
+By default, invalid or missing tokens return:
+
+```json
+{ "error": "Unauthorized" }
+```
+
+Customize with `onError`:
+
+```typescript
+const auth = clowkAuth({
+  onError: (err, c) => {
+    return c.json({ error: err.message }, 401)
+  },
+})
+```
+
+## Runtimes
+
+| Runtime | Deploy target |
+|---------|--------------|
+| Cloudflare Workers | `wrangler deploy` |
+| Bun | `bun run src/index.ts` |
+| Deno | `deno run src/index.ts` |
+| Node.js | `node src/index.ts` |
+
+The `@clowk/core` package uses native `fetch` and Web Crypto APIs — no Node.js-specific dependencies.
+
+## Next steps
+
+- [Hono quickstart](/docs/quickstart/hono) — getting started guide
+- [@clowk/core reference](/docs/sdks/core) — foundation package

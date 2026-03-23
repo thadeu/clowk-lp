@@ -1,0 +1,123 @@
+---
+title: Next.js
+description: Full integration guide for Clowk with Next.js
+---
+
+## Install
+
+```bash
+pnpm add @clowk/nextjs
+```
+
+`@clowk/nextjs` includes `@clowk/react` and `@clowk/core` as dependencies.
+
+## Environment variables
+
+```bash title=".env.local"
+NEXT_PUBLIC_CLOWK_PUBLISHABLE_KEY=pk_live_...
+CLOWK_SECRET_KEY=sk_live_...
+```
+
+## Middleware
+
+Protect routes with Next.js middleware:
+
+```typescript title="middleware.ts"
+import { clowkMiddleware } from '@clowk/nextjs'
+
+export default clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+  publicRoutes: ['/', '/sign-in', '/sign-up'],
+  signInUrl: '/sign-in',
+})
+
+export const config = {
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+}
+```
+
+### Middleware options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `secretKey` | `string` | Secret key for JWT verification |
+| `publicRoutes` | `string[]` | Routes that don't require authentication |
+| `signInUrl` | `string` | Redirect URL for unauthenticated users |
+
+## Server Components
+
+Access the authenticated user in Server Components with the `auth()` function:
+
+```tsx title="app/dashboard/page.tsx"
+import { auth } from '@clowk/nextjs'
+import { redirect } from 'next/navigation'
+
+export default async function Dashboard() {
+  const { user, signedIn } = await auth({
+    secretKey: process.env.CLOWK_SECRET_KEY,
+  })
+
+  if (!signedIn) redirect('/sign-in')
+
+  return (
+    <div>
+      <h1>Hello, {user?.name}</h1>
+      <p>{user?.email}</p>
+    </div>
+  )
+}
+```
+
+### `auth()` return type
+
+```typescript
+interface AuthResult {
+  user: JwtPayload | null
+  token: string | null
+  signedIn: boolean
+}
+```
+
+## Route Handlers
+
+```typescript title="app/api/profile/route.ts"
+import { auth } from '@clowk/nextjs'
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  const { user, signedIn } = await auth({
+    secretKey: process.env.CLOWK_SECRET_KEY,
+  })
+
+  if (!signedIn) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  return NextResponse.json({ user })
+}
+```
+
+## Client Components
+
+`@clowk/nextjs` re-exports all `@clowk/react` components and hooks:
+
+```tsx title="components/header.tsx"
+'use client'
+
+import { SignInButton, SignOutButton, useAuth } from '@clowk/nextjs'
+
+export function Header() {
+  const { signedIn, user } = useAuth()
+
+  if (!signedIn) return <SignInButton />
+
+  return (
+    <div>
+      <span>{user?.name}</span>
+      <SignOutButton />
+    </div>
+  )
+}
+```
+
+Available client exports: `ClowkProvider`, `useAuth`, `useToken`, `useClowk`, `SignInButton`, `SignUpButton`, `SignOutButton`.

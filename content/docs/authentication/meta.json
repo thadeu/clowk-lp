@@ -1,0 +1,4 @@
+{
+  "title": "Authentication",
+  "pages": ["how-it-works", "email-password", "google", "twitter", "github", "apple"]
+}

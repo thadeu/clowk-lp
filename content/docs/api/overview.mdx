@@ -1,0 +1,95 @@
+---
+title: API Overview
+description: Clowk REST API for token verification and user management
+---
+
+## Base URL
+
+```
+https://{{subdomain}}.clowk.dev/api/v1
+```
+
+Each subdomain maps to a specific **instance** within your organization. This is Clowk's multi-tenant isolation layer — every API request is scoped to the instance identified by the subdomain, so users, tokens, and credentials from one instance can never leak into another.
+
+For example, if your organization has a `staging` and a `production` instance:
+
+```
+https://staging.clowk.dev/api/v1/tokens/verify
+https://production.clowk.dev/api/v1/tokens/verify
+```
+
+Each instance has its own `publishable_key`, `secret_key`, users, OAuth credentials, and allowed redirect URIs. The subdomain is resolved from your publishable key when you create the instance in the Clowk dashboard.
+
+## Authentication
+
+All API requests require your **secret key**. You can pass it in one of two ways:
+
+**Custom header (recommended)**
+
+```bash
+curl -X POST https://myapp.clowk.dev/api/v1/tokens/verify \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+**Bearer token**
+
+```bash
+curl -X POST https://myapp.clowk.dev/api/v1/tokens/verify \
+  -H "Authorization: Bearer sk_live_..."
+```
+
+Your secret key is available in the Clowk dashboard under your instance settings. Never expose it in client-side code.
+
+## Multi-tenant architecture
+
+Clowk organizes resources in a hierarchy:
+
+```
+Organization
+└── Workspace
+    └── App
+        └── Instance (development, production, ...)
+            ├── Users
+            ├── Identities
+            ├── OAuth credentials
+            └── Secret key / Publishable key
+```
+
+Each instance gets its own subdomain (`myapp.clowk.dev`) and its own key pair. The secret key authenticates API requests and signs JWTs. The publishable key identifies the instance in client-side code (sign-in redirects, SDK configuration).
+
+Data is fully isolated between instances. A user in `staging.clowk.dev` is a completely separate record from a user with the same email in `production.clowk.dev`.
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/api/v1/tokens/verify` | Verify a JWT and return the user |
+| `GET` | `/api/v1/users/:id` | Get a user by ID |
+
+## Error format
+
+All errors return a JSON object with an `error` field:
+
+```json
+{
+  "error": "Missing token"
+}
+```
+
+## Status codes
+
+| Code | Meaning |
+|------|---------|
+| `200` | Success |
+| `400` | Bad request — missing or malformed parameter |
+| `401` | Unauthorized — invalid or missing secret key / token |
+| `404` | Not found — user does not exist or belongs to another instance |
+
+## SDK wrappers
+
+You don't need to call the API directly. The Clowk SDKs handle token verification and user lookup for you:
+
+- **Ruby:** `Clowk::JwtVerifier` verifies tokens locally using your secret key
+- **JavaScript:** `JwtVerifier` from `@clowk/core` does the same
+- **Express / Hono:** `clowkMiddleware()` and `requireAuth()` handle extraction and verification automatically
+- **Next.js:** `auth()` and `clowkMiddleware()` verify tokens server-side

@@ -1,0 +1,25 @@
+---
+title: "@clowk/sdk"
+description: User-facing convenience package
+---
+
+## Install
+
+```bash
+npm install @clowk/sdk
+```
+
+## Overview
+
+Re-exports everything from `@clowk/core` under a clean import path. Use this if you want a single dependency instead of importing from `@clowk/core` directly.
+
+```typescript
+import { configure, verifyToken } from '@clowk/sdk'
+
+configure({
+  publishableKey: 'pk_live_...',
+  secretKey: 'sk_live_...',
+})
+
+const user = await verifyToken(token)
+```

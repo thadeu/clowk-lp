@@ -1,0 +1,44 @@
+---
+title: FAQ
+description: Frequently asked questions about Clowk
+---
+
+## Is Clowk free?
+
+Yes. Clowk is free forever for most use cases. A PRO plan is available for teams that need advanced features.
+
+## Is Clowk open source?
+
+No. Clowk is a managed service. You don't need to host or maintain anything.
+
+## Is Clowk self-hosted?
+
+No. Clowk is a hosted service. Authentication flows run on `auth.clowk.in`.
+
+## What's the difference between Clowk and Clerk?
+
+Clowk is a broker — it handles OAuth and returns a JWT. Clerk is a provider — it embeds UI into your app. See [Clowk vs Clerk](/docs/concepts/clowk-vs-clerk) for a full comparison.
+
+## Which frameworks are supported?
+
+Clowk has official SDKs for:
+
+- Ruby on Rails
+- React
+- Next.js
+- Express
+- Hono
+
+The core package (`@clowk/core`) works on any runtime that supports `fetch`.
+
+## How are passwords stored?
+
+Passwords are hashed with bcrypt before storage. Clowk never stores plaintext passwords.
+
+## What happens if Clowk is down?
+
+Existing JWTs remain valid — your app can verify them locally without contacting Clowk. New sign-ins would be unavailable until the service recovers.
+
+## How do I get support?
+
+Email [support@clowk.in](mailto:support@clowk.in).

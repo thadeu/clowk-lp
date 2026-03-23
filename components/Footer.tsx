@@ -41,7 +41,7 @@ export default function Footer() {
             </p>
             <ul className="space-y-3">
               {[
-                { label: "Docs", href: "https://docs.clowk.in" },
+                { label: "Docs", href: "/docs" },
                 { label: "Changelog", href: "#" },
                 { label: "Status", href: "#" },
                 { label: "Roadmap", href: "#" },

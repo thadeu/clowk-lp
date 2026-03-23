@@ -1,0 +1,58 @@
+---
+title: "@clowk/core"
+description: Runtime-agnostic foundation for all Clowk SDKs
+---
+
+## Install
+
+```bash
+npm install @clowk/core
+```
+
+## Overview
+
+The foundation package. Runtime-agnostic — works in Node.js, Bun, Deno, Cloudflare Workers, and browsers.
+
+**What it provides:**
+
+- Configuration singleton with sensible defaults
+- Error hierarchy (`ClowkError`, `ConfigurationError`, `InvalidStateError`, `InvalidTokenError`)
+- HTTP client built on native `fetch` with middleware stack (timeout, retry, logger)
+- SDK Client with resource-oriented API: `users`, `sessions`, `subdomains`, `tokens`
+- JWT verification (HS256 via jose) with issuer validation and expiration check
+- Token extraction (params, bearer header, cookie)
+
+## Configure
+
+```typescript
+import { configure } from '@clowk/core'
+
+configure({
+  publishableKey: 'pk_live_...',
+  secretKey: 'sk_live_...',
+})
+```
+
+## Verify a token
+
+```typescript
+import { verifyToken } from '@clowk/core'
+
+const user = await verifyToken(token)
+// => { id, email, name, provider, iat, exp }
+```
+
+## Architecture
+
+All Clowk SDKs depend on `@clowk/core`:
+
+```
+@clowk/core
+   ├── @clowk/sdk
+   ├── @clowk/react
+   ├── @clowk/express
+   ├── @clowk/hono
+   └── @clowk/nextjs
+```
+
+Framework packages are thin wrappers that adapt core to each framework's conventions.

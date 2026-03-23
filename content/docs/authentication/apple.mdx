@@ -1,0 +1,30 @@
+---
+title: Apple
+description: Authenticate users with Apple through Clowk
+---
+
+## Overview
+
+Allow users to sign in with their Apple ID. Apple Sign In support is coming soon to Clowk.
+
+## Status
+
+Apple Sign In is currently in development. Follow the Clowk changelog for updates.
+
+## What to expect
+
+When available, the Apple integration will:
+
+- Handle the full Sign in with Apple flow
+- Support Apple's private relay email (`abc123@privaterelay.appleid.com`)
+- Store the user's name from the first sign-in (Apple only sends it once)
+- Return a standard Clowk JWT with `"provider": "apple"`
+
+## Current providers
+
+While Apple support is being built, you can use:
+
+- [Google](/docs/authentication/google)
+- [GitHub](/docs/authentication/github)
+- [Twitter](/docs/authentication/twitter)
+- [Email & Password](/docs/authentication/email-password)

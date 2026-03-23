@@ -1,0 +1,71 @@
+---
+title: Get User
+description: Retrieve a user by ID from the Clowk API
+---
+
+## GET /api/v1/users/:id
+
+Retrieves a user by UUID. Only returns users that belong to the instance associated with your secret key.
+
+## Request
+
+```bash
+curl https://myapp.clowk.dev/api/v1/users/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Yes | Your instance secret key |
+
+### Path parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | `string` | User UUID |
+
+## Response
+
+### 200 — User found
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "avatar_url": "https://lh3.googleusercontent.com/...",
+  "email_verified": true,
+  "providers": ["google", "github"],
+  "created_at": "2026-03-20T10:30:00Z"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `string` | User UUID |
+| `email` | `string` | User email |
+| `name` | `string` | Display name |
+| `avatar_url` | `string \| null` | Profile picture URL |
+| `email_verified` | `boolean` | Whether the email has been verified |
+| `providers` | `string[]` | List of connected OAuth providers |
+| `created_at` | `string` | ISO 8601 timestamp |
+
+### 401 — Unauthorized
+
+```json
+{
+  "error": "Missing secret key"
+}
+```
+
+### 404 — User not found
+
+```json
+{
+  "error": "User not found"
+}
+```
+
+Returns `404` if the user does not exist or belongs to a different instance.
