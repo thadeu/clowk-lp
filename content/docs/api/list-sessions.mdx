@@ -1,0 +1,69 @@
+---
+title: List Sessions
+description: List all sessions for an instance
+---
+
+## GET /api/v1/sessions
+
+Returns all sessions (active and revoked) that belong to the instance associated with your secret key, ordered by most recent sign-in.
+
+## Request
+
+```bash
+curl https://myapp.clowk.dev/api/v1/sessions \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Yes | Your instance secret key |
+
+## Response
+
+### 200 — Success
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "resource": "session",
+    "data": {
+      "session_id": "clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "user_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "provider": "google",
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "ip_address": "203.0.113.42",
+      "geo_data": {},
+      "logged_in_at": "2026-03-20T10:30:00Z",
+      "last_signin_at": "2026-03-20T10:30:00Z",
+      "revoked_at": null,
+      "active": true
+    }
+  }
+]
+```
+
+### Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `session_id` | `string` | Unique session identifier (`clk_session_UUID`) |
+| `user_id` | `string` | UUID of the user who owns the session |
+| `provider` | `string` | Auth provider used: `google`, `github`, `twitter`, `password` |
+| `name` | `string` | User's display name at sign-in time |
+| `email` | `string` | User's email at sign-in time |
+| `ip_address` | `string` | IP address from which the session was created |
+| `geo_data` | `object` | Geographic data derived from the IP (if available) |
+| `logged_in_at` | `string` | ISO 8601 timestamp of the initial sign-in |
+| `last_signin_at` | `string` | ISO 8601 timestamp of the most recent sign-in |
+| `revoked_at` | `string \| null` | ISO 8601 timestamp of revocation, or `null` if active |
+| `active` | `boolean` | `true` if the session has not been revoked |
+
+### 401 — Unauthorized
+
+```json
+{ "error": "Unauthorized" }
+```

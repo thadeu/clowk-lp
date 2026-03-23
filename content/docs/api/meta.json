@@ -1,4 +1,4 @@
 {
   "title": "API",
-  "pages": ["overview", "resolve-instance", "verify-token", "list-users", "get-user", "search-users", "delete-user", "openid-connect"]
+  "pages": ["overview", "resolve-instance", "verify-token", "list-users", "get-user", "search-users", "delete-user", "list-sessions", "get-session", "search-sessions", "revoke-session", "openid-connect"]
 }

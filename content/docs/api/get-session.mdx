@@ -1,0 +1,63 @@
+---
+title: Get Session
+description: Retrieve a session by its session_id
+---
+
+## GET /api/v1/sessions/:id
+
+Retrieves a single session by its `session_id` (`clk_session_UUID`). Only returns sessions that belong to the instance associated with your secret key.
+
+## Request
+
+```bash
+curl https://myapp.clowk.dev/api/v1/sessions/clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890 \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Yes | Your instance secret key |
+
+### Path parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `id` | `string` | The `session_id` value (format: `clk_session_UUID`) |
+
+## Response
+
+### 200 — Session found
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "resource": "session",
+  "data": {
+    "session_id": "clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "user_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "provider": "google",
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "ip_address": "203.0.113.42",
+    "geo_data": {},
+    "logged_in_at": "2026-03-20T10:30:00Z",
+    "last_signin_at": "2026-03-20T10:30:00Z",
+    "revoked_at": null,
+    "active": true
+  }
+}
+```
+
+### 401 — Unauthorized
+
+```json
+{ "error": "Unauthorized" }
+```
+
+### 404 — Not found
+
+```json
+{ "error": "Session not found" }
+```

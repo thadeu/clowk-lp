@@ -1,0 +1,75 @@
+---
+title: Search Sessions
+description: Search sessions by email
+---
+
+## GET /api/v1/sessions/search
+
+Searches sessions in the instance by the user's email address using a case-insensitive partial match.
+
+## Request
+
+```bash
+curl "https://myapp.clowk.dev/api/v1/sessions/search?email=jane%40example.com" \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Yes | Your instance secret key |
+
+### Query parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `email` | `string` | No | Email to search for (case-insensitive, partial match) |
+
+## Response
+
+### 200 — Success
+
+Returns a filtered array. Same shape as [List Sessions](/docs/api/list-sessions).
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "resource": "session",
+    "data": {
+      "session_id": "clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "user_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "provider": "google",
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "ip_address": "203.0.113.42",
+      "geo_data": {},
+      "logged_in_at": "2026-03-20T10:30:00Z",
+      "last_signin_at": "2026-03-20T10:30:00Z",
+      "revoked_at": null,
+      "active": true
+    }
+  }
+]
+```
+
+Returns an empty array `[]` when no sessions match the query.
+
+### 401 — Unauthorized
+
+```json
+{ "error": "Unauthorized" }
+```
+
+## SDK usage
+
+```ruby
+# Ruby
+client.sessions.search(email: "jane@example.com")
+```
+
+```typescript
+// JavaScript
+await client.sessions.search('jane@example.com')
+```
