@@ -44,10 +44,12 @@ export const metadata: Metadata = {
       'No embedded UI, no per-MAU billing. Clowk brokers OAuth and returns a signed JWT. SDKs for React, Next.js, Express, Hono, and Rails.',
     images: [OG_IMAGE],
   },
+  manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     title: 'Clowk',
     statusBarStyle: 'black-translucent',
+    startupImage: ['/icons/icon-512.png'],
   },
   other: {
     'mobile-web-app-capable': 'yes',
@@ -74,6 +76,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -83,7 +86,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={dmSans.className}>
-      <body className="min-h-full flex flex-col antialiased">{children}</body>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+      </head>
+      <body className="min-h-full flex flex-col antialiased bg-[#0C0014]">{children}</body>
     </html>
   );
 }
