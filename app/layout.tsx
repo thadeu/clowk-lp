@@ -8,7 +8,7 @@ const dmSans = DM_Sans({
   display: 'swap',
 });
 
-const SITE_URL = 'https://clowk.dev';
+const SITE_URL = 'https://clowk.in';
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export const metadata: Metadata = {
@@ -87,7 +87,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={dmSans.className}>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+        />
       </head>
       <body className="min-h-full flex flex-col antialiased bg-[#0C0014]">{children}</body>
     </html>
