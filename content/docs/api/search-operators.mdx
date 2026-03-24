@@ -1,0 +1,128 @@
+---
+title: Search Operators
+description: Reference for all query operators supported across Clowk search endpoints
+---
+
+## Overview
+
+All Clowk search endpoints (`/users/search`, `/sessions/search`) accept a `query` parameter using a structured query language inspired by Zendesk Search.
+
+Filters are **space-separated tokens**. Each token is a `field`, an `operator`, and a `value`:
+
+```
+field:value
+field:value* field:*value field:*value*
+field>value field<value field>=value field<=value
+-field:value
+```
+
+Multiple tokens are combined with **AND** by default. Repeating the same field produces an **OR**.
+
+## Operator reference
+
+| Operator | Type | Behavior | Example |
+|----------|------|----------|---------|
+| `field:value` | Exact | Returns records where `field` equals `value` exactly | `provider:google` |
+| `field:value*` | Starts with | Returns records where `field` starts with `value` | `email:alice*` |
+| `field:*value` | Ends with | Returns records where `field` ends with `value` | `email:*@gmail.com` |
+| `field:*value*` | Contains | Returns records where `field` contains `value` | `name:*Silva*` |
+| `field>value` | Greater than | Returns records where `field` is after/above `value` | `created_at>2026-01-01` |
+| `field<value` | Less than | Returns records where `field` is before/below `value` | `created_at<2026-01-01` |
+| `field>=value` | Greater than or equal | Inclusive lower bound | `created_at>=2026-01-01` |
+| `field<=value` | Less than or equal | Inclusive upper bound | `created_at<=2026-03-31` |
+| `-field:value` | Negation | Excludes records matching the token | `-provider:twitter` |
+
+Wildcards (`*`) are only meaningful on string fields. On datetime and numeric fields, use `>`, `<`, `>=`, `<=` instead.
+
+## OR — same field, multiple tokens
+
+Repeating the **same field** in a query combines the values with `OR`:
+
+```
+provider:google provider:github
+```
+
+→ sessions from Google **or** GitHub.
+
+```
+email:alice@example.com email:bob@example.com
+```
+
+→ users matching either email exactly.
+
+Different fields are always combined with `AND`:
+
+```
+email:*@gmail.com created_at>2026-01-01
+```
+
+→ Gmail users **and** created after January 2026.
+
+## Negation
+
+Prefix any token with `-` to exclude matches:
+
+```
+-provider:twitter
+```
+
+→ all sessions except Twitter.
+
+```
+-email:*test* -email:*staging*
+```
+
+→ users whose email doesn't contain `test` or `staging`.
+
+Negation applies per token and is always AND'd with the rest of the query.
+
+## Wildcard patterns
+
+The position of `*` controls the match pattern:
+
+| Token | Pattern | SQL |
+|-------|---------|-----|
+| `email:alice*` | Starts with `alice` | `email ILIKE 'alice%'` |
+| `email:*@gmail.com` | Ends with `@gmail.com` | `email ILIKE '%@gmail.com'` |
+| `email:*gmail*` | Contains `gmail` | `email ILIKE '%gmail%'` |
+| `email:alice@example.com` | Exact (no wildcard) | `email = 'alice@example.com'` |
+
+> Spaces are token separators — values with spaces require wildcards. Use `name:*Doe*` instead of `name:Jane Doe`.
+
+## Date and time values
+
+Use ISO 8601 date strings for datetime comparisons:
+
+```
+created_at>2026-01-01
+last_signin_at>=2026-03-01
+logged_in_at<2026-01-01T12:00:00Z
+```
+
+## Combined examples
+
+**Gmail or Yahoo users created in Q1 2026:**
+```
+email:*@gmail.com email:*@yahoo.com created_at>=2026-01-01 created_at<=2026-03-31
+```
+
+**Active Google or GitHub sessions signed in after March 1:**
+```
+provider:google provider:github last_signin_at>2026-03-01
+```
+
+**All sessions except Twitter from a specific IP range:**
+```
+-provider:twitter ip_address:10.0.*
+```
+
+**Users with "silva" in their name, excluding test accounts:**
+```
+name:*silva* -email:*test*
+```
+
+## Ignored tokens
+
+- Tokens without a valid operator are silently ignored.
+- Fields that don't exist on the resource are silently ignored.
+- Sensitive fields (`password_digest`, `secret_key`, `kv`) are always excluded regardless of the query.

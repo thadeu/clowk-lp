@@ -41,9 +41,10 @@ curl -X POST https://myapp.clowk.dev/api/v1/tokens/verify \
 
 ```json
 {
-  "valid": true,
-  "user": {
-    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "resource": "token",
+  "data": {
+    "valid": true,
     "email": "jane@example.com",
     "name": "Jane Doe",
     "avatar_url": "https://lh3.googleusercontent.com/...",
