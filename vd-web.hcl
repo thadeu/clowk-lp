@@ -1,7 +1,6 @@
 deployment "vd-web" {
   path       = "."
   dockerfile = "Dockerfile"
-  ports      = ["80"]
 
   env = {
     NODE_ENV = "production"
