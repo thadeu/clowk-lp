@@ -1,16 +1,18 @@
 deployment "vd-web" {
   path       = "."
   dockerfile = "Dockerfile"
-  ports      = ["3000:80"]
+  ports      = ["80"]
 
   env = {
     NODE_ENV = "production"
     PORT     = "3000"
   }
+}
 
-  # post_deploy = [
-  #   "npm run migrate"  # opcional, roda depois do container subir
-  # ]
+ingress "vd-web" {
+  host    = "vd-web.lvh.me"
+  service = "vd-web"
+  port    = 80
 }
 
 # deployment "web-0" {
