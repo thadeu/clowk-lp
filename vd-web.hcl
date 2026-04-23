@@ -1,4 +1,4 @@
-deployment "vd-web" {
+deployment "clowk-lp" "vd-web" {
   path       = "."
   dockerfile = "Dockerfile"
   replicas = 1
@@ -11,7 +11,7 @@ deployment "vd-web" {
   }
 }
 
-ingress "vd-web" {
+ingress "clowk-lp" "vd-web" {
   host    = "vd-web.lvh.me"
   service = "vd-web"
 
