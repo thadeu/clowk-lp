@@ -12,4 +12,10 @@ deployment "vd-web" {
 ingress "vd-web" {
   host    = "vd-web.lvh.me"
   service = "vd-web"
+
+  tls {
+    enabled = true
+    provider = "letsencrypt"
+    email = "ops@voodu.clowk.in"
+  }
 }
