@@ -1,5 +1,5 @@
 deployment "clowk-lp" "web" {
-  replicas = 3
+  replicas = 1
 
   env = {
     NODE_ENV = "production"
