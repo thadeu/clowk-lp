@@ -19,3 +19,14 @@ ingress "vd-web" {
     email = "ops@voodu.clowk.in"
   }
 }
+
+ingress "vd2-web" {
+  host    = "vd2-web.lvh.me"
+  service = "vd-web"
+
+  tls {
+    enabled = true
+    provider = "letsencrypt"
+    email = "ops@voodu.clowk.in"
+  }
+}
