@@ -8,7 +8,7 @@ deployment "clowk-lp" "web" {
   }
 }
 
-ingress "clowk-lp" "lb0" {
+ingress "clowk-lp" "web" {
   host = "vd-web.lvh.me"
 
   tls {
