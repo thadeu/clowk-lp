@@ -48,7 +48,7 @@ export default function Hero() {
       <div className="relative max-w-4xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs text-white/60 font-medium mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E8930C] animate-pulse" />
-          Free forever · Auth Broker · No per-MAU billing
+          Free forever · Auth Broker • No per-MAU billing!
         </div>
 
         {/* Headline */}
