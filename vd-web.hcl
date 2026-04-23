@@ -1,8 +1,5 @@
 deployment "clowk-lp" "web" {
-  path       = "."
-  dockerfile = "Dockerfile"
   replicas = 3
-  health_check = "/"
 
   env = {
     NODE_ENV = "production"
