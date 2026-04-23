@@ -1,4 +1,4 @@
-deployment "web-0" {
+deployment "vd-web" {
   path       = "."
   dockerfile = "Dockerfile"
   ports      = ["3000:80"]
