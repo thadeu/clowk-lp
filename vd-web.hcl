@@ -1,7 +1,6 @@
 deployment "vd-web" {
   path       = "."
   dockerfile = "Dockerfile"
-  ports      = ["3000"]
 
   env = {
     NODE_ENV = "production"
@@ -12,11 +11,6 @@ deployment "vd-web" {
 ingress "vd-web" {
   host    = "vd-web.lvh.me"
   service = "vd-web"
-
-  tls {
-    enabled  = true
-    provider = "internal"
-  }
 }
 
 # deployment "web-0" {
