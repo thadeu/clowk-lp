@@ -1,7 +1,7 @@
 deployment "vd-web" {
   path       = "."
   dockerfile = "Dockerfile"
-  replicas = 3
+  replicas = 1
   health_check = "/"
 
   env = {
