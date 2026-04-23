@@ -1,7 +1,7 @@
-deployment "clowk-lp" "vd-web" {
+deployment "clowk-lp" "web" {
   path       = "."
   dockerfile = "Dockerfile"
-  replicas = 1
+  replicas = 3
   health_check = "/"
 
   env = {
@@ -11,14 +11,8 @@ deployment "clowk-lp" "vd-web" {
   }
 }
 
-ingress "clowk-lp" "vd-web" {
-  host    = "vd-web.lvh.me"
-  service = "vd-web"
-
-  lb {
-    policy = "random"
-    interval = "5s"
-  }
+ingress "clowk-lp" "web" {
+  host = "vd-web.lvh.me"
 
   tls {
     enabled = true
