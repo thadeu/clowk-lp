@@ -17,7 +17,7 @@ ingress "vd-web" {
 
   lb {
     policy = "random"
-    internal = "5s"
+    interval = "5s"
   }
 
   tls {
