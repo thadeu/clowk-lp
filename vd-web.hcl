@@ -17,14 +17,3 @@ ingress "clowk-lp" "web" {
     email = "ops@voodu.clowk.in"
   }
 }
-
-ingress "clowk-lp" "web2" {
-  host = "vd2-web.lvh.me"
-  service = "web"
-
-  tls {
-    enabled = true
-    provider = "letsencrypt"
-    email = "ops@voodu.clowk.in"
-  }
-}
