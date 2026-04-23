@@ -1,7 +1,7 @@
 deployment "web-0" {
   path       = "."
   # lang       = "nodejs"       # opcional: auto-detecta via package.json
-  # dockerfile = "Dockerfile"   # opcional: default é ./Dockerfile
+  dockerfile = "Dockerfile"   # opcional: default é ./Dockerfile
   ports      = ["3000:80"]
 
   env = {
