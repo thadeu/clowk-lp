@@ -9,8 +9,8 @@ deployment "vd-web" {
   }
 }
 
-ingress "vd2-web" {
-  host    = "vd2-web.lvh.me"
+ingress "vd-web" {
+  host    = "vd-web.lvh.me"
   service = "vd-web"
 
   tls {
