@@ -12,5 +12,4 @@ deployment "vd-web" {
 ingress "vd-web" {
   host    = "vd-web.lvh.me"
   service = "vd-web"
-  port = 80
 }
