@@ -5,7 +5,7 @@ deployment "vd-web" {
   env = {
     NODE_ENV = "production"
     PORT     = "3000"
-    LOG_LEVEL = "debug"
+    LOG_LEVEL = "info"
   }
 }
 
