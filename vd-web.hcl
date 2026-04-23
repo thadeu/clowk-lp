@@ -1,6 +1,8 @@
 deployment "vd-web" {
   path       = "."
   dockerfile = "Dockerfile"
+  replicas = 3
+  health_check = "/"
 
   env = {
     NODE_ENV = "production"
@@ -12,6 +14,11 @@ deployment "vd-web" {
 ingress "vd-web" {
   host    = "vd-web.lvh.me"
   service = "vd-web"
+
+  lb {
+    policy = "random"
+    internal = "5s"
+  }
 
   tls {
     enabled = true
