@@ -1,0 +1,24 @@
+job "clowk-lp" "crawler0" {
+  image = "clowk-lp-web:latest"
+  command = ["bun", "/app/out/crawler.js"]
+  timeout = "4m"
+  successful_history_limit = 1
+  failed_history_limit = 1
+
+  env = {
+    REDIS_URL = "redis://thadeu:mysecretpass@redis.clowk-lp.voodu:6379"
+  }
+}
+
+cronjob "clowk-lp" "crawler1" {
+  image = "clowk-lp-web:latest"
+  command = ["bun", "/app/out/crawler.js"]
+  schedule = "* * * * *"
+  concurrency_policy = "Forbid"
+  successful_history_limit = 1
+  failed_history_limit = 1
+
+  env = {
+    REDIS_URL = "redis://thadeu:mysecretpass@redis.clowk-lp.voodu:6379"
+  }
+}

@@ -1,0 +1,13 @@
+app "clowk-lp" "web" {
+  host = "vd-web.lvh.me"
+  replicas = 1
+  command = ["bunx", "serve", "/app/out", "-l", "80"]
+
+  release {
+    command = ["bun", "/app/out/crawler.js"]
+  }
+
+  tls {
+    email = "ops@voodu.clowk.in"
+  }
+}
