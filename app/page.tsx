@@ -3,6 +3,7 @@ import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import CodeExample from '@/components/CodeExample';
 import SDKSection from '@/components/SDKSection';
+import Pricing from '@/components/Pricing';
 import VideoBlock from '@/components/VideoBlock';
 import FAQ from '@/components/FAQ';
 import Footer from '@/components/Footer';
@@ -18,6 +19,7 @@ export default function Home() {
         <CodeExample />
         <SDKSection />
         <VideoBlock />
+        <Pricing />
         <FAQ />
       </main>
       <Footer />

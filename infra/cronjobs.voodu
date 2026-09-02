@@ -1,0 +1,13 @@
+cronjob "clowk-lp" "crawler1" {
+  image = "clowk-lp-web:latest"
+  env_from = ["clowk-lp/web"]
+  
+  command = ["bun", "/app/out/crawler.js"]
+
+  # every minute
+  schedule = "* * * * *"
+  
+  concurrency_policy = "Forbid"
+  successful_history_limit = 1
+  failed_history_limit = 1
+}

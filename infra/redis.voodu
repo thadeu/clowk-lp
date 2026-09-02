@@ -2,26 +2,24 @@ asset "artifact" {
   redis_aclfile = file("conf/aclfile.conf")
 }
 
-asset "clowk-lp" "externals" {
-  acls = url("http://192.168.2.137:9099?v=6&file=users.acl", {
-    timeout = "10s"
-    on_failure = "error"
-  })
-}
+# asset "clowk-lp" "externals" {
+#   acls = url("http://192.168.2.137:9099?v=6&file=users.acl")
+# }
 
 redis "clowk-lp" "redis" {
-  image   = "redis:8"
+  image = "redis:8"
   replicas = 2
 
-  plugin {
-    version = "latest"
+  # plugin { version = "latest" }
+
+  resources {
+    limits {
+      cpu = "0.3"
+      memory = "255Mi"
+    }
   }
 
-  env = {
-    SKIP_FIX_PERMS = 1
-  }
-
-  volumes = [
-    "${asset.clowk-lp.externals.acls}:/etc/redis/conf.d/users.conf:ro"
-  ]
+  # volumes = [
+  #   "${asset.clowk-lp.externals.acls}:/etc/redis/conf.d/users.conf:ro"
+  # ]
 }

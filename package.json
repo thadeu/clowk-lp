@@ -2,6 +2,7 @@
   "name": "clowk-lp",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.15.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -34,5 +35,13 @@
     "tailwindcss": "4.2.1",
     "typescript": "^5",
     "wrangler": "^4.74.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver",
+      "workerd"
+    ]
   }
 }

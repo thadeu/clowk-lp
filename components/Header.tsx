@@ -6,8 +6,7 @@ import Link from 'next/link';
 
 const navLinks = [
   { label: 'Docs', href: '/docs' },
-  { label: 'Pricing', href: '#' },
-  { label: 'Blog', href: '#' },
+  { label: 'Pricing', href: '/#pricing' },
 ];
 
 export default function Header() {

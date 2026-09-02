@@ -3,11 +3,38 @@ app "clowk-lp" "web" {
   replicas = 1
   command = ["bunx", "serve", "/app/out", "-l", "80"]
 
-  release {
-    command = ["bun", "/app/out/crawler.js"]
+  build {
+    args = {
+      RELEASE = "v3"
+      NODE_VERSION = "24-alpine"
+    }
   }
+
+  probes {
+    startup {
+      http_get {
+        path = "/"
+        port = 80
+      }
+
+      period = "2s"
+      failure_threshold = 5
+      success_threshold = 1
+    }
+  }
+
+  # release {
+  #   command = ["bun", "/app/out/crawler.js"]
+  # }
 
   tls {
     email = "ops@voodu.clowk.in"
+  }
+
+  resources {
+    limits {
+      cpu = "0.5"
+      memory = "100Mi"
+    }
   }
 }

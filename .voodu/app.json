@@ -1,0 +1,11 @@
+{
+  "scope": "lp2",
+  "ingress": {
+    "web": {
+      "host": "${API_HOST:-ws.lvh.me}",
+      "tls": {
+        "email": "ops@myemail.com"
+      }
+    }
+  }
+}

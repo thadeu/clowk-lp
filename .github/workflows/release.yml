@@ -1,0 +1,68 @@
+name: release
+
+# A tag is the only thing that publishes. Pushing to main does not deploy, so
+# the site is never a side effect of a merge — somebody decides, tags, and the
+# tag is the record of what is live.
+#
+# It also closes the gap this workflow was written for: docs written in
+# September sat unpublished because deploying meant remembering to run
+# `pnpm deploy:prod` by hand, and nothing anywhere said the site was behind.
+on:
+  push:
+    tags: ['v*']
+
+# One deploy at a time, and never cancel one in flight: wrangler uploading a
+# half-finished set of files is worse than waiting. Two tags pushed together
+# publish in order.
+concurrency:
+  group: release-clowk-lp
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # pnpm before Node: setup-node's pnpm cache needs the package manager to
+      # already exist, and it reads the version from `packageManager` in
+      # package.json rather than being told twice.
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      # `next.config.ts` sets `output: 'export'`, so this writes a static site
+      # to `out/` and there is nothing to run in production.
+      #
+      # Lint is NOT a gate here, deliberately: it currently reports pre-existing
+      # errors, and a release pipeline that cannot publish a docs fix until an
+      # unrelated lint debt is paid gets bypassed by hand — which is the manual
+      # step this replaces. Build failing still stops the deploy, because a
+      # broken build has nothing to upload.
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Same command as `pnpm deploy:prod`, minus the build it already did.
+          # The branch is pinned so a tag publishes to PRODUCTION: wrangler
+          # infers it from git otherwise, and a detached HEAD at a tag is not
+          # the production branch, so the upload would land on a preview URL
+          # and the live site would not move.
+          command: pages deploy out --project-name clowk-lp --branch main

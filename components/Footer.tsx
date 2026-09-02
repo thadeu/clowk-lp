@@ -65,9 +65,8 @@ export default function Footer() {
             </p>
             <ul className="space-y-3">
               {[
-                { label: "Blog", href: "#" },
                 { label: "Support", href: "mailto:support@clowk.in" },
-                { label: "Pricing", href: "#" },
+                { label: "Pricing", href: "/#pricing" },
                 { label: "Terms", href: "/terms" },
               ].map((item) => (
                 <li key={item.label}>

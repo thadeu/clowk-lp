@@ -1,0 +1,1 @@
+web: bunx serve out

@@ -1,0 +1,10 @@
+redis "clowk-lp" "redis-ha" {
+  image = "redis:8"
+  replicas = 3
+
+  plugin { version = "latest" }
+
+  sentinel {
+    monitor = "clowk-lp/redis"
+  }
+}
