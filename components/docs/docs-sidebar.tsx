@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { ChevronDown, Search, X } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Search, X } from 'lucide-react';
 import { contents, type SidebarSection } from './sidebar-content';
 
 export function DocsSidebar() {
@@ -66,6 +66,14 @@ export function DocsSidebar() {
             <X size={18} />
           </button>
         </div>
+
+        <Link
+          href="/"
+          className="flex items-center gap-2 px-5 min-h-11 border-b border-white/5 shrink-0 text-sm text-white/60 hover:text-white transition-colors"
+        >
+          <ArrowLeft size={14} />
+          Back to Clowk
+        </Link>
 
         <nav className="flex-1 overflow-y-auto px-3 py-3 docs-sidebar-scroll">
           {contents.map(section => (
