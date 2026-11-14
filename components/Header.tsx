@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Logo from '@/components/Logo';
+import Image from 'next/image';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import { localePath, t, type Locale } from '@/lib/i18n';
 import { localizedProducts } from '@/lib/localized';
@@ -48,42 +48,54 @@ export default function Header({ locale = 'en' }: { locale?: Locale }) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 pt-[env(safe-area-inset-top)] ${
-          scrolled ? 'bg-[#0C0014]/95 backdrop-blur-md border-b border-white/[0.08]' : 'bg-transparent'
-        } ${hidden && !menuOpen ? '-translate-y-full' : 'translate-y-0'}`}
+        className={`fixed top-0 inset-x-0 z-50 px-3 sm:px-6 pt-[calc(env(safe-area-inset-top)+12px)] transition-transform duration-300 ${
+          hidden && !menuOpen ? '-translate-y-[120%]' : 'translate-y-0'
+        }`}
       >
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
-          <Logo height={30} href={localePath(locale, '/')} />
+        <div
+          className={`max-w-6xl mx-auto rounded-2xl p-px bg-gradient-to-r from-[#F43F5E]/60 via-white/10 to-[#8B5CF6]/60 transition-shadow duration-300 ${
+            scrolled ? 'shadow-[0_8px_40px_-12px_rgba(244,63,94,0.55)]' : 'shadow-[0_8px_32px_-16px_rgba(139,92,246,0.45)]'
+          }`}
+        >
+          <div className="h-14 px-4 sm:px-5 rounded-[15px] bg-[#0C0014]/75 backdrop-blur-xl flex items-center justify-between gap-6">
+            <Link href={localePath(locale, '/')} aria-label="Clowk" className="inline-flex items-center min-h-11">
+              <Image src="/brand/wordmark-on-dark.svg?v=1" alt="Clowk" width={87} height={24} priority />
+            </Link>
 
-          <nav aria-label="Main" className="hidden md:flex items-center gap-7">
-            {navLinks.map(item => (
-              <Link key={item.label} href={item.href} className="text-[15px] font-medium text-white/70 hover:text-white transition-colors">
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+            <nav aria-label="Main" className="hidden md:flex items-center gap-1">
+              {navLinks.map(item => (
+                <Link
+                  key={item.label}
+                  href={item.href}
+                  className="relative px-3 py-2 font-mono text-[12px] uppercase tracking-[0.16em] text-white/60 hover:text-white transition-colors after:absolute after:left-3 after:right-3 after:-bottom-px after:h-px after:bg-gradient-to-r after:from-[#F43F5E] after:to-[#8B5CF6] after:scale-x-0 hover:after:scale-x-100 after:transition-transform"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
 
-          <div className="flex items-center gap-3">
-            <LanguageSwitch locale={locale} />
+            <div className="flex items-center gap-2">
+              <LanguageSwitch locale={locale} compact className="font-mono text-[12px] tracking-[0.12em] border border-white/10" />
 
-            <a
-              href="https://app.clowk.in/sign-in"
-              className="hidden sm:inline-flex items-center min-h-10 px-4 rounded-lg text-sm font-semibold bg-[#F43F5E] text-white hover:bg-[#E8385A] transition-colors"
-            >
-              {text.signIn}
-            </a>
+              <a
+                href="https://app.clowk.in/sign-in"
+                className="hidden sm:inline-flex items-center min-h-10 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#F43F5E] to-[#C026D3] shadow-[0_0_24px_-6px_rgba(244,63,94,0.8)] hover:shadow-[0_0_32px_-4px_rgba(244,63,94,0.95)] transition-shadow"
+              >
+                {text.signIn}
+              </a>
 
-            <button
-              type="button"
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden relative w-11 h-11 flex flex-col items-center justify-center gap-1.75"
-              aria-label={menuOpen ? text.closeMenu : text.openMenu}
-              aria-expanded={menuOpen}
-            >
-              <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-2.25' : ''}`} />
-              <span className={`block w-5 h-0.5 bg-white transition-all duration-300 ${menuOpen ? 'opacity-0 scale-0' : ''}`} />
-              <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-2.25' : ''}`} />
-            </button>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="md:hidden relative w-11 h-11 flex flex-col items-center justify-center gap-1.75"
+                aria-label={menuOpen ? text.closeMenu : text.openMenu}
+                aria-expanded={menuOpen}
+              >
+                <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-2.25' : ''}`} />
+                <span className={`block w-5 h-0.5 bg-white transition-all duration-300 ${menuOpen ? 'opacity-0 scale-0' : ''}`} />
+                <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-2.25' : ''}`} />
+              </button>
+            </div>
           </div>
         </div>
       </header>

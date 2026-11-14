@@ -22,7 +22,7 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
       <Header locale={locale} />
 
       <main className="bg-[#0C0014] text-white">
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-12 md:pb-14 flex flex-wrap gap-10 md:gap-12 items-center">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 md:pt-36 pb-12 md:pb-14 flex flex-wrap gap-10 md:gap-12 items-center">
           <div className="flex-[999_1_520px] min-w-0 flex flex-col items-start gap-5">
             <nav aria-label="Breadcrumb" className="flex gap-2 text-sm text-[#A9A1B6]">
               <Link href={localePath(locale, '/#products')} className="hover:text-white">{text.breadcrumb}</Link>
