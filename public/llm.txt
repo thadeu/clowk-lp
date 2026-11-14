@@ -1,7 +1,9 @@
-# Clowk — Authentication Broker
+# Clowk auth — Authentication Broker
 
 > llm.txt for AI agents, LLMs, and developer tools.
 > Learn more about llm.txt at https://llmstxt.org
+>
+> auth is one of the Clowk products. The whole family (auth, ndb, voodu, anway, cronota, 1billion) is listed at https://clowk.in/llms.txt
 
 ## What is Clowk?
 
@@ -9,7 +11,7 @@ Clowk is an **authentication broker** — not an authentication UI provider.
 
 Most auth solutions (Clerk, Auth0, Firebase Auth) own the sign-in UI: they render forms, inputs, and social buttons inside your app. Your users interact with someone else's frontend, embedded in yours.
 
-Clowk takes a different approach. It **brokers the authentication** between your app and OAuth providers (Google, GitHub, Twitter) through a redirect flow:
+Clowk takes a different approach. It **brokers the authentication** between your app and OAuth providers (Google, GitHub, X/Twitter and Apple) through a redirect flow. It also handles email and password, magic links and TOTP:
 
 ```
 Your App → Clowk (handles OAuth) → Your App (receives signed JWT)
@@ -18,14 +20,14 @@ Your App → Clowk (handles OAuth) → Your App (receives signed JWT)
 ## Why this matters
 
 - **No embedded UI to maintain** — Clowk handles the entire auth flow on its own domain (*.clowk.dev). Your app just redirects and receives a JWT back.
-- **OAuth requires redirects anyway** — Google, GitHub, and Twitter will redirect the user regardless. Embedding a UI doesn't eliminate the redirect, it just adds an intermediary.
+- **OAuth requires redirects anyway** — Google, GitHub, X and Apple will redirect the user regardless. Embedding a UI doesn't eliminate the redirect, it just adds an intermediary.
 - **Security by isolation** — credentials and OAuth tokens never touch your app's DOM. The auth flow happens entirely on the Clowk domain.
 - **Zero frontend lock-in** — no Clerk Elements, no Auth0 Lock, no custom widgets to style or break on upgrades. Your app controls its own buttons and pages.
 
 ## Pricing
 
 - **Free plan** — everything you need to ship auth. Free forever.
-- **PRO plan** — advanced features for teams.
+- **PRO plan** — more apps, production instances, providers and webhook endpoints.
 - **No per-MAU billing** — ever.
 
 ## Auth Flow
@@ -303,7 +305,7 @@ end
 | Password storage     | In your DB      | In your DB      | Handled by Clowk |
 | OAuth setup          | OmniAuth gems   | rodauth-oauth   | Built-in         |
 | Multi-tenancy        | Manual          | Manual          | Built-in         |
-| JWT verification     | N/A             | N/A             | Built-in (HS256) |
+| JWT verification     | N/A             | N/A             | Built-in (HS256, or RS256 with JWKS) |
 | Frontend lock-in     | No              | No              | No               |
 | Per-MAU billing      | N/A             | N/A             | Never            |
 | Setup time           | 30+ min         | 30+ min         | 5 min            |
@@ -330,6 +332,8 @@ const user = await verifyToken(token)
 ## Links
 
 - Website: https://clowk.in
+- Product page: https://clowk.in/auth/
 - Dashboard: https://app.clowk.in
-- Documentation: https://docs.clowk.in
+- Documentation: https://clowk.in/docs/
+- All Clowk products: https://clowk.in/llms.txt
 - Support: support@clowk.in
