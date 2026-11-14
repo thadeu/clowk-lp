@@ -1,6 +1,6 @@
 # Clowk Landing Page
 
-Landing page for [Clowk](https://clowk.in) — authentication broker for every stack.
+Site of [Clowk](https://clowk.in): the home page, one page per product (Auth, ndb, Voodu, Anway, Cronota) and the Clowk Auth docs. The brand files live in [`brand/`](brand/README.md).
 
 ## Stack
 

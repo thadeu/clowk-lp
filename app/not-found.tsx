@@ -4,17 +4,8 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <main className="min-h-screen bg-[#0C0014] flex flex-col items-center justify-center px-6 text-center">
-      <Link href="/" className="flex items-center gap-2 mb-12">
-        <Image
-          src="/clowk-white.svg"
-          alt="Clowk"
-          width={36}
-          height={48}
-          className="object-contain"
-        />
-        <span className="text-xl font-bold tracking-tight text-white">
-          Clowk
-        </span>
+      <Link href="/" className="mb-12">
+        <Image src="/brand/lockup-on-dark.svg" alt="Clowk" width={124} height={40} priority />
       </Link>
 
       <p className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#F43F5E] to-[#E8930C] mb-4">

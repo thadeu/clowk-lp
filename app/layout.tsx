@@ -11,18 +11,20 @@ const dmSans = DM_Sans({
 const SITE_URL = 'https://clowk.in';
 const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
+const TITLE = 'Clowk — Small tools you run on your own servers';
+const DESCRIPTION =
+  'Clowk makes self-hosted tools: Clowk Auth for sign-in, ndb for search on NDJSON, Voodu for deploys, Anway for background jobs and Cronota for NFS-e.';
+
 export const metadata: Metadata = {
-  title: 'Clowk — Authentication broker for every stack',
-  description:
-    'Clowk brokers authentication between your app and OAuth providers. No embedded UI, no per-MAU billing. SDKs for React, Next.js, Express, Hono, and Rails.',
+  title: { default: TITLE, template: '%s · Clowk' },
+  description: DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: 'Clowk — Broker, not provider. Auth that stays out of your UI.',
-    description:
-      'Most auth solutions own your sign-in UI. Clowk brokers the authentication through a redirect flow — no embedded forms, no iframes, no frontend lock-in. Free forever.',
+    title: TITLE,
+    description: DESCRIPTION,
     siteName: 'Clowk',
     url: SITE_URL,
     type: 'website',
@@ -32,16 +34,15 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: 'Clowk — Authentication broker for every stack',
+        alt: 'Clowk — Small tools you run on your own servers',
         type: 'image/png',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Clowk — Authentication broker for every stack',
-    description:
-      'No embedded UI, no per-MAU billing. Clowk brokers OAuth and returns a signed JWT. SDKs for React, Next.js, Express, Hono, and Rails.',
+    title: TITLE,
+    description: DESCRIPTION,
     images: [OG_IMAGE],
   },
   manifest: '/manifest.json',

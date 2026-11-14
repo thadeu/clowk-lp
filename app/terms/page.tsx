@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Clowk",
+  title: { absolute: "Terms of Service — Clowk" },
   description: "Clowk terms of service, acceptable use policy, and legal information.",
 };
 

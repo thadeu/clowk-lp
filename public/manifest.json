@@ -1,7 +1,7 @@
 {
   "name": "Clowk",
   "short_name": "Clowk",
-  "description": "Authentication broker for every stack",
+  "description": "Small tools you run on your own servers",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0C0014",

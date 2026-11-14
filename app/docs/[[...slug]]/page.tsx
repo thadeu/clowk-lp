@@ -48,7 +48,7 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
   const description = page.data.description;
 
   return {
-    title,
+    title: { absolute: title },
     description,
     openGraph: {
       title,
