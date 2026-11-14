@@ -15,7 +15,7 @@ export default function ProductPage({ product }: { product: Product }) {
       <Header />
 
       <main className="bg-[#0C0014] text-white">
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-32 pb-14 flex flex-wrap gap-12 items-center">
+        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 md:pt-32 pb-12 md:pb-14 flex flex-wrap gap-10 md:gap-12 items-center">
           <div className="flex-[999_1_520px] min-w-0 flex flex-col items-start gap-5">
             <nav aria-label="Breadcrumb" className="flex gap-2 text-sm text-[#A9A1B6]">
               <Link href="/#products" className="hover:text-white">Products</Link>
@@ -37,7 +37,7 @@ export default function ProductPage({ product }: { product: Product }) {
 
             <div className="flex flex-wrap gap-3">
               <Link href={product.docsUrl} className="inline-flex items-center min-h-12 px-6 rounded-xl bg-[#F43F5E] hover:bg-[#E8385A] font-bold transition-colors">
-                {product.slug === 'cronota' ? 'Open Cronota' : 'Read the docs'} ↗
+                {product.slug === 'cronota' ? 'Open cronota' : 'Read the docs'} ↗
               </Link>
 
               {product.githubUrl && (
@@ -57,7 +57,7 @@ export default function ProductPage({ product }: { product: Product }) {
         </section>
 
         {product.slug !== 'cronota' && (
-          <section aria-labelledby="install-title" className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+          <section aria-labelledby="install-title" className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 md:pb-16">
             <div className="rounded-[18px] bg-[#140D1C] border border-white/[0.09] p-5 sm:px-6 flex flex-wrap items-center gap-x-6 gap-y-3">
               <h2 id="install-title" className="text-base font-bold">Install</h2>
 
@@ -70,7 +70,7 @@ export default function ProductPage({ product }: { product: Product }) {
           </section>
         )}
 
-        <section aria-labelledby="features-title" className="max-w-6xl mx-auto px-4 sm:px-6 pb-20 flex flex-col gap-6">
+        <section aria-labelledby="features-title" className="max-w-6xl mx-auto px-4 sm:px-6 pb-14 md:pb-20 flex flex-col gap-6">
           <h2 id="features-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold">What you get</h2>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-4">
@@ -84,7 +84,7 @@ export default function ProductPage({ product }: { product: Product }) {
         </section>
 
         <section aria-labelledby="more-title" className="border-t border-white/[0.08] bg-[#110A18]">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16 flex flex-col gap-5">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16 flex flex-col gap-5">
             <h2 id="more-title" className="text-2xl font-bold">More from Clowk</h2>
 
             <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(220px,100%),1fr))] gap-3">
@@ -104,7 +104,7 @@ export default function ProductPage({ product }: { product: Product }) {
           </div>
         </section>
 
-        <section aria-labelledby="faq-title" className="max-w-[820px] mx-auto px-4 sm:px-6 py-18 flex flex-col gap-3">
+        <section aria-labelledby="faq-title" className="max-w-[820px] mx-auto px-4 sm:px-6 py-14 md:py-18 flex flex-col gap-3">
           <h2 id="faq-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold mb-2">Questions</h2>
 
           {product.faq.map(item => (

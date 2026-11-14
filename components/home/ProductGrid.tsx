@@ -5,7 +5,7 @@ import { products } from '@/lib/products';
 
 export default function ProductGrid() {
   return (
-    <section id="products" aria-labelledby="products-title" className="scroll-mt-24 max-w-6xl mx-auto px-4 sm:px-6 pt-8 pb-20 flex flex-col gap-7">
+    <section id="products" aria-labelledby="products-title" className="scroll-mt-24 max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-14 md:pt-8 md:pb-20 flex flex-col gap-6 md:gap-7">
       <div className="flex flex-col gap-2">
         <h2 id="products-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white">
           The products

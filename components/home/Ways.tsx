@@ -6,7 +6,7 @@ const ways = [
 
 export default function Ways() {
   return (
-    <section aria-labelledby="ways-title" className="max-w-6xl mx-auto px-4 sm:px-6 py-20 flex flex-col gap-7">
+    <section aria-labelledby="ways-title" className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-20 flex flex-col gap-6 md:gap-7">
       <h2 id="ways-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white">
         One way of working
       </h2>

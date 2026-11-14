@@ -28,9 +28,9 @@ export const SITE_URL = 'https://clowk.in';
 export const products: Product[] = [
   {
     slug: 'auth',
-    name: 'Clowk Auth',
+    name: 'auth',
     mark: '/brand/mark-on-light.svg',
-    seoTitle: 'Clowk Auth — authentication broker for every stack',
+    seoTitle: 'auth by Clowk — authentication broker for every stack',
     seoDescription:
       'Clowk runs the OAuth dance with Google, GitHub, X and Apple and returns a signed JWT. No embedded UI, no per-MAU billing. SDKs for React, Next.js, Express, Hono and Rails.',
     tagline: 'Broker, not provider. Sign-in that stays out of your UI.',
@@ -116,11 +116,11 @@ export const products: Product[] = [
   },
   {
     slug: 'voodu',
-    name: 'Voodu',
+    name: 'voodu',
     mark: '/products/voodu.svg',
-    seoTitle: 'Voodu — self-hosted PaaS with one HCL file and one voodu apply',
+    seoTitle: 'voodu — self-hosted PaaS with one HCL file and one voodu apply',
     seoDescription:
-      'Voodu is a self-hosted, Heroku-shaped PaaS. One HCL file describes apps, ingress with TLS and stateful services. voodu apply builds, ships, routes and swaps over SSH.',
+      'voodu is a self-hosted, Heroku-shaped PaaS. One HCL file describes apps, ingress with TLS and stateful services. voodu apply builds, ships, routes and swaps over SSH.',
     tagline: 'Self-hosted PaaS. One HCL file. One voodu apply.',
     summary:
       'Heroku-shaped deploys on your own boxes. The CLI streams the build over SSH: no commit, no push, no bare repo.',
@@ -162,7 +162,7 @@ export const products: Product[] = [
       },
     ],
     faq: [
-      { q: 'Do I need Kubernetes?', a: 'No. Voodu runs on a plain Linux server with Docker.' },
+      { q: 'Do I need Kubernetes?', a: 'No. voodu runs on a plain Linux server with Docker.' },
       { q: 'Do I have to commit before a deploy?', a: 'No. The CLI streams the build context straight to the server.' },
       { q: 'Which machines does it install on?', a: 'The server runs on Linux. On macOS the installer sets up the client only.' },
     ],
@@ -170,11 +170,11 @@ export const products: Product[] = [
   },
   {
     slug: 'anway',
-    name: 'Anway',
+    name: 'anway',
     mark: '/products/anway.svg',
-    seoTitle: 'Anway — background jobs for any language, one binary, no Redis',
+    seoTitle: 'anway — background jobs for any language, one binary, no Redis',
     seoDescription:
-      'Anway is a language-agnostic background job server. One binary with embedded disk storage, no Redis. Push a job from Rails and run it in Go.',
+      'anway is a language-agnostic background job server. One binary with embedded disk storage, no Redis. Push a job from Rails and run it in Go.',
     tagline: 'Background jobs for any language. One binary, no Redis.',
     summary: 'A Rails app pushes email.send, and a Go worker runs it. Storage is on disk, inside the binary.',
     bullets: [
@@ -197,7 +197,7 @@ export const products: Product[] = [
       { title: 'Batches', text: 'Batches with callbacks and child batches, job tracking, and a death hook.' },
     ],
     faq: [
-      { q: 'Do I need Redis?', a: 'No. Anway stores jobs on disk, inside the server.' },
+      { q: 'Do I need Redis?', a: 'No. anway stores jobs on disk, inside the server.' },
       { q: 'Which languages can push and run jobs?', a: 'There are SDKs for Ruby, Go and JavaScript. A job pushed in one language can run in another.' },
       { q: 'How do I run it?', a: 'Use the Docker image, or download a binary for Linux or macOS from the releases.' },
     ],
@@ -205,11 +205,11 @@ export const products: Product[] = [
   },
   {
     slug: 'cronota',
-    name: 'Cronota',
+    name: 'cronota',
     mark: '/products/cronota.svg',
-    seoTitle: 'Cronota — emit NFS-e on a schedule through the Emissor Nacional',
+    seoTitle: 'cronota — emit NFS-e on a schedule through the Emissor Nacional',
     seoDescription:
-      'Cronota emits NFS-e through the Emissor Nacional: one-off notes, templates and recurring schedules with approval. A1 certificate encrypted and audited.',
+      'cronota emits NFS-e through the Emissor Nacional: one-off notes, templates and recurring schedules with approval. A1 certificate encrypted and audited.',
     tagline: 'NFS-e on a schedule, through the Emissor Nacional.',
     summary:
       'For companies in Brazil: one-off notes, templates and recurring schedules, with approval before each note if you want it.',
@@ -227,11 +227,11 @@ export const products: Product[] = [
       { title: 'Schedules', text: 'Recurring notes, with an optional approval before each one is emitted.' },
       { title: 'Live and Sandbox', text: 'Production and produção restrita, switched in the tenant menu.' },
       { title: 'A1 certificate', text: 'The PFX is encrypted, and every opening is audited.' },
-      { title: 'ADN sync', text: 'Notes emitted outside Cronota show up in the app.' },
+      { title: 'ADN sync', text: 'Notes emitted outside cronota show up in the app.' },
       { title: 'API and webhooks', text: 'API v1, webhooks, XML import, reports and team members.' },
     ],
     faq: [
-      { q: 'Who is Cronota for?', a: 'Companies in Brazil that emit NFS-e through the Emissor Nacional.' },
+      { q: 'Who is cronota for?', a: 'Companies in Brazil that emit NFS-e through the Emissor Nacional.' },
       { q: 'Can I check a note before it goes out?', a: 'Yes. A schedule can ask for approval before each note.' },
       { q: 'Can I test without emitting real notes?', a: 'Yes. Switch to Sandbox to use produção restrita.' },
     ],

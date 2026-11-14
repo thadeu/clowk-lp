@@ -6,7 +6,7 @@
 
 This folder holds the Clowk visual identity: the mark, the wordmark, the lockups, the app icons, the colors and the tools that build them. Use these files. Do not draw the mark again.
 
-Clowk is the family name. ndb, Voodu, Anway and Cronota keep their own marks, and they sit next to Clowk as "by Clowk".
+Clowk is the family name. ndb, voodu, anway and cronota keep their own marks, and they sit next to Clowk as "by Clowk".
 
 ## The mark: Hood
 
@@ -14,7 +14,7 @@ Clowk is the family name. ndb, Voodu, Anway and Cronota keep their own marks, an
   <img src="png/mark-on-light-256.png" alt="The Clowk hood" width="160">
 </p>
 
-The name sounds like "cloak", so the mark is a small figure in a coral hood. It has the same drawing language as the rest of the family (the ndb bowl, the Cronota note): a dark outline, flat fills, and a friendly face.
+The name sounds like "cloak", so the mark is a small figure in a coral hood. It has the same drawing language as the rest of the family (the ndb bowl, the cronota note): a dark outline, flat fills, and a friendly face.
 
 ### Construction
 

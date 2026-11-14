@@ -4,7 +4,7 @@ import { products } from '@/lib/products';
 
 export default function HomeHero() {
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-36 pb-14 md:pt-44 flex flex-col items-start gap-6">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-10 md:pt-40 md:pb-14 flex flex-col items-start gap-5 md:gap-6">
       <span className="inline-flex items-center px-3 py-1.5 rounded-full border border-white/[0.12] text-[13px] text-[#C9C3D4]">
         Five products · one family · self-hosted
       </span>
@@ -24,11 +24,11 @@ export default function HomeHero() {
         </Link>
 
         <Link href="/auth" className="inline-flex items-center min-h-12 px-6 rounded-xl border border-white/[0.18] hover:bg-white/5 text-white font-bold transition-colors">
-          Start with Clowk Auth
+          Start with auth
         </Link>
       </div>
 
-      <ul className="flex flex-wrap gap-2.5 mt-4" aria-label="Products">
+      <ul className="flex flex-wrap gap-2.5 mt-2 md:mt-4" aria-label="Products">
         {products.map(product => (
           <li key={product.slug}>
             <Link
