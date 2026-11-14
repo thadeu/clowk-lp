@@ -13,9 +13,9 @@ export function authMetadata(locale: Locale) {
 export default function AuthPage({ locale }: { locale: Locale }) {
   return (
     <ProductPage product={findProduct('auth', locale)!} locale={locale}>
+      <Pricing locale={locale} />
       <CodeExample locale={locale} />
       <SDKSection locale={locale} />
-      <Pricing locale={locale} />
     </ProductPage>
   );
 }

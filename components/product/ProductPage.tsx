@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
+import FinalCta from '@/components/FinalCta';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import InstallLine from '@/components/InstallLine';
@@ -52,18 +53,20 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
                 </Link>
               )}
 
-              <Link
-                href={localePath(locale, product.docsUrl)}
-                className={`inline-flex items-center min-h-12 px-6 rounded-xl font-bold transition-colors ${
-                  product.primaryCta ? 'border border-white/[0.18] hover:bg-white/5' : 'bg-[#F43F5E] hover:bg-[#E8385A]'
-                }`}
-              >
-                {docsCta(product, locale)}
-              </Link>
+              {product.primaryCta?.href !== product.docsUrl && (
+                <Link
+                  href={localePath(locale, product.docsUrl)}
+                  className={`inline-flex items-center min-h-12 px-6 rounded-xl font-bold transition-colors ${
+                    product.primaryCta ? 'border border-white/[0.18] hover:bg-white/5' : 'bg-[#F43F5E] hover:bg-[#E8385A]'
+                  }`}
+                >
+                  {docsCta(product, locale)}
+                </Link>
+              )}
 
               {product.githubUrl && (
-                <Link href={product.githubUrl} className="inline-flex items-center min-h-12 px-6 rounded-xl border border-white/[0.18] hover:bg-white/5 font-bold transition-colors">
-                  {text.github}
+                <Link href={product.githubUrl} className="inline-flex items-center min-h-12 px-2 font-bold text-[#C9C3D4] hover:text-white transition-colors">
+                  {text.github} ↗
                 </Link>
               )}
             </div>
@@ -106,6 +109,36 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
 
         {children}
 
+        <section aria-labelledby="faq-title" className="max-w-[820px] mx-auto px-4 sm:px-6 py-14 md:py-18 flex flex-col gap-3">
+          <h2 id="faq-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold mb-2">{text.questions}</h2>
+
+          {product.faq.map(item => (
+            <details key={item.q} className="group rounded-[14px] border border-white/[0.09] px-5 py-4">
+              <summary className="cursor-pointer text-[17px] font-bold min-h-7">{item.q}</summary>
+              <p className="mt-2.5 text-[15px] leading-relaxed text-[#C9C3D4]">{item.a}</p>
+            </details>
+          ))}
+        </section>
+
+        <FinalCta title={text.endTitle(product.name)} lead={product.tagline}>
+          {product.primaryCta && (
+            <Link href={product.primaryCta.href} className="inline-flex items-center min-h-12 px-6 rounded-xl bg-[#F43F5E] hover:bg-[#E8385A] font-bold transition-colors">
+              {product.primaryCta.label} →
+            </Link>
+          )}
+
+          {product.primaryCta?.href !== product.docsUrl && (
+            <Link
+              href={localePath(locale, product.docsUrl)}
+              className={`inline-flex items-center min-h-12 px-6 rounded-xl font-bold transition-colors ${
+                product.primaryCta ? 'border border-white/[0.18] hover:bg-white/5' : 'bg-[#F43F5E] hover:bg-[#E8385A]'
+              }`}
+            >
+              {docsCta(product, locale)}
+            </Link>
+          )}
+        </FinalCta>
+
         <section aria-labelledby="more-title" className="border-t border-white/[0.08] bg-[#110A18]">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16 flex flex-col gap-5">
             <h2 id="more-title" className="text-2xl font-bold">{text.more}</h2>
@@ -125,17 +158,6 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
               ))}
             </ul>
           </div>
-        </section>
-
-        <section aria-labelledby="faq-title" className="max-w-[820px] mx-auto px-4 sm:px-6 py-14 md:py-18 flex flex-col gap-3">
-          <h2 id="faq-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold mb-2">{text.questions}</h2>
-
-          {product.faq.map(item => (
-            <details key={item.q} className="group rounded-[14px] border border-white/[0.09] px-5 py-4">
-              <summary className="cursor-pointer text-[17px] font-bold min-h-7">{item.q}</summary>
-              <p className="mt-2.5 text-[15px] leading-relaxed text-[#C9C3D4]">{item.a}</p>
-            </details>
-          ))}
         </section>
       </main>
 
