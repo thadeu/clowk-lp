@@ -9,7 +9,7 @@ description: API REST do Clowk para verificar tokens e gerenciar usuários
 https://{{subdomain}}.clowk.dev/api/v1
 ```
 
-Cada subdomínio aponta para uma **instância** específica da sua organização. Esta é a camada de isolamento multi-tenant do Clowk — toda requisição à API vale só para a instância do subdomínio. Assim, usuários, tokens e credenciais de uma instância nunca vazam para outra.
+Cada subdomínio aponta para uma **instance** específica da sua organização. Esta é a camada de isolamento multi-tenant do Clowk — toda requisição à API vale só para a instância do subdomínio. Assim, usuários, tokens e credenciais de uma instância nunca vazam para outra.
 
 Por exemplo, se a sua organização tem uma instância `staging` e uma `production`:
 
@@ -57,7 +57,7 @@ Organization
 
 Cada instância tem seu próprio subdomínio (`myapp.clowk.dev`) e seu próprio par de chaves. A secret key autentica as requisições à API e assina os JWTs. A publishable key identifica a instância no código do lado do cliente (redirects de login, configuração do SDK).
 
-Os dados são totalmente isolados entre instâncias. Um usuário em `staging.clowk.dev` é um registro separado de um usuário com o mesmo e-mail em `production.clowk.dev`.
+Os dados são totalmente isolados entre instâncias. Um usuário em `staging.clowk.dev` é um registro separado de um usuário com o mesmo email em `production.clowk.dev`.
 
 ## Formato da resposta
 

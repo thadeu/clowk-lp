@@ -52,7 +52,7 @@ Repetir o mesmo campo gera um `OR` entre os valores:
 email:alice@example.com email:bob@example.com
 ```
 
-→ retorna usuários com qualquer um dos dois e-mails.
+→ retorna usuários com qualquer um dos dois emails.
 
 ### Campos aceitos
 
@@ -70,7 +70,7 @@ Qualquer coluna da tabela `users` pode ser usada como filtro. Campos sensíveis 
 
 ## Exemplos
 
-**E-mail exato:**
+**Email exato:**
 ```
 ?query=email:jane@example.com
 ```
@@ -90,7 +90,7 @@ Qualquer coluna da tabela `users` pode ser usada como filtro. Campos sensíveis 
 ?query=email:*@gmail.com email:*@yahoo.com created_at>2026-01-01
 ```
 
-**Excluir e-mails de teste/staging:**
+**Excluir emails de teste/staging:**
 ```
 ?query=-email:*test* -email:*staging*
 ```
@@ -135,7 +135,7 @@ client.users.search(email: "jane@example.com")
 # Ruby — query string pura
 client.users.search("email:*@gmail.com created_at>2026-01-01")
 
-# Ruby — excluir e-mails de teste
+# Ruby — excluir emails de teste
 client.users.search("-email:*test*")
 ```
 
@@ -146,6 +146,6 @@ await client.users.search({ email: 'jane@example.com' })
 // JavaScript — query string pura
 await client.users.search('email:*@gmail.com created_at>2026-01-01')
 
-// JavaScript — excluir e-mails de teste
+// JavaScript — excluir emails de teste
 await client.users.search('-email:*test*')
 ```

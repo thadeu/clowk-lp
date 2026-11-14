@@ -11,7 +11,7 @@ export const ptBr: Record<string, ProductText> = {
     summary:
       'O Clowk faz o fluxo OAuth com Google, GitHub, X e Apple e entrega um JWT assinado ao seu app. Seu app mantém as próprias telas.',
     bullets: [
-      'Login social, e-mail e senha, magic links e TOTP',
+      'Login social, email e senha, magic links e TOTP',
       'JWT assinado que seu app verifica com JWKS',
       'Sem cobrança por MAU',
     ],
@@ -28,7 +28,7 @@ export const ptBr: Record<string, ProductText> = {
       },
       {
         title: 'Vários provedores',
-        text: 'Google, GitHub, X e Apple, além de e-mail e senha, magic links e TOTP.',
+        text: 'Google, GitHub, X e Apple, além de email e senha, magic links e TOTP.',
       },
       {
         title: 'Segurança por isolamento',
@@ -54,7 +54,7 @@ export const ptBr: Record<string, ProductText> = {
       },
       {
         q: 'Quais provedores são suportados?',
-        a: 'Google, GitHub, X e Apple, além de e-mail e senha, magic links e TOTP.',
+        a: 'Google, GitHub, X e Apple, além de email e senha, magic links e TOTP.',
       },
       {
         q: 'O Clowk funciona fora do Rails?',
@@ -179,7 +179,7 @@ export const ptBr: Record<string, ProductText> = {
     summary: 'Um app Rails envia email.send, e um worker Go executa. O armazenamento fica em disco, dentro do binário.',
     bullets: [
       'Filas com prioridade, retries com backoff e um dead set',
-      'Cron, jobs únicos e batches com callbacks',
+      'Cron, unique jobs e batches com callbacks',
       'SDKs para Ruby, Go e JavaScript',
     ],
     installNote: 'Binários para Linux e macOS em cada release',
@@ -188,7 +188,7 @@ export const ptBr: Record<string, ProductText> = {
       { title: 'Sem Redis', text: 'Um binário com armazenamento em disco embutido. Nada mais para rodar.' },
       { title: 'Filas', text: 'Ordem por prioridade, pausa e retomada, e limite de vazão por fila.' },
       { title: 'Retries e dead set', text: 'Jobs agendados, retries com backoff, um dead set e MUTATE para alterá-los.' },
-      { title: 'Cron e jobs únicos', text: 'Cron, jobs únicos e jobs que expiram, já inclusos.' },
+      { title: 'Cron e unique jobs', text: 'Cron, unique jobs e jobs que expiram, já inclusos.' },
       { title: 'Batches', text: 'Batches com callbacks e batches filhos, rastreio de jobs e um death hook.' },
     ],
     faq: [
@@ -226,20 +226,20 @@ export const ptBr: Record<string, ProductText> = {
   },
 
   '1billion': {
-    seoTitle: '1billion — e-mail transacional com servidor de e-mail próprio',
+    seoTitle: '1billion — email transacional com servidor de email próprio',
     seoDescription:
-      'O 1billion é o e-mail transacional da Clowk, com servidor de e-mail próprio, DKIM e uma API HTTP. Em desenvolvimento: roda primeiro dentro dos apps da Clowk e abre ao público depois.',
-    tagline: 'E-mail transacional com servidor de e-mail próprio.',
+      'O 1billion é o email transacional da Clowk, com servidor de email próprio, DKIM e uma API HTTP. Em desenvolvimento: roda primeiro dentro dos apps da Clowk e abre ao público depois.',
+    tagline: 'Email transacional com servidor de email próprio.',
     summary:
-      'Envie e-mail do seu app com uma chamada HTTP. O 1billion coloca na fila, assina com DKIM e entrega por SMTP do próprio servidor.',
+      'Envie email do seu app com uma chamada HTTP. O 1billion coloca na fila, assina com DKIM e entrega por SMTP do próprio servidor.',
     bullets: [
-      'Uma chamada HTTP por e-mail, com API keys',
+      'Uma chamada HTTP por email, com API keys',
       'Workers de fila com retries, assinatura DKIM e SMTP',
       'Pago com créditos, sem mensalidade',
     ],
     status: 'Em desenvolvimento',
     example: {
-      caption: 'Envie um e-mail',
+      caption: 'Envie um email',
       code: `curl -X POST $BILLION_URL/send \
   -H "Authorization: Bearer $API_KEY" \
   -H "Content-Type: application/json" \
@@ -251,17 +251,17 @@ export const ptBr: Record<string, ProductText> = {
 }'`,
     },
     features: [
-      { title: 'Servidor de e-mail próprio', text: 'Um servidor de e-mail em Go com API HTTP, workers de fila, SMTP e DKIM. Sem provedor de e-mail terceiro.' },
-      { title: 'Uma chamada HTTP', text: 'POST /send com uma API key. O console confere o pedido e responde na hora; o e-mail sai em segundo plano.' },
-      { title: 'Retries', text: 'Todo e-mail passa por uma fila com retries antes de o servidor de e-mail enviar.' },
-      { title: 'Privado por design', text: 'O servidor de e-mail não tem endereço público. Só o console fala com ele, pela rede privada.' },
+      { title: 'Servidor de email próprio', text: 'Um servidor de email em Go com API HTTP, workers de fila, SMTP e DKIM. Sem provedor de email terceiro.' },
+      { title: 'Uma chamada HTTP', text: 'POST /send com uma API key. O console confere o pedido e responde na hora; o email sai em segundo plano.' },
+      { title: 'Retries', text: 'Todo email passa por uma fila com retries antes de o servidor de email enviar.' },
+      { title: 'Privado por design', text: 'O servidor de email não tem endereço público. Só o console fala com ele, pela rede privada.' },
       { title: 'Créditos, sem mensalidade', text: 'Você compra um pacote de créditos uma vez e usa até acabar.' },
-      { title: 'Usado primeiro pelos nossos apps', text: 'O cronota foi feito para enviar e-mail pelo 1billion. O acesso público abre depois.' },
+      { title: 'Usado primeiro pelos nossos apps', text: 'O cronota foi feito para enviar email pelo 1billion. O acesso público abre depois.' },
     ],
     faq: [
       { q: 'Posso usar o 1billion agora?', a: 'Ainda não. O 1billion roda primeiro dentro dos apps da Clowk e abre ao público depois.' },
       { q: 'Como é cobrado?', a: 'Com créditos que você compra uma vez, sem mensalidade. Os preços ainda não são finais.' },
-      { q: 'Ele usa outro provedor de e-mail?', a: 'Não. O 1billion tem servidor de e-mail próprio, com SMTP e DKIM próprios.' },
+      { q: 'Ele usa outro provedor de email?', a: 'Não. O 1billion tem servidor de email próprio, com SMTP e DKIM próprios.' },
     ],
   },
 };
