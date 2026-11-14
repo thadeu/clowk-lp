@@ -1,0 +1,150 @@
+---
+title: Como funciona
+description: Entenda o fluxo de autenticação do Clowk, do redirect ao JWT
+---
+
+## O modelo de broker
+
+O Clowk é um **broker de autenticação**. Em vez de embutir formulários de login no seu app, o Clowk cuida de todo o fluxo de autenticação em uma página hospedada e retorna um JWT assinado quando o usuário está autenticado.
+
+Seu app nunca toca em credenciais OAuth, trocas de token ou lógica de criação de usuário. O Clowk faz tudo isso e entrega um JWT em que você pode confiar.
+
+## O fluxo
+
+```
+1. O usuário clica em "Entrar" no seu app
+2. Seu app redireciona para a página hospedada do Clowk
+   → https://yourapp.clowk.dev/sign-in?redirect_uri=https://yourapp.com/auth/callback
+
+3. O usuário escolhe um provedor (Google, GitHub, Twitter) ou usa email/senha
+4. O Clowk faz a troca OAuth com o provedor
+5. O Clowk cria ou encontra o usuário e gera um JWT
+6. O Clowk redireciona de volta para o seu app com o token
+   → https://yourapp.com/auth/callback?token=eyJ...
+```
+
+Seu backend verifica o JWT com a sua secret key e cria uma sessão.
+
+## Provedores nativos
+
+O Clowk vem com suporte nativo a estes provedores. Basta ativá-los no dashboard, sem outra configuração:
+
+| Provedor | Scopes | Observações |
+|----------|--------|-------|
+| Google | `openid`, `email`, `profile` | Email sempre verificado |
+| GitHub | `user:email`, `read:user` | Busca o email principal verificado |
+| Twitter | `tweet.read`, `users.read` | Usa PKCE, o email pode não estar disponível |
+| Apple | Em breve | — |
+| Email e senha | — | Hash com bcrypt, regras de senha configuráveis |
+
+Os provedores nativos usam as credenciais OAuth do próprio Clowk por padrão. Assim, você pode ativar o login com Google ou GitHub sem criar seu próprio OAuth app. O Clowk cuida disso.
+
+## Credenciais próprias
+
+Se você quiser usar suas próprias credenciais OAuth (para que a tela de consentimento mostre o nome e o logo do seu app em vez dos do Clowk), configure **credenciais próprias** por provedor e por instância.
+
+Abra o dashboard do Clowk → **Instance** → **SSO Connections** e defina:
+
+| Configuração | Descrição |
+|---------|-------------|
+| `use_custom_credentials` | Ativa credenciais OAuth próprias para este provedor |
+| `client_id` | Seu OAuth Client ID |
+| `client_secret` | Seu OAuth Client Secret (salvo criptografado) |
+| `force_account_selector` | Força o provedor a mostrar o seletor de contas (só Google) |
+| `block_subaddresses` | Rejeita emails com `+` na parte local |
+| `scopes` | Substitui os scopes padrão (opcional) |
+
+Com credenciais próprias configuradas, o Clowk usa essas em vez das nativas. O resto do fluxo continua igual: o Clowk ainda cuida da troca de token, da criação do usuário e da geração do JWT.
+
+```
+Nativas:     O usuário vê "Clowk wants to access your Google account"
+Próprias:    O usuário vê "YourApp wants to access your Google account"
+```
+
+Você pode combinar: use credenciais nativas para um provedor e próprias para outro na mesma instância.
+
+## Estrutura do JWT
+
+Todo JWT do Clowk contém estas claims:
+
+```json
+{
+  "iss": "clowk",
+  "iat": 1711152000,
+  "exp": 1711155600,
+  "sub": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "avatar_url": "https://lh3.googleusercontent.com/...",
+  "provider": "google",
+  "instance_id": "inst_abc123",
+  "app_id": "app_xyz789"
+}
+```
+
+| Claim | Descrição |
+|-------|-------------|
+| `iss` | Sempre `"clowk"` |
+| `sub` | ID do usuário (UUID) |
+| `email` | Endereço de email do usuário |
+| `name` | Nome de exibição vindo do provedor |
+| `avatar_url` | URL da foto de perfil |
+| `provider` | Qual provedor foi usado (`google`, `github`, `twitter`, `email`) |
+| `instance_id` | ID da sua instância do Clowk |
+| `app_id` | ID do seu app no Clowk |
+| `iat` | Emitido em (Unix timestamp) |
+| `exp` | Expira em (1 hora após o `iat`) |
+
+Os tokens são assinados com **HS256** usando a secret key da sua instância.
+
+## Entrega do token
+
+Depois da autenticação, o Clowk redireciona de volta para a sua `redirect_uri` com o token como query parameter:
+
+```
+https://yourapp.com/auth/callback?token=eyJ...
+```
+
+Os SDKs do Clowk extraem o token automaticamente de três fontes (nesta ordem):
+
+1. **Query parameter** — `?token=eyJ...`
+2. **Header Authorization** — `Bearer eyJ...`
+3. **Cookie** — `clowk_token=eyJ...`
+
+## Verificação do token
+
+Você pode verificar tokens de duas formas:
+
+**Localmente (recomendado)**: decodifique o JWT com a sua secret key. Todos os SDKs do Clowk fazem isso automaticamente:
+
+```typescript
+import { JwtVerifier } from '@clowk/core'
+
+const verifier = new JwtVerifier({ secretKey: process.env.CLOWK_SECRET_KEY })
+const payload = await verifier.verify(token)
+```
+
+```ruby
+verifier = Clowk::JwtVerifier.new
+payload = verifier.verify(token)
+```
+
+**Via API**: envie o token para o Clowk verificar:
+
+```bash
+curl -X POST https://myapp.clowk.dev/api/v1/tokens/verify \
+  -H "X-Clowk-Secret-Key: sk_live_..." \
+  -H "Content-Type: application/json" \
+  -d '{ "token": "eyJ..." }'
+```
+
+A verificação local é mais rápida porque não faz chamada de rede. O endpoint da API é útil quando você não tem acesso à secret key no cliente.
+
+## O que torna o Clowk diferente
+
+Diferente dos provedores de autenticação embutidos (Clerk, Auth0 Lock), o Clowk nunca injeta UI no seu app. Seu app redireciona para o Clowk, o Clowk cuida de tudo e redireciona de volta com um JWT. Isso significa:
+
+- **Nada de CSS ou JS de fornecedor** no seu bundle
+- **Sem lock-in de componentes**: troque de provedor sem mudar sua UI
+- **JWT padrão**: funciona com qualquer backend que verifique tokens HS256
+- **JWTs existentes continuam válidos** mesmo se o Clowk ficar fora do ar por um tempo

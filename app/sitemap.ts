@@ -1,21 +1,26 @@
 import type { MetadataRoute } from 'next';
-import { source } from '@/lib/source';
+import { localePath, locales } from '@/lib/i18n';
 import { products, SITE_URL } from '@/lib/products';
+import { source } from '@/lib/source';
 
 export const dynamic = 'force-static';
 
+type Entry = MetadataRoute.Sitemap[number];
+
+function entries(path: string, priority: number, changeFrequency: Entry['changeFrequency']): Entry[] {
+  const languages = { en: `${SITE_URL}${path}`, 'pt-BR': `${SITE_URL}${localePath('pt-br', path)}` };
+
+  return locales.map(locale => ({
+    url: `${SITE_URL}${localePath(locale, path)}`,
+    changeFrequency,
+    priority,
+    alternates: { languages },
+  }));
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const pages = products.map(product => ({
-    url: `${SITE_URL}/${product.slug}/`,
-    changeFrequency: 'weekly' as const,
-    priority: 0.9,
-  }));
+  const pages = products.flatMap(product => entries(`/${product.slug}/`, 0.9, 'weekly'));
+  const docs = source.getPages('en').flatMap(page => entries(`${page.url}/`, 0.5, 'monthly'));
 
-  const docs = source.getPages().map(page => ({
-    url: `${SITE_URL}${page.url}/`,
-    changeFrequency: 'monthly' as const,
-    priority: 0.5,
-  }));
-
-  return [{ url: `${SITE_URL}/`, changeFrequency: 'weekly', priority: 1 }, ...pages, ...docs];
+  return [...entries('/', 1, 'weekly'), ...entries('/terms/', 0.3, 'yearly'), ...pages, ...docs];
 }

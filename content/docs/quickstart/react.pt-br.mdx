@@ -1,0 +1,90 @@
+---
+title: React
+description: Adicione autenticação ao seu app React com o Clowk
+---
+
+## Instalação
+
+```bash
+pnpm add @clowk/react
+```
+
+## Defina sua publishable key
+
+```bash title=".env"
+VITE_CLOWK_PUBLISHABLE_KEY=pk_live_...
+```
+
+## Adicione o ClowkProvider
+
+Envolva seu app com o `ClowkProvider` no ponto de entrada:
+
+```tsx title="src/main.tsx"
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { ClowkProvider } from '@clowk/react'
+import App from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ClowkProvider publishableKey={import.meta.env.VITE_CLOWK_PUBLISHABLE_KEY}>
+      <App />
+    </ClowkProvider>
+  </StrictMode>
+)
+```
+
+## Use a autenticação
+
+```tsx title="src/App.tsx"
+import { SignInButton, SignUpButton, SignOutButton, useAuth } from '@clowk/react'
+
+function App() {
+  const { user, signedIn, isLoading } = useAuth()
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (!signedIn) {
+    return (
+      <div>
+        <h1>Welcome to my app</h1>
+        <SignInButton />
+        <SignUpButton />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <p>Hello, {user?.name}</p>
+      <SignOutButton />
+    </div>
+  )
+}
+
+export default App
+```
+
+## Componentes disponíveis
+
+| Componente | Descrição |
+|-----------|-------------|
+| `<ClowkProvider>` | Provider de contexto: captura o callback `?token=` e gerencia o estado de auth |
+| `<SignInButton>` | Redireciona para a página de login do Clowk |
+| `<SignUpButton>` | Redireciona para a página de cadastro do Clowk |
+| `<SignOutButton>` | Limpa o estado de auth e o cookie |
+
+## Hooks disponíveis
+
+| Hook | Retorna |
+|------|---------|
+| `useAuth()` | `{ user, token, signedIn, isLoading, signOut }` |
+| `useClowk()` | Uma instância de `ClowkClient` para chamadas de API |
+| `useToken()` | A string bruta do JWT |
+
+Esses componentes disparam redirects, eles não renderizam UI de auth. Sua instância do Clowk cuida da página de login.
+
+## Próximos passos
+
+- [Quickstart do Next.js](/pt-br/docs/quickstart/nextjs) — middleware no servidor e o helper `auth()`
+- [Integração completa com React](/pt-br/docs/integrations/react) — referência completa da API

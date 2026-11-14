@@ -1,0 +1,54 @@
+---
+title: Documentação
+description: Aprenda a integrar o Clowk na sua aplicação
+---
+
+## O que é o Clowk?
+
+O Clowk é um **broker de autenticação**, não um provedor de UI de autenticação.
+
+A maioria das soluções de auth (Clerk, Auth0) é dona da UI de login: elas renderizam formulários, campos e botões sociais dentro do seu app. O Clowk segue outro caminho: ele intermedeia a autenticação entre o seu app e os provedores OAuth por meio de um fluxo de redirect.
+
+```
+Seu App → Clowk (cuida do OAuth) → Seu App (recebe o JWT assinado)
+```
+
+## Como funciona
+
+1. O usuário clica em um botão de login no seu app
+2. O navegador redireciona para `https://{subdomain}.clowk.dev/sign-in`
+3. O usuário se autentica (OAuth ou email/senha)
+4. O Clowk redireciona de volta para o seu app com `?token=eyJ...`
+5. Seu app captura o JWT, verifica e já tem o usuário
+
+Sem formulários embutidos. Sem iframes. Sem UI de terceiros no seu DOM.
+
+## Quickstarts
+
+Comece em poucos minutos:
+
+- [Ruby on Rails](/pt-br/docs/quickstart/rails)
+- [React](/pt-br/docs/quickstart/react)
+- [Next.js](/pt-br/docs/quickstart/nextjs)
+- [Express](/pt-br/docs/quickstart/express)
+- [Hono](/pt-br/docs/quickstart/hono)
+
+## SDKs
+
+- [@clowk/core](/pt-br/docs/sdks/core) — Base independente de runtime
+- [@clowk/sdk](/pt-br/docs/sdks/sdk) — Pacote de conveniência para o usuário
+- [@clowk/react](/pt-br/docs/sdks/react) — Provider, hooks, botões de redirect
+- [@clowk/nextjs](/pt-br/docs/sdks/nextjs) — Middleware + auth() + reexports do React
+- [@clowk/express](/pt-br/docs/sdks/express) — Middleware para Express
+- [@clowk/hono](/pt-br/docs/sdks/hono) — Middleware para Hono
+
+## Configuração
+
+Toda integração precisa, no mínimo, de:
+
+| Chave | Onde | Descrição |
+|-----|-------|-------------|
+| `publishableKey` | Frontend (`pk_...`) | Identifica a instância do Clowk, pode ser exposta com segurança |
+| `secretKey` | Backend (`sk_...`) | Usada para verificar assinaturas de JWT, nunca exponha no cliente |
+
+Pegue suas chaves em [app.clowk.in](https://app.clowk.in).

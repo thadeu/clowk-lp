@@ -1,0 +1,122 @@
+---
+title: Verificar token
+description: Verifique um JWT e obtenha o usuário autenticado
+---
+
+## POST /api/v1/tokens/verify
+
+Verifica um JWT do Clowk e retorna o usuário ligado a ele. O token deve pertencer à mesma instância da secret key usada na autenticação.
+
+## Requisição
+
+```bash
+curl -X POST https://myapp.clowk.dev/api/v1/tokens/verify \
+  -H "Content-Type: application/json" \
+  -H "X-Clowk-Secret-Key: sk_live_..." \
+  -d '{ "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }'
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+| `Content-Type` | Sim | `application/json` |
+
+### Body
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|----------|-------------|
+| `token` | `string` | Sim | O JWT a verificar |
+
+## Resposta
+
+### 200 — Token válido
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "resource": "token",
+  "data": {
+    "valid": true,
+    "email": "jane@example.com",
+    "name": "Jane Doe",
+    "avatar_url": "https://lh3.googleusercontent.com/...",
+    "provider": "google"
+  }
+}
+```
+
+### 400 — Token ausente
+
+```json
+{
+  "error": "Missing token"
+}
+```
+
+### 401 — Token inválido
+
+```json
+{
+  "valid": false,
+  "error": "Token invalid signature"
+}
+```
+
+Também retorna `401` se o token pertence a outra instância:
+
+```json
+{
+  "valid": false,
+  "error": "Token does not belong to this instance"
+}
+```
+
+### 404 — Usuário não encontrado
+
+```json
+{
+  "error": "User not found"
+}
+```
+
+## Estrutura do payload do JWT
+
+Quando você decodifica um JWT do Clowk, o payload contém:
+
+```json
+{
+  "iss": "clowk",
+  "iat": 1711152000,
+  "exp": 1711155600,
+  "sub": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "avatar_url": "https://lh3.googleusercontent.com/...",
+  "provider": "google",
+  "instance_id": "inst_abc123",
+  "app_id": "app_xyz789"
+}
+```
+
+| Claim | Descrição |
+|-------|-------------|
+| `iss` | Sempre `"clowk"` |
+| `sub` | ID do usuário (UUID) |
+| `email` | Endereço de e-mail do usuário |
+| `name` | Nome de exibição do usuário |
+| `avatar_url` | URL da foto de perfil vinda do provedor OAuth |
+| `provider` | Provedor de autenticação (`google`, `github`, `twitter`, `email`) |
+| `instance_id` | O ID da sua instância no Clowk |
+| `app_id` | O ID do seu app no Clowk |
+| `iat` | Emitido em (timestamp Unix) |
+| `exp` | Expira em (timestamp Unix, 1 hora depois de `iat`) |
+
+Os tokens são assinados com HS256 usando a secret key da sua instância.

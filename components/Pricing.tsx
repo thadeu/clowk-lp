@@ -1,39 +1,4 @@
-const plans = [
-  {
-    name: 'Free',
-    tagline: 'Everything you need to ship authentication.',
-    price: '$0',
-    cadence: 'forever',
-    cta: { label: 'Start building', href: 'https://app.clowk.in' },
-    featured: false,
-    features: [
-      '1 app',
-      '1 production instance',
-      'Google sign-in',
-      'Email and password',
-      'Unlimited users — no per-MAU billing',
-      'Every SDK: React, Next.js, Express, Hono, Rails',
-      '1 webhook endpoint',
-    ],
-  },
-  {
-    name: 'Pro',
-    tagline: 'For teams running more than one thing.',
-    price: 'See in app',
-    cadence: 'per organization, per month',
-    cta: { label: 'Upgrade to Pro', href: 'https://app.clowk.in' },
-    featured: true,
-    features: [
-      'Unlimited apps',
-      'Unlimited production instances',
-      'Google, GitHub, X and Apple sign-in',
-      'Email and password',
-      'Unlimited users — no per-MAU billing',
-      'Every SDK: React, Next.js, Express, Hono, Rails',
-      'Unlimited webhook endpoints',
-    ],
-  },
-];
+const hrefs = ['https://app.clowk.in', 'https://app.clowk.in'];
 
 function Check({ muted }: { muted?: boolean }) {
   return (
@@ -50,16 +15,20 @@ function Check({ muted }: { muted?: boolean }) {
   );
 }
 
-export default function Pricing() {
+import { t, type Locale } from '@/lib/i18n';
+
+export default function Pricing({ locale = 'en' }: { locale?: Locale }) {
+  const text = t(locale).pricing;
+  const plans = text.plans.map((plan, index) => ({ ...plan, featured: index === 1, href: hrefs[index] }));
+
   return (
     <section id="pricing" aria-labelledby="pricing-title" className="py-14 md:py-20 border-t border-white/[0.08] scroll-mt-24">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="mb-8">
-          <p className="text-sm font-semibold text-[#F43F5E] tracking-widest uppercase mb-3">Pricing</p>
-          <h2 id="pricing-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white leading-tight">Two plans. No per-user bill.</h2>
+          <p className="text-sm font-semibold text-[#F43F5E] tracking-widest uppercase mb-3">{text.eyebrow}</p>
+          <h2 id="pricing-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white leading-tight">{text.title}</h2>
           <p className="mt-4 text-lg text-[#C9C3D4] max-w-2xl">
-            Authentication priced by what you build, not by how many people sign in. Your user count never appears on
-            the invoice.
+            {text.lead}
           </p>
         </div>
 
@@ -77,7 +46,7 @@ export default function Pricing() {
                 <h3 className="text-xl font-bold text-white">{plan.name}</h3>
                 {plan.featured && (
                   <span className="rounded-full bg-[#F43F5E]/15 px-2.5 py-0.5 text-xs font-semibold text-[#F43F5E]">
-                    Most teams
+                    {text.mostTeams}
                   </span>
                 )}
               </div>
@@ -90,14 +59,14 @@ export default function Pricing() {
               </div>
 
               <a
-                href={plan.cta.href}
+                href={plan.href}
                 className={`mt-6 inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold transition-colors ${
                   plan.featured
                     ? 'bg-[#F43F5E] text-white hover:bg-[#E11D48]'
                     : 'border border-white/[0.09] text-white hover:border-white/25 hover:bg-white/5'
                 }`}
               >
-                {plan.cta.label}
+                {plan.cta}
               </a>
 
               <ul className="mt-8 space-y-3 text-[#E4DFEA]">
@@ -113,7 +82,7 @@ export default function Pricing() {
         </div>
 
         <p className="mt-8 text-sm text-[#A9A1B6]">
-          Questions about the plans? Write to{' '}
+          {text.questions}{' '}
           <a href="mailto:support@clowk.in" className="font-medium text-[#FB7185] hover:underline">
             support@clowk.in
           </a>

@@ -1,0 +1,25 @@
+---
+title: "@clowk/sdk"
+description: Pacote de conveniência para quem usa o SDK
+---
+
+## Instalação
+
+```bash
+npm install @clowk/sdk
+```
+
+## Visão geral
+
+Reexporta tudo de `@clowk/core` com um caminho de import mais limpo. Use este pacote se você quer uma única dependência em vez de importar direto de `@clowk/core`.
+
+```typescript
+import { configure, verifyToken } from '@clowk/sdk'
+
+configure({
+  publishableKey: 'pk_live_...',
+  secretKey: 'sk_live_...',
+})
+
+const user = await verifyToken(token)
+```

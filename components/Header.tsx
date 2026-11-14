@@ -3,15 +3,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
-import { products } from '@/lib/products';
+import LanguageSwitch from '@/components/LanguageSwitch';
+import { localePath, t, type Locale } from '@/lib/i18n';
+import { localizedProducts } from '@/lib/localized';
 
-const navLinks = [
-  { label: 'Products', href: '/#products' },
-  { label: 'How they fit', href: '/#family' },
-  { label: 'Docs', href: '/docs' },
-];
+export default function Header({ locale = 'en' }: { locale?: Locale }) {
+  const text = t(locale).nav;
+  const products = localizedProducts(locale);
 
-export default function Header() {
+  const navLinks = [
+    { label: text.products, href: localePath(locale, '/#products') },
+    { label: text.family, href: localePath(locale, '/#family') },
+    { label: text.docs, href: localePath(locale, '/docs') },
+  ];
+
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,7 +53,7 @@ export default function Header() {
         } ${hidden && !menuOpen ? '-translate-y-full' : 'translate-y-0'}`}
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
-          <Logo height={30} />
+          <Logo height={30} href={localePath(locale, '/')} />
 
           <nav aria-label="Main" className="hidden md:flex items-center gap-7">
             {navLinks.map(item => (
@@ -59,18 +64,20 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
+            <LanguageSwitch locale={locale} />
+
             <a
               href="https://app.clowk.in/sign-in"
               className="hidden sm:inline-flex items-center min-h-10 px-4 rounded-lg text-sm font-semibold bg-[#F43F5E] text-white hover:bg-[#E8385A] transition-colors"
             >
-              Sign in
+              {text.signIn}
             </a>
 
             <button
               type="button"
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden relative w-11 h-11 flex flex-col items-center justify-center gap-1.75"
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-label={menuOpen ? text.closeMenu : text.openMenu}
               aria-expanded={menuOpen}
             >
               <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-2.25' : ''}`} />
@@ -87,12 +94,12 @@ export default function Header() {
         }`}
       >
         <nav aria-label="Mobile" className="flex flex-col h-full px-6 pt-24 pb-10 gap-1 overflow-y-auto">
-          <span className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-2">Products</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-white/50 mb-2">{text.products}</span>
 
           {products.map(product => (
             <Link
               key={product.slug}
-              href={`/${product.slug}`}
+              href={localePath(locale, `/${product.slug}`)}
               onClick={() => setMenuOpen(false)}
               className="min-h-12 flex items-center text-xl font-semibold text-white/85 hover:text-white"
             >
@@ -118,7 +125,7 @@ export default function Header() {
             onClick={() => setMenuOpen(false)}
             className="mt-6 inline-flex items-center justify-center min-h-12 rounded-xl text-base font-semibold bg-[#F43F5E] text-white"
           >
-            Sign in
+            {text.signIn}
           </a>
         </nav>
       </div>

@@ -1,0 +1,57 @@
+---
+title: Clowk vs Clerk
+description: Entenda a diferença entre um broker de autenticação e um provedor de autenticação
+---
+
+## A diferença principal
+
+O **Clerk** é um provedor de autenticação: ele é dono da sua UI de login, embute componentes no seu app e cobra por usuário ativo mensal (MAU).
+
+O **Clowk** é um broker de autenticação: ele cuida do handshake OAuth por um fluxo de redirect e retorna um JWT assinado. Seu app controla toda a UI.
+
+## Comparação
+
+| | Clowk | Clerk |
+|---|---|---|
+| **Modelo** | Broker (fluxo de redirect) | Provedor (UI embutida) |
+| **Dono da UI** | Você, 100% | Componentes do Clerk |
+| **Preço** | Grátis para sempre + plano PRO | Cobrança por MAU |
+| **Lock-in no frontend** | Nenhum | Componentes React do Clerk |
+| **JWT** | JWT padrão assinado com HS256 | Session tokens do Clerk |
+| **Expiração do token** | 1 hora | Baseada em sessão |
+| **Self-hosted** | Não — serviço gerenciado | Não — serviço gerenciado |
+| **Open source** | Não | Parcial |
+| **Frameworks suportados** | Rails, React, Next.js, Express, Hono | React, Next.js, Remix |
+| **Verificação offline** | Sim — verifique JWTs localmente | Exige a API do Clerk |
+
+## Como o Clowk funciona
+
+1. Seu app redireciona para `yourapp.clowk.in/sign-in`
+2. O usuário se autentica com Google, GitHub, Twitter ou email/senha
+3. O Clowk redireciona de volta com um JWT assinado (`?token=eyJ...`)
+4. Seu backend verifica o JWT localmente com a sua secret key
+
+Sem JavaScript de fornecedor. Sem iframes embutidos. Sem custo por MAU.
+
+## Como o Clerk funciona
+
+1. Você adiciona o componente `<SignIn />` ao seu app React
+2. O Clerk renderiza a própria UI dentro do seu app
+3. O Clerk gerencia a sessão nos servidores dele
+4. Você acessa o usuário pelo SDK do Clerk
+
+O Clerk controla a experiência de login. Você personaliza pelo dashboard dele.
+
+## Quando escolher o Clowk
+
+- Você quer controle total da UI de login e cadastro
+- Você não quer pagar por MAU
+- Você precisa de um broker OAuth simples, não de uma plataforma de identidade completa
+- Você usa Rails, Hono ou qualquer stack que não seja React
+- Você quer tokens que funcionam offline (verificação local, sem chamar uma API)
+
+## Quando escolher o Clerk
+
+- Você quer componentes de UI prontos
+- Você precisa de gestão de organizações, RBAC ou recursos avançados
+- Você prefere uma solução com tudo incluído

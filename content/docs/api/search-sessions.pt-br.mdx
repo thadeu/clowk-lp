@@ -1,0 +1,164 @@
+---
+title: Pesquisar sessões
+description: Pesquise sessões com operadores de campo, wildcards, negação e comparação de datas
+---
+
+## GET /api/v1/sessions/search
+
+Pesquisa sessões da instância com uma linguagem de consulta estruturada. Aceita a mesma sintaxe de operadores de [Pesquisar usuários](/pt-br/docs/api/search-users).
+
+## Requisição
+
+```bash
+curl "https://myapp.clowk.dev/api/v1/sessions/search?query=provider:google%20-email:*test*" \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+
+### Parâmetros de query
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-------------|
+| `query` | `string` | Tokens de pesquisa separados por espaço |
+
+Veja a [referência completa de operadores de pesquisa](/pt-br/docs/api/search-operators) para toda a sintaxe aceita.
+
+## Sintaxe da consulta
+
+### Operadores
+
+| Sintaxe | Comportamento | Exemplo |
+|--------|----------|---------|
+| `field:value` | Correspondência exata | `provider:google` |
+| `field:value*` | Começa com | `ip_address:192.168*` |
+| `field:*value` | Termina com | `email:*@gmail.com` |
+| `field:*value*` | Contém | `email:*gmail*` |
+| `field>value` | Maior que | `logged_in_at>2026-01-01` |
+| `field<value` | Menor que | `last_signin_at<2026-03-01` |
+| `field>=value` | Maior ou igual | `logged_in_at>=2026-01-01` |
+| `field<=value` | Menor ou igual | `logged_in_at<=2026-03-01` |
+| `-field:value` | Negação (NOT) | `-provider:twitter` |
+
+### OR — mesmo campo repetido
+
+Repetir o mesmo campo gera um `OR` entre os valores:
+
+```
+provider:google provider:github
+```
+
+→ retorna sessões de qualquer um dos dois provedores.
+
+### Campos aceitos
+
+Qualquer coluna da tabela `sessions` pode ser usada como filtro.
+
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `email` | string | Aceita wildcards |
+| `name` | string | Aceita wildcards |
+| `provider` | string | `google`, `github`, `twitter`, `password` |
+| `ip_address` | string | Aceita wildcards, por exemplo `ip_address:10.0.*` |
+| `logged_in_at` | datetime | Timestamp do primeiro login |
+| `last_signin_at` | datetime | Timestamp do login mais recente |
+| `revoked_at` | datetime | Filtra sessões revogadas pela data |
+| `created_at` | datetime | Timestamp de criação do registro |
+
+> `provider` é uma coluna string — correspondências parciais funcionam com wildcards: `provider:git*` encontra `github`.
+
+## Exemplos
+
+**Todas as sessões do Google:**
+```
+?query=provider:google
+```
+
+**Sessões do Google ou do GitHub:**
+```
+?query=provider:google provider:github
+```
+
+**Sessões ativas do Gmail com login depois de março de 2026:**
+```
+?query=email:*@gmail.com last_signin_at>2026-03-01
+```
+
+**Excluir sessões do Twitter:**
+```
+?query=-provider:twitter
+```
+
+**Sessões de uma sub-rede IP específica:**
+```
+?query=ip_address:192.168.*
+```
+
+**Sessões de um usuário por e-mail parcial:**
+```
+?query=email:alice*
+```
+
+## Resposta
+
+### 200 — Sucesso
+
+Retorna um array filtrado. Mesmo formato de [Listar sessões](/pt-br/docs/api/list-sessions).
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "resource": "session",
+    "data": {
+      "session_id": "clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "user_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "provider": "google",
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "ip_address": "203.0.113.42",
+      "geo_data": {},
+      "logged_in_at": "2026-03-20T10:30:00Z",
+      "last_signin_at": "2026-03-20T10:30:00Z",
+      "revoked_at": null,
+      "active": true
+    }
+  }
+]
+```
+
+Retorna um array vazio `[]` quando nenhuma sessão corresponde à consulta.
+
+### 401 — Não autorizado
+
+```json
+{ "error": "Unauthorized" }
+```
+
+## Uso no SDK
+
+```ruby
+# Ruby — provedor exato
+client.sessions.search(provider: "google")
+
+# Ruby — query string pura
+client.sessions.search("provider:google provider:github last_signin_at>2026-03-01")
+
+# Ruby — excluir twitter
+client.sessions.search("-provider:twitter email:*@gmail.com")
+```
+
+```typescript
+// JavaScript — provedor exato
+await client.sessions.search({ provider: 'google' })
+
+// JavaScript — query string pura
+await client.sessions.search('provider:google provider:github last_signin_at>2026-03-01')
+
+// JavaScript — excluir twitter
+await client.sessions.search('-provider:twitter email:*@gmail.com')
+```

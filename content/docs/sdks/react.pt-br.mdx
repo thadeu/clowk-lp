@@ -1,0 +1,112 @@
+---
+title: "@clowk/react"
+description: Hooks e componentes React para autenticação com Clowk
+---
+
+## Instalação
+
+```bash
+npm install @clowk/react @clowk/core
+```
+
+## Visão geral
+
+Bindings React para o Clowk. Oferece um context provider, hooks e componentes prontos para os fluxos de autenticação.
+
+**O que ele oferece:**
+
+- `ClowkProvider` — context provider que inicializa o SDK
+- `useUser()` — acesso ao usuário autenticado atual
+- `useSession()` — acesso à sessão atual
+- `useAuth()` — ações de autenticação (entrar, sair)
+- `SignInButton` / `SignOutButton` — botões prontos de UI
+
+## ClowkProvider
+
+Envolva seu app com `ClowkProvider` para inicializar o SDK:
+
+```tsx
+import { ClowkProvider } from '@clowk/react'
+
+function App() {
+  return (
+    <ClowkProvider publishableKey="pk_live_...">
+      <YourApp />
+    </ClowkProvider>
+  )
+}
+```
+
+## useUser
+
+Retorna o usuário autenticado atual ou `null`:
+
+```tsx
+import { useUser } from '@clowk/react'
+
+function Profile() {
+  const { user, isLoaded } = useUser()
+
+  if (!isLoaded) return <div>Loading...</div>
+  if (!user) return <div>Not signed in</div>
+
+  return <div>Hello, {user.name}</div>
+}
+```
+
+### Tipo de retorno
+
+| Campo | Tipo | Descrição |
+|-------|------|-------------|
+| `user` | `User \| null` | O objeto do usuário autenticado |
+| `isLoaded` | `boolean` | Se o estado do usuário já foi resolvido |
+
+## useSession
+
+Retorna a sessão atual:
+
+```tsx
+import { useSession } from '@clowk/react'
+
+function SessionInfo() {
+  const { session, isLoaded } = useSession()
+
+  if (!isLoaded) return null
+
+  return <div>Session ID: {session?.id}</div>
+}
+```
+
+## useAuth
+
+Ações de autenticação:
+
+```tsx
+import { useAuth } from '@clowk/react'
+
+function AuthControls() {
+  const { signIn, signOut, isSignedIn } = useAuth()
+
+  if (isSignedIn) {
+    return <button onClick={signOut}>Sign out</button>
+  }
+
+  return <button onClick={() => signIn('google')}>Sign in with Google</button>
+}
+```
+
+### Provedores disponíveis
+
+Passe o nome de um provedor para `signIn()`:
+
+```tsx
+signIn('google')
+signIn('github')
+signIn('apple')
+signIn('microsoft')
+```
+
+## Próximos passos
+
+- [Quickstart do React](/pt-br/docs/quickstart/react) — guia para começar
+- [Referência do @clowk/core](/pt-br/docs/sdks/core) — pacote base

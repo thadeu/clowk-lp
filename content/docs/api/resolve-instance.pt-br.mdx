@@ -1,0 +1,91 @@
+---
+title: Resolver instância
+description: Resolva a URL do subdomínio a partir de uma publishable key
+---
+
+## GET /api/v1/instances/search
+
+Resolve a URL do subdomínio de uma instância a partir de uma publishable key. Este é o **endpoint de bootstrap** — usado quando a sua aplicação só conhece a `publishable_key` e precisa descobrir a URL completa do subdomínio antes de chamar a API da instância.
+
+Este endpoint fica em `api.clowk.dev` e não exige saber o subdomínio antes.
+
+## Requisição
+
+```bash
+curl "https://api.clowk.dev/api/v1/instances/search?query=publishable_key:pk_live_..." \
+  -H "X-Clowk-Publishable-Key: pk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Publishable-Key` | Sim* | A publishable key da sua instância |
+| `X-Clowk-Secret-Key` | Sim* | Ou use a secret key |
+
+\* Qualquer uma das chaves é aceita.
+
+### Parâmetros de query
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-------------|
+| `query` | `string` | Deve incluir `publishable_key:pk_...` |
+
+## Resposta
+
+### 200 — Instância encontrada
+
+```json
+{
+  "id": "inst-a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "resource": "instance",
+  "data": {
+    "publishable_key": "pk_live_abc123",
+    "url": "https://myapp.clowk.dev",
+    "subdomain": "myapp"
+  }
+}
+```
+
+| Campo | Tipo | Descrição |
+|-------|------|-------------|
+| `id` | `string` | UUID da instância |
+| `resource` | `string` | Sempre `"instance"` |
+| `data.publishable_key` | `string` | A publishable key |
+| `data.url` | `string \| null` | URL completa do subdomínio (null se ainda não estiver ativa) |
+| `data.subdomain` | `string \| null` | Nome do subdomínio (null se ainda não estiver ativa) |
+
+### 400 — publishable_key ausente
+
+```json
+{ "error": "publishable_key is required in query" }
+```
+
+### 404 — Não encontrada
+
+```json
+{ "error": "Instance not found" }
+```
+
+## Como os SDKs usam isto
+
+Os SDKs do Clowk chamam este endpoint automaticamente quando `publishableKey` está configurada mas `subdomainUrl` não. A URL resolvida fica em cache por 60 segundos.
+
+```typescript
+// JavaScript — bootstrap automático
+Clowk.configure({ publishableKey: 'pk_live_...' })
+
+// O SDK resolve a URL do subdomínio no primeiro uso
+const resolver = new SubdomainResolver()
+const url = await resolver.resolveUrl() // chama este endpoint
+```
+
+```ruby
+# Ruby — bootstrap automático
+Clowk.configure do |config|
+  config.publishable_key = 'pk_live_...'
+end
+
+# Clowk::Subdomain.resolve_url! chama este endpoint
+url = Clowk::Subdomain.resolve_url!
+```

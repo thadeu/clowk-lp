@@ -342,5 +342,5 @@ export const products: Product[] = [
 ];
 
 export function findProduct(slug: string) {
-  return products.find((product) => product.slug === slug);
+  return products.find(product => product.slug === slug);
 }

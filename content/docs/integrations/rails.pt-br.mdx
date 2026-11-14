@@ -1,0 +1,275 @@
+---
+title: Ruby on Rails
+description: Guia completo de integração do Clowk com Ruby on Rails
+---
+
+## Instalação
+
+Adicione o Clowk ao seu Gemfile:
+
+```ruby
+gem 'clowk'
+```
+
+```bash
+bundle install
+```
+
+Requer Ruby >= 3.1 e Rails >= 7.0.
+
+## Configuração
+
+Crie um initializer com suas chaves:
+
+```ruby title="config/initializers/clowk.rb"
+Clowk.configure do |config|
+  config.publishable_key = ENV['CLOWK_PUBLISHABLE_KEY']
+  config.secret_key      = ENV['CLOWK_SECRET_KEY']
+end
+```
+
+### Todas as opções de configuração
+
+| Opção | Padrão | Descrição |
+|--------|---------|-------------|
+| `publishable_key` | `nil` | A publishable key da sua instância |
+| `secret_key` | `nil` | A secret key da sua instância (para verificar o JWT) |
+| `mount_path` | `'/clowk'` | Caminho onde a engine é montada |
+| `callback_path` | `'/clowk/oauth/callback'` | Caminho do callback OAuth |
+| `cookie_key` | `'clowk_token'` | Nome do cookie do JWT |
+| `session_key` | `:clowk` | Chave da sessão onde ficam os dados de autenticação |
+| `token_param` | `:token` | Nome do parâmetro de query do token |
+| `issuer` | `'clowk'` | Claim de issuer esperada no JWT |
+| `prefix_by` | `:clowk` | Prefixo dos métodos helper gerados |
+| `after_sign_in_path` | `'/'` | Caminho de redirect após entrar |
+| `after_sign_out_path` | `'/'` | Caminho de redirect após sair |
+| `app_base_url` | `'https://app.clowk.in'` | URL do app Clowk |
+| `api_base_url` | `'https://api.clowk.dev/client/v1'` | URL da API do Clowk |
+
+### Credenciais que não são conhecidas no boot
+
+`Clowk.configure` é o certo quando suas chaves vêm do ambiente. Dois casos
+comuns não funcionam assim:
+
+- **Produtos self-hosted com uma tela de configurações.** Um operador cola uma
+  publishable key na sua UI de admin e espera que o login funcione já na
+  próxima requisição — sem novo deploy, sem nova variável de ambiente.
+- **Apps multi-tenant.** Um processo, uma instância por tenant.
+
+Para esses casos existe um método — `Clowk.with_credentials`. Ele limita as
+credenciais a um bloco, e não ao processo:
+
+```ruby
+Clowk.with_credentials(publishable_key: 'pk_live_…') do
+  # URLs de login, JWKS, verificação de token e o SDK client
+  # usam essa instância aqui dentro
+end
+```
+
+`secret_key` e `subdomain_url` entram do mesmo jeito e os dois são opcionais —
+RS256 não precisa de secret, e o domínio de autenticação é resolvido a partir da
+publishable key quando ausente.
+
+Em um controller, ligue isso com um `around_action` com o nome que você quiser:
+
+```ruby title="app/controllers/application_controller.rb"
+class ApplicationController < ActionController::Base
+  include Clowk::Authenticable
+
+  around_action :require_tenant_key!
+  before_action :authenticate_clowk_user!
+
+  private
+
+  def require_tenant_key!(&)
+    Clowk.with_credentials(publishable_key: Tenant.current.key, &)
+  end
+end
+```
+
+Como você escreve o bloco também é com você — `(&)`, `(&block)`, `(&action)` ou
+`{ yield }`. Os exemplos aqui usam `(&)`; nada na gem depende disso.
+
+`:allow_own_credentials!`, `:use_workspace_sso!` — a gem não se importa e
+nunca procura um método com um nome específico. De onde vêm as credenciais
+também é decisão sua: uma variável de ambiente, uma linha de configurações, o
+subdomínio, um header.
+
+Passe `nil` e o bloco roda com o que o `Clowk.configure` definiu, então uma
+requisição sem tenant não precisa de um `if`:
+
+```ruby
+def require_tenant_key!(&)
+  Clowk.with_credentials(Tenant.current&.clowk_credentials, &)
+end
+```
+
+Essa forma recebe um objeto `Clowk::Credentials`, para quem já tem um.
+A forma com keywords cria o objeto para você, então o caso comum nunca precisa
+citar a classe. A mesma chamada funciona em um job, uma rake task ou um script —
+não há nada específico de controller nela.
+
+Nada instala o filtro para você. O `around_action` precisa envolver o
+`authenticate_clowk_user!`, e a posição dele entre os seus filtros é decisão
+sua — não algo que uma gem deve decidir por você.
+
+**De propósito, não existe um setter `Clowk.secret_key = …`.** Um setter não tem
+tempo de vida: uma requisição que der erro entre a atribuição e o reset deixaria
+essa chave instalada para o processo inteiro, e a secret key gera tokens HS256
+para qualquer subject. O `with_credentials` restaura o valor anterior mesmo
+quando o bloco dá erro. É isso que faz do tempo de vida uma propriedade da API,
+e não da disciplina do seu código.
+
+O escopo é baseado em fibers, então ele sobrevive a respostas em streaming e a
+adapters assíncronos. Escopos podem ser aninhados, e o interno restaura o
+externo. Apps que configuram uma vez no boot não são afetados — `Clowk.credentials`
+cai no `Clowk.configure`, e argumentos passados explicitamente ainda vencem os dois.
+
+## Montar a engine
+
+```ruby title="config/routes.rb"
+Rails.application.routes.draw do
+  mount Clowk::Engine => '/clowk'
+end
+```
+
+Isso adiciona quatro rotas:
+
+| Caminho | Descrição |
+|------|-------------|
+| `/clowk/sign_in` | Faz redirect para a página de login do Clowk |
+| `/clowk/sign_up` | Faz redirect para a página de cadastro do Clowk |
+| `/clowk/sign_out` | Limpa a sessão e o cookie |
+| `/clowk/oauth/callback` | Recebe o JWT do Clowk |
+
+## Incluir o Authenticable
+
+Adicione o módulo `Clowk::Authenticable` ao seu `ApplicationController`:
+
+```ruby title="app/controllers/application_controller.rb"
+class ApplicationController < ActionController::Base
+  include Clowk::Authenticable
+end
+```
+
+Isso dá a você três métodos helper:
+
+| Método | Descrição |
+|--------|-------------|
+| `current_clowk` | Retorna um objeto `Clowk::Current` ou `nil` |
+| `authenticate_clowk!` | Exige autenticação — faz redirect para o login ou retorna 401 para JSON |
+| `clowk_signed_in?` | Retorna `true` se autenticado |
+
+## Proteger controllers
+
+```ruby title="app/controllers/dashboard_controller.rb"
+class DashboardController < ApplicationController
+  before_action :authenticate_clowk!
+
+  def index
+    @user = current_clowk
+  end
+end
+```
+
+## O objeto `Clowk::Current`
+
+`current_clowk` retorna uma instância de `Clowk::Current` com estes acessores:
+
+```ruby
+current_clowk.id           # UUID do usuário (da claim "sub")
+current_clowk.email        # "jane@example.com"
+current_clowk.name         # "Jane Doe"
+current_clowk.avatar_url   # "https://lh3.googleusercontent.com/..."
+current_clowk.provider     # "google"
+current_clowk.instance_id  # "inst_abc123"
+current_clowk.app_id       # "app_xyz789"
+current_clowk[:custom]     # Acessa qualquer claim do JWT pela chave
+current_clowk.to_h         # Payload completo como hash
+```
+
+## Proteger actions específicas
+
+```ruby title="app/controllers/posts_controller.rb"
+class PostsController < ApplicationController
+  before_action :authenticate_clowk!, only: [:create, :update, :destroy]
+
+  def index
+    @posts = Post.all
+  end
+
+  def create
+    @post = Post.create!(
+      title: params[:title],
+      author_email: current_clowk.email,
+      author_id: current_clowk.id
+    )
+
+    redirect_to @post
+  end
+end
+```
+
+## Controllers só de API
+
+Em apps só de API, `authenticate_clowk!` retorna uma resposta JSON 401 em vez de fazer redirect:
+
+```ruby title="app/controllers/api/v1/base_controller.rb"
+class Api::V1::BaseController < ActionController::API
+  include Clowk::Authenticable
+
+  before_action :authenticate_clowk!
+end
+```
+
+O middleware extrai o token de (nesta ordem):
+1. Parâmetro de query (`?token=eyJ...`)
+2. Header Authorization (`Bearer eyJ...`)
+3. Cookie (`clowk_token`)
+
+## Views com Hotwire e Turbo
+
+```erb title="app/views/layouts/application.html.erb"
+<nav>
+  <% if clowk_signed_in? %>
+    <span>Hello, <%= current_clowk.name %></span>
+    <%= link_to "Sign out", clowk.sign_out_path, data: { turbo_method: :delete } %>
+  <% else %>
+    <%= link_to "Sign in", clowk.sign_in_path %>
+    <%= link_to "Sign up", clowk.sign_up_path %>
+  <% end %>
+</nav>
+```
+
+### Enviar um formulário para `/sign_in`
+
+`/clowk/sign_in` responde com um redirect para a sua instância Clowk — outra
+origem. **O Turbo não consegue seguir um redirect cross-origin.** Ele não gera
+erro e não avisa: o fetch é descartado, a página fica exatamente como estava e
+o submit parece um botão que não faz nada. Um refresh manual depois funciona,
+e isso faz o problema parecer instabilidade, e não um opt-out que falta.
+
+Links funcionam. Se você envia um **formulário** que termina em `/sign_in` — uma
+tela de configurações que ativa o login, por exemplo — tire esse formulário do
+Turbo para que o navegador faça a navegação sozinho:
+
+```erb
+<%= form_with url: clowk.sign_in_path, method: :get, data: { turbo: false } do |form| %>
+  <%= form.submit "Sign in" %>
+<% end %>
+```
+
+O mesmo vale para qualquer action sua que termina com um redirect para
+`/sign_in` — a cadeia de redirects ainda termina em outra origem.
+
+## SDK Client
+
+Use `Clowk::SDK::Client` para falar com a API do Clowk a partir do seu backend:
+
+```ruby
+client = Clowk::SDK::Client.new
+
+client.tokens.verify(token: "eyJ...")
+client.users.find("user-uuid")
+client.users.search(email: "jane@example.com")
+```

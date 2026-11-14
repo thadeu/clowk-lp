@@ -1,0 +1,122 @@
+---
+title: Hono
+description: Guia completo de integração do Clowk com Hono
+---
+
+## Instalação
+
+```bash
+pnpm add @clowk/hono @clowk/core
+```
+
+## Configuração
+
+```typescript title="src/index.ts"
+import { Hono } from 'hono'
+import { clowkMiddleware, requireAuth } from '@clowk/hono'
+
+const app = new Hono()
+```
+
+## Proteger todas as rotas
+
+Aplique `clowkMiddleware` de forma global. O payload decodificado do JWT fica disponível via `c.get('auth')`:
+
+```typescript
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/me', (c) => {
+  const auth = c.get('auth')
+
+  return c.json({ user: auth })
+})
+
+export default app
+```
+
+### Opções do middleware
+
+| Opção | Tipo | Descrição |
+|--------|------|-------------|
+| `secretKey` | `string` | Secret key para verificar o JWT |
+| `tokenParam` | `string` | Nome do parâmetro de query (padrão: `"token"`) |
+| `cookieKey` | `string` | Nome do cookie (padrão: `"clowk_token"`) |
+
+## Proteger rotas específicas
+
+Use `requireAuth()` para proteger rotas. Ele retorna 401 se não encontrar um token válido:
+
+```typescript
+app.get('/public', (c) => {
+  return c.json({ message: 'This is public' })
+})
+
+app.get('/dashboard', requireAuth(), (c) => {
+  const auth = c.get('auth')
+
+  return c.json({ user: auth })
+})
+```
+
+## Tipo de `c.get('auth')`
+
+```typescript
+interface JwtPayload {
+  iss?: string       // "clowk"
+  sub?: string       // UUID do usuário
+  email?: string     // "jane@example.com"
+  name?: string      // "Jane Doe"
+  avatar_url?: string
+  provider?: string  // "google" | "github" | "twitter" | "email"
+  instance_id?: string
+  app_id?: string
+  iat?: number
+  exp?: number
+}
+```
+
+Com `clowkMiddleware`, `c.get('auth')` é `null` se nenhum token for encontrado (soft auth). Com `requireAuth`, a requisição é recusada antes de chegar ao seu handler.
+
+## Runtimes
+
+Hono + Clowk funciona em todo runtime. O `@clowk/core` usa `fetch` nativo e as APIs Web Crypto — sem dependências específicas do Node.js.
+
+| Runtime | Alvo de deploy |
+|---------|--------------|
+| Cloudflare Workers | `wrangler deploy` |
+| Bun | `bun run src/index.ts` |
+| Deno | `deno run src/index.ts` |
+| Node.js | `node src/index.ts` |
+
+## Exemplo completo
+
+```typescript title="src/index.ts"
+import { Hono } from 'hono'
+import { clowkMiddleware, requireAuth } from '@clowk/hono'
+
+const app = new Hono()
+
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/', (c) => {
+  const auth = c.get('auth')
+
+  return c.json({ authenticated: !!auth })
+})
+
+app.get('/profile', requireAuth(), (c) => {
+  const auth = c.get('auth')
+
+  return c.json({
+    id: auth?.sub,
+    email: auth?.email,
+    name: auth?.name,
+  })
+})
+
+export default app
+```

@@ -1,0 +1,111 @@
+---
+title: Express
+description: Guia completo de integração do Clowk com Express
+---
+
+## Instalação
+
+```bash
+pnpm add @clowk/express @clowk/core
+```
+
+## Configuração
+
+```typescript title="app.ts"
+import express from 'express'
+import { clowkMiddleware, requireAuth } from '@clowk/express'
+
+const app = express()
+```
+
+## Proteger todas as rotas
+
+Aplique `clowkMiddleware` de forma global para decodificar o JWT em toda requisição. O payload decodificado fica em `req.auth`:
+
+```typescript
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/dashboard', (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+### Opções do middleware
+
+| Opção | Tipo | Descrição |
+|--------|------|-------------|
+| `secretKey` | `string` | Secret key para verificar o JWT |
+| `tokenParam` | `string` | Nome do parâmetro de query (padrão: `"token"`) |
+| `cookieKey` | `string` | Nome do cookie (padrão: `"clowk_token"`) |
+
+## Proteger rotas específicas
+
+Use `requireAuth()` para proteger rotas individuais. Ele retorna 401 se não encontrar um token válido:
+
+```typescript
+app.get('/public', (req, res) => {
+  res.json({ message: 'This is public' })
+})
+
+app.get('/dashboard', requireAuth(), (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+## Tipo de `req.auth`
+
+Quando há um token válido, `req.auth` contém o payload decodificado do JWT:
+
+```typescript
+interface JwtPayload {
+  iss?: string       // "clowk"
+  sub?: string       // UUID do usuário
+  email?: string     // "jane@example.com"
+  name?: string      // "Jane Doe"
+  avatar_url?: string
+  provider?: string  // "google" | "github" | "twitter" | "email"
+  instance_id?: string
+  app_id?: string
+  iat?: number
+  exp?: number
+}
+```
+
+Com `clowkMiddleware`, `req.auth` é `null` se nenhum token for encontrado (soft auth). Com `requireAuth`, a requisição é recusada com 401 antes de chegar ao seu handler.
+
+## Extração do token
+
+O middleware extrai o JWT de (nesta ordem):
+
+1. **Parâmetro de query** — `?token=eyJ...`
+2. **Header Authorization** — `Bearer eyJ...`
+3. **Cookie** — `clowk_token`
+
+## Exemplo completo
+
+```typescript title="app.ts"
+import express from 'express'
+import { clowkMiddleware, requireAuth } from '@clowk/express'
+
+const app = express()
+
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/', (req, res) => {
+  res.json({ authenticated: !!req.auth })
+})
+
+app.get('/profile', requireAuth(), (req, res) => {
+  res.json({
+    id: req.auth?.sub,
+    email: req.auth?.email,
+    name: req.auth?.name,
+  })
+})
+
+app.listen(3000)
+```

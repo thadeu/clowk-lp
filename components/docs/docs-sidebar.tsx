@@ -5,10 +5,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ArrowLeft, ChevronDown, Search, X } from 'lucide-react';
-import { contents, type SidebarSection } from './sidebar-content';
+import LanguageSwitch from '@/components/LanguageSwitch';
+import { localePath, t, type Locale } from '@/lib/i18n';
+import { localizedContents, type SidebarSection } from './sidebar-content';
 
-export function DocsSidebar() {
-  const pathname = usePathname();
+export function DocsSidebar({ locale }: { locale: Locale }) {
+  const pathname = usePathname().replace(/\/$/, '') || '/';
+  const text = t(locale).docs;
+  const contents = localizedContents(locale);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
@@ -32,12 +36,12 @@ export function DocsSidebar() {
       <button
         onClick={() => setMobileOpen(true)}
         className="docs-sidebar-trigger fixed top-3 left-3 z-50 flex items-center gap-2 rounded-lg bg-white/5 px-3 py-2 text-sm text-white/60 backdrop-blur-md border border-white/8 lg:hidden"
-        aria-label="Open sidebar"
+        aria-label={text.openSidebar}
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
-        Menu
+        {text.menu}
       </button>
 
       <div
@@ -53,7 +57,7 @@ export function DocsSidebar() {
         }`}
       >
         <div className="flex items-center justify-between px-5 h-14 border-b border-white/5 shrink-0">
-          <Link href="/docs" className="flex items-center gap-2">
+          <Link href={localePath(locale, '/docs')} className="flex items-center gap-2">
             <Image src="/brand/lockup-on-dark.svg?v=2" alt="Clowk" width={107} height={24} />
             <span className="text-[10px] font-medium text-white/30 bg-white/5 px-1.5 py-0.5 rounded">Docs</span>
           </Link>
@@ -61,18 +65,18 @@ export function DocsSidebar() {
           <button
             onClick={() => setMobileOpen(false)}
             className="lg:hidden text-white/40 hover:text-white/70 transition-colors"
-            aria-label="Close sidebar"
+            aria-label={text.closeSidebar}
           >
             <X size={18} />
           </button>
         </div>
 
         <Link
-          href="/"
+          href={localePath(locale, '/')}
           className="flex items-center gap-2 px-5 min-h-11 border-b border-white/5 shrink-0 text-sm text-white/60 hover:text-white transition-colors"
         >
           <ArrowLeft size={14} />
-          Back to Clowk
+          {text.back}
         </Link>
 
         <nav className="flex-1 overflow-y-auto px-3 py-3 docs-sidebar-scroll">
@@ -81,7 +85,7 @@ export function DocsSidebar() {
           ))}
         </nav>
 
-        <div className="px-5 py-3 border-t border-white/5 shrink-0">
+        <div className="px-5 py-3 border-t border-white/5 shrink-0 flex items-center justify-between gap-3">
           <a
             href="https://github.com/thadeu"
             className="flex items-center gap-2 text-xs text-white/25 hover:text-white/50 transition-colors"
@@ -93,6 +97,8 @@ export function DocsSidebar() {
             </svg>
             GitHub
           </a>
+
+          <LanguageSwitch locale={locale} className="min-h-8 text-xs" />
         </div>
       </aside>
     </>

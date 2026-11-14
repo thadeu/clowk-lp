@@ -1,0 +1,136 @@
+---
+title: Visão geral da API
+description: API REST do Clowk para verificar tokens e gerenciar usuários
+---
+
+## URL base
+
+```
+https://{{subdomain}}.clowk.dev/api/v1
+```
+
+Cada subdomínio aponta para uma **instância** específica da sua organização. Esta é a camada de isolamento multi-tenant do Clowk — toda requisição à API vale só para a instância do subdomínio. Assim, usuários, tokens e credenciais de uma instância nunca vazam para outra.
+
+Por exemplo, se a sua organização tem uma instância `staging` e uma `production`:
+
+```
+https://staging.clowk.dev/api/v1/tokens/verify
+https://production.clowk.dev/api/v1/tokens/verify
+```
+
+Cada instância tem sua própria `publishable_key`, `secret_key`, usuários, credenciais OAuth e redirect URIs permitidas. O subdomínio é resolvido a partir da sua publishable key quando você cria a instância no dashboard do Clowk.
+
+## Autenticação
+
+Toda requisição à API exige a sua **secret key**. Você pode enviá-la de duas formas:
+
+**Header próprio (recomendado)**
+
+```bash
+curl -X POST https://myapp.clowk.dev/api/v1/tokens/verify \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+**Bearer token**
+
+```bash
+curl -X POST https://myapp.clowk.dev/api/v1/tokens/verify \
+  -H "Authorization: Bearer sk_live_..."
+```
+
+A sua secret key fica no dashboard do Clowk, nas configurações da instância. Nunca exponha a chave em código do lado do cliente.
+
+## Arquitetura multi-tenant
+
+O Clowk organiza os recursos em uma hierarquia:
+
+```
+Organization
+└── Workspace
+    └── App
+        └── Instance (development, production, ...)
+            ├── Users
+            ├── Identities
+            ├── OAuth credentials
+            └── Secret key / Publishable key
+```
+
+Cada instância tem seu próprio subdomínio (`myapp.clowk.dev`) e seu próprio par de chaves. A secret key autentica as requisições à API e assina os JWTs. A publishable key identifica a instância no código do lado do cliente (redirects de login, configuração do SDK).
+
+Os dados são totalmente isolados entre instâncias. Um usuário em `staging.clowk.dev` é um registro separado de um usuário com o mesmo e-mail em `production.clowk.dev`.
+
+## Formato da resposta
+
+Toda resposta de sucesso segue o mesmo envelope:
+
+```json
+{
+  "id": "uuid",
+  "resource": "user | token | instance",
+  "data": {}
+}
+```
+
+Endpoints de coleção retornam um array de itens com o mesmo formato:
+
+```json
+[
+  { "id": "uuid", "resource": "user", "data": { ... } }
+]
+```
+
+Erros são planos — sem envelope:
+
+```json
+{ "error": "Missing token" }
+```
+
+## Endpoints
+
+### Bootstrap — `api.clowk.dev`
+
+Acessível sem saber o subdomínio da instância. Autentica com `X-Clowk-Publishable-Key` ou `X-Clowk-Secret-Key`.
+
+| Método | Caminho | Descrição |
+|--------|------|-------------|
+| `GET` | `/api/v1/instances/search` | Resolve a URL do subdomínio a partir de uma publishable key |
+
+### API da instância — `{{subdomain}}.clowk.dev`
+
+Todos os endpoints exigem `X-Clowk-Secret-Key`.
+
+| Método | Caminho | Descrição |
+|--------|------|-------------|
+| `POST` | `/api/v1/tokens/verify` | Verifica um JWT e retorna o usuário |
+| `GET` | `/api/v1/users` | Lista todos os usuários da instância |
+| `GET` | `/api/v1/users/:id` | Busca um usuário pelo ID |
+| `GET` | `/api/v1/users/search` | Pesquisa usuários por campo |
+| `DELETE` | `/api/v1/users/:id` | Exclui um usuário |
+
+## Formato de erro
+
+Todo erro retorna um objeto JSON com o campo `error`:
+
+```json
+{
+  "error": "Missing token"
+}
+```
+
+## Códigos de status
+
+| Código | Significado |
+|------|---------|
+| `200` | Sucesso |
+| `400` | Requisição inválida — parâmetro ausente ou malformado |
+| `401` | Não autorizado — secret key / token inválido ou ausente |
+| `404` | Não encontrado — o usuário não existe ou pertence a outra instância |
+
+## Wrappers dos SDKs
+
+Você não precisa chamar a API diretamente. Os SDKs do Clowk fazem a verificação de tokens e a busca de usuários para você:
+
+- **Ruby:** `Clowk::JwtVerifier` verifica tokens localmente com a sua secret key
+- **JavaScript:** `JwtVerifier` de `@clowk/core` faz o mesmo
+- **Express / Hono:** `clowkMiddleware()` e `requireAuth()` extraem e verificam o token automaticamente
+- **Next.js:** `auth()` e `clowkMiddleware()` verificam tokens no servidor

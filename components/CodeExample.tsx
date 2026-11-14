@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
+import { localePath, t, type Locale } from '@/lib/i18n';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { SiRubyonrails, SiReact, SiNextdotjs, SiExpress, SiHono } from 'react-icons/si';
 
@@ -121,19 +122,20 @@ app.get('/me', (c) => {
 export default app`,
 };
 
-export default function CodeExample() {
+export default function CodeExample({ locale = 'en' }: { locale?: Locale }) {
+  const text = t(locale).code;
   const [active, setActive] = useState('ruby');
 
   return (
     <section aria-labelledby="code-title" className="py-14 md:py-20 border-t border-white/[0.08]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="mb-8">
-          <p className="text-sm font-semibold text-[#F43F5E] tracking-widest uppercase mb-3">Integrate in minutes</p>
+          <p className="text-sm font-semibold text-[#F43F5E] tracking-widest uppercase mb-3">{text.eyebrow}</p>
           <h2 id="code-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white leading-tight mb-4">
-            From zero to auth in 5 lines
+            {text.title}
           </h2>
           <p className="text-[#A9A1B6] text-[17px]">
-            Works with your existing stack. No new abstractions to learn.
+            {text.lead}
           </p>
         </div>
 
@@ -186,9 +188,9 @@ export default function CodeExample() {
         </div>
 
         <p className="text-sm text-[#A9A1B6] mt-6">
-          Need more detail?{' '}
-          <Link href="/docs" className="text-[#FB7185] font-medium hover:underline">
-            Read the docs →
+          {text.more}{' '}
+          <Link href={localePath(locale, '/docs')} className="text-[#FB7185] font-medium hover:underline">
+            {text.readDocs}
           </Link>
         </p>
       </div>

@@ -1,29 +1,33 @@
 import Link from 'next/link';
 import Logo from '@/components/Logo';
-import { products } from '@/lib/products';
+import { localePath, t, type Locale } from '@/lib/i18n';
+import { localizedProducts } from '@/lib/localized';
 
-const company = [
-  { label: 'GitHub', href: 'https://github.com/thadeu' },
-  { label: 'Support', href: 'mailto:support@clowk.in' },
-  { label: 'Terms', href: '/terms' },
-];
+export default function Footer({ locale = 'en' }: { locale?: Locale }) {
+  const text = t(locale).footer;
+  const products = localizedProducts(locale);
 
-export default function Footer() {
+  const company = [
+    { label: 'GitHub', href: 'https://github.com/thadeu' },
+    { label: text.support, href: 'mailto:support@clowk.in' },
+    { label: text.terms, href: localePath(locale, '/terms') },
+  ];
+
   return (
     <footer className="bg-[#0C0014] border-t border-white/[0.08] text-[#C9C3D4]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-[2fr_1fr_1fr_1fr] gap-x-6 gap-y-8">
         <div className="col-span-2 sm:col-span-3 md:col-span-1 flex flex-col gap-2">
-          <Logo height={28} />
-          <p className="text-sm text-[#A9A1B6]">Small tools you run on your own servers.</p>
+          <Logo height={28} href={localePath(locale, '/')} />
+          <p className="text-sm text-[#A9A1B6]">{text.tagline}</p>
         </div>
 
-        <FooterColumn title="Products" links={products.map(product => ({ label: product.name, href: `/${product.slug}` }))} />
-        <FooterColumn title="Docs" links={products.map(product => ({ label: product.docsLabel, href: product.docsUrl }))} />
-        <FooterColumn title="Company" links={company} />
+        <FooterColumn title={text.products} links={products.map(product => ({ label: product.name, href: localePath(locale, `/${product.slug}`) }))} />
+        <FooterColumn title={text.docs} links={products.map(product => ({ label: product.docsLabel, href: localePath(locale, product.docsUrl) }))} />
+        <FooterColumn title={text.company} links={company} />
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-8 text-xs text-[#A9A1B6]">
-        © {new Date().getFullYear()} Clowk. All rights reserved.
+        © {new Date().getFullYear()} Clowk. {text.rights}
       </div>
     </footer>
   );

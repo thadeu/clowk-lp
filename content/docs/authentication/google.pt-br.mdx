@@ -1,0 +1,72 @@
+---
+title: Google
+description: Configure a autenticação OAuth do Google com o Clowk
+---
+
+## Visão geral
+
+O Clowk cuida de todo o fluxo OAuth 2.0 do Google. Seu app redireciona para o Clowk, o Clowk redireciona para o Google e, quando o usuário autoriza, o Clowk cria o usuário e retorna um JWT.
+
+## Configuração
+
+### 1. Ative o Google no Clowk
+
+Abra o dashboard do Clowk e ative o provedor Google na sua instância. Informe suas credenciais OAuth do Google.
+
+### 2. Crie as credenciais OAuth do Google
+
+1. Acesse o [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Crie um **OAuth 2.0 Client ID** (Web application)
+3. Adicione a redirect URI autorizada: `https://clowk.in/oauth/google/callback`
+4. Copie o **Client ID** e o **Client Secret** para o dashboard do Clowk
+
+### 3. Scopes
+
+Por padrão, o Clowk pede estes scopes:
+
+| Scope | Finalidade |
+|-------|---------|
+| `openid` | Identidade OpenID Connect |
+| `email` | Endereço de email do usuário |
+| `profile` | Nome e foto de perfil do usuário |
+
+## Fluxo OAuth
+
+```
+1. Seu app → Clowk:
+   GET https://yourapp.clowk.in/sign-in?redirect_uri=https://yourapp.com/auth/callback
+
+2. Clowk → Google:
+   GET https://accounts.google.com/o/oauth2/v2/auth?
+     client_id=...&
+     scope=openid+email+profile&
+     state=...&
+     redirect_uri=https://clowk.in/oauth/google/callback
+
+3. Google → Clowk:
+   GET https://clowk.in/oauth/google/callback?code=...&state=...
+
+4. O Clowk troca o code por tokens e cria/encontra o usuário
+
+5. Clowk → Seu app:
+   GET https://yourapp.com/auth/callback?token=eyJ...
+```
+
+## Payload do JWT
+
+```json
+{
+  "iss": "clowk",
+  "sub": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "avatar_url": "https://lh3.googleusercontent.com/a/...",
+  "provider": "google",
+  "instance_id": "inst_abc123",
+  "app_id": "app_xyz789",
+  "iat": 1711152000,
+  "exp": 1711155600
+}
+```
+
+Usuários do Google têm o `email_verified_at` preenchido automaticamente, já que o Google verifica o email durante o login.

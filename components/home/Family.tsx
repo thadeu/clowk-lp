@@ -1,7 +1,9 @@
 import ProductMark from '@/components/ProductMark';
+import { t, type Locale } from '@/lib/i18n';
 import { findProduct, products } from '@/lib/products';
 
-export default function Family() {
+export default function Family({ locale }: { locale: Locale }) {
+  const text = t(locale).home;
   const cronota = findProduct('cronota')!;
   const used = products.filter(product => product.usedBy);
 
@@ -10,11 +12,11 @@ export default function Family() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 md:py-18 flex flex-wrap gap-8 md:gap-10 items-center">
         <div className="flex-[1_1_340px] flex flex-col gap-3">
           <h2 id="family-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white">
-            We build on our own tools.
+            {text.familyTitle}
           </h2>
 
           <p className="text-[17px] leading-relaxed text-[#C9C3D4]">
-            cronota is a real app, and it runs on four of the products. You can mix them the same way, or use only one.
+            {text.familyLead}
           </p>
         </div>
 
@@ -22,7 +24,7 @@ export default function Family() {
           <div className="flex items-center gap-3">
             <ProductMark product={cronota} size="sm" />
             <span className="text-base font-bold text-white">{cronota.name}</span>
-            <span className="text-sm text-[#A9A1B6]">runs on</span>
+            <span className="text-sm text-[#A9A1B6]">{text.runsOn}</span>
           </div>
 
           <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(180px,100%),1fr))] gap-2.5">
@@ -30,7 +32,7 @@ export default function Family() {
               <li key={product.slug} className="flex items-center gap-3 px-3.5 py-3 rounded-[14px] bg-[#140D1C] border border-white/[0.09]">
                 <ProductMark product={product} size="sm" />
                 <span className="text-base font-bold text-white">{product.name}</span>
-                <span className="ml-auto text-sm font-bold text-[#FB7185]">{product.usedBy}</span>
+                <span className="ml-auto text-sm font-bold text-[#FB7185]">{text.usedBy[product.usedBy!]}</span>
               </li>
             ))}
           </ul>

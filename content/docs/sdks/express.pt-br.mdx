@@ -1,0 +1,84 @@
+---
+title: "@clowk/express"
+description: Middleware Express para autenticação com Clowk
+---
+
+## Instalação
+
+```bash
+npm install @clowk/express @clowk/core
+```
+
+## Visão geral
+
+Middleware Express que verifica JWTs e coloca o usuário autenticado em `req.clowk.user`.
+
+**O que ele oferece:**
+
+- `ClowkExpressMiddleware()` — factory de middleware
+- `req.clowk.user` — o usuário decodificado após a verificação
+- `req.clowk.userId` — atalho para o ID do usuário
+
+## ClowkExpressMiddleware
+
+```javascript
+import { ClowkExpressMiddleware } from '@clowk/express'
+
+const auth = ClowkExpressMiddleware()
+```
+
+### Opções
+
+| Opção | Tipo | Padrão | Descrição |
+|--------|------|---------|-------------|
+| `onError` | `(err, req, res, next) => void` | Retorna 401 | Handler de erro personalizado |
+| `extractToken` | `(req) => string \| null` | Detecção automática | Extrator de token personalizado |
+
+### Ordem de extração do token
+
+O middleware procura o JWT nesta ordem:
+
+1. Parâmetro de query: `?token=eyJ...`
+2. Cookie: `clowk_token`
+3. Header Authorization: `Bearer eyJ...`
+
+## req.clowk
+
+Após uma verificação bem-sucedida, `req.clowk` contém:
+
+```typescript
+interface ClowkRequest {
+  user: {
+    id: string
+    email: string
+    name: string
+    provider: string
+    iat: number
+    exp: number
+  }
+  userId: string
+}
+```
+
+## Tratamento de erros
+
+Por padrão, tokens inválidos ou ausentes retornam uma resposta `401`:
+
+```json
+{ "error": "Unauthorized" }
+```
+
+Personalize com `onError`:
+
+```javascript
+const auth = ClowkExpressMiddleware({
+  onError: (err, req, res, next) => {
+    res.status(401).json({ error: err.message })
+  },
+})
+```
+
+## Próximos passos
+
+- [Quickstart do Express](/pt-br/docs/quickstart/express) — guia para começar
+- [Referência do @clowk/core](/pt-br/docs/sdks/core) — pacote base

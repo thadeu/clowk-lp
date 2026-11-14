@@ -1,0 +1,48 @@
+---
+title: Listar usuários
+description: Liste todos os usuários de uma instância
+---
+
+## GET /api/v1/users
+
+Retorna todos os usuários da instância ligada à sua secret key.
+
+## Requisição
+
+```bash
+curl https://myapp.clowk.dev/api/v1/users \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+
+## Resposta
+
+### 200 — Sucesso
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "resource": "user",
+    "data": {
+      "email": "jane@example.com",
+      "name": "Jane Doe",
+      "avatar_url": "https://lh3.googleusercontent.com/...",
+      "email_verified": true,
+      "providers": ["google"],
+      "created_at": "2026-03-20T10:30:00Z"
+    }
+  }
+]
+```
+
+### 401 — Não autorizado
+
+```json
+{ "error": "Unauthorized" }
+```

@@ -1,0 +1,75 @@
+---
+title: Buscar usuário
+description: Busque um usuário pelo ID na API do Clowk
+---
+
+## GET /api/v1/users/:id
+
+Busca um usuário pelo UUID. Retorna só usuários da instância ligada à sua secret key.
+
+## Requisição
+
+```bash
+curl https://myapp.clowk.dev/api/v1/users/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+
+### Parâmetros de caminho
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-------------|
+| `id` | `string` | UUID do usuário |
+
+## Resposta
+
+### 200 — Usuário encontrado
+
+```json
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "resource": "user",
+  "data": {
+    "email": "jane@example.com",
+    "name": "Jane Doe",
+    "avatar_url": "https://lh3.googleusercontent.com/...",
+    "email_verified": true,
+    "providers": ["google", "github"],
+    "created_at": "2026-03-20T10:30:00Z"
+  }
+}
+```
+
+| Campo | Tipo | Descrição |
+|-------|------|-------------|
+| `id` | `string` | UUID do usuário (nível superior) |
+| `resource` | `string` | Sempre `"user"` |
+| `data.email` | `string` | E-mail do usuário |
+| `data.name` | `string` | Nome de exibição |
+| `data.avatar_url` | `string \| null` | URL da foto de perfil |
+| `data.email_verified` | `boolean` | Se o e-mail foi verificado |
+| `data.providers` | `string[]` | Lista de provedores OAuth conectados |
+| `data.created_at` | `string` | Timestamp ISO 8601 |
+
+### 401 — Não autorizado
+
+```json
+{
+  "error": "Missing secret key"
+}
+```
+
+### 404 — Usuário não encontrado
+
+```json
+{
+  "error": "User not found"
+}
+```
+
+Retorna `404` se o usuário não existe ou pertence a outra instância.

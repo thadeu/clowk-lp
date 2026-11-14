@@ -1,0 +1,81 @@
+---
+title: Revogar sessão
+description: Revogue uma sessão ativa
+---
+
+## DELETE /api/v1/sessions/:id
+
+Revoga uma sessão ativa pelo `session_id`. Depois de revogada, a sessão não pode ser reativada. O JWT do usuário continua válido até expirar — este endpoint marca a sessão como revogada nos registros do Clowk.
+
+## Requisição
+
+```bash
+curl -X DELETE \
+  https://myapp.clowk.dev/api/v1/sessions/clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890 \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+
+### Parâmetros de caminho
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-------------|
+| `id` | `string` | O valor de `session_id` (formato: `clk_session_UUID`) |
+
+## Resposta
+
+### 200 — Revogada
+
+```json
+{
+  "revoked": true,
+  "session_id": "clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+```
+
+### 401 — Não autorizado
+
+```json
+{ "error": "Unauthorized" }
+```
+
+### 404 — Não encontrada
+
+```json
+{ "error": "Session not found" }
+```
+
+### 422 — Já revogada
+
+```json
+{ "error": "Session already revoked" }
+```
+
+## Uso no SDK
+
+```ruby
+# Ruby
+client.sessions.revoke("clk_session_a1b2c3d4-...")
+# ou, de forma equivalente:
+client.sessions.destroy("clk_session_a1b2c3d4-...")
+```
+
+```typescript
+// JavaScript
+await client.sessions.revoke('clk_session_a1b2c3d4-...')
+// ou, de forma equivalente:
+await client.sessions.destroy('clk_session_a1b2c3d4-...')
+```
+
+## Limite de sessões por instância
+
+Você pode configurar `max_concurrent_sessions` em uma instância para revogar sessões antigas automaticamente quando uma nova é criada:
+
+- `null` — sessões simultâneas ilimitadas (padrão)
+- `1` — uma sessão ativa por usuário; a mais antiga é revogada quando acontece um novo login
+- `n` — até `n` sessões simultâneas por usuário

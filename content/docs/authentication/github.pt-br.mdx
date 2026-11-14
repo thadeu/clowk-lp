@@ -1,0 +1,71 @@
+---
+title: GitHub
+description: Configure a autenticação OAuth do GitHub com o Clowk
+---
+
+## Visão geral
+
+O Clowk cuida do fluxo OAuth 2.0 do GitHub. Os usuários autorizam com a conta do GitHub e o Clowk retorna um JWT com os dados do perfil.
+
+## Configuração
+
+### 1. Ative o GitHub no Clowk
+
+Abra o dashboard do Clowk e ative o provedor GitHub na sua instância.
+
+### 2. Crie um OAuth App no GitHub
+
+1. Acesse o [GitHub Developer Settings](https://github.com/settings/developers)
+2. Clique em **New OAuth App**
+3. Defina a URL de callback de autorização como: `https://clowk.in/oauth/github/callback`
+4. Copie o **Client ID** e o **Client Secret** para o dashboard do Clowk
+
+### 3. Scopes
+
+O Clowk pede estes scopes:
+
+| Scope | Finalidade |
+|-------|---------|
+| `user:email` | Ler os endereços de email do usuário |
+| `read:user` | Ler os dados do perfil do usuário |
+
+## Fluxo OAuth
+
+```
+1. Seu app → Clowk:
+   GET https://yourapp.clowk.in/sign-in?redirect_uri=https://yourapp.com/auth/callback
+
+2. Clowk → GitHub:
+   GET https://github.com/login/oauth/authorize?
+     client_id=...&
+     scope=user:email+read:user&
+     state=...&
+     redirect_uri=https://clowk.in/oauth/github/callback
+
+3. GitHub → Clowk:
+   GET https://clowk.in/oauth/github/callback?code=...&state=...
+
+4. O Clowk troca o code por tokens e cria/encontra o usuário
+
+5. Clowk → Seu app:
+   GET https://yourapp.com/auth/callback?token=eyJ...
+```
+
+## Payload do JWT
+
+```json
+{
+  "iss": "clowk",
+  "sub": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "email": "jane@example.com",
+  "name": "Jane Doe",
+  "avatar_url": "https://avatars.githubusercontent.com/u/...",
+  "provider": "github",
+  "instance_id": "inst_abc123",
+  "app_id": "app_xyz789",
+  "iat": 1711152000,
+  "exp": 1711155600
+}
+```
+
+Usuários do GitHub têm o `email_verified_at` preenchido automaticamente.

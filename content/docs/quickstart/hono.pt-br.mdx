@@ -1,0 +1,69 @@
+---
+title: Hono
+description: Adicione autenticação ao seu app Hono com o Clowk
+---
+
+## Instalação
+
+```bash
+pnpm add @clowk/hono @clowk/core
+```
+
+## Configuração
+
+```typescript title="src/index.ts"
+import { Hono } from 'hono'
+import { clowkMiddleware, requireAuth } from '@clowk/hono'
+
+const app = new Hono()
+```
+
+## Proteja todas as rotas
+
+Aplique o middleware de forma global. O JWT decodificado fica disponível via `c.get('auth')`:
+
+```typescript
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/me', (c) => {
+  const auth = c.get('auth')
+
+  return c.json({ user: auth })
+})
+
+export default app
+```
+
+## Proteja rotas específicas
+
+Use `requireAuth()` para proteger rotas. Ele retorna 401 se não houver token válido:
+
+```typescript
+app.get('/public', (c) => {
+  return c.json({ message: 'This is public' })
+})
+
+app.get('/dashboard', requireAuth(), (c) => {
+  const auth = c.get('auth')
+
+  return c.json({ user: auth })
+})
+```
+
+## Runtimes
+
+Hono + Clowk funciona em qualquer runtime. O `@clowk/core` usa `fetch` nativo e as APIs Web Crypto, sem dependências específicas do Node.js.
+
+| Runtime | Comando de deploy |
+|---------|--------------|
+| Cloudflare Workers | `wrangler deploy` |
+| Bun | `bun run src/index.ts` |
+| Deno | `deno run src/index.ts` |
+| Node.js | `node src/index.ts` |
+
+## Próximos passos
+
+- [Quickstart do Express](/pt-br/docs/quickstart/express) — se você precisa de compatibilidade com Express
+- [Integração completa com Hono](/pt-br/docs/integrations/hono) — referência completa da API

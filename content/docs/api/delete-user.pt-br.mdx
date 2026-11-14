@@ -1,0 +1,44 @@
+---
+title: Excluir usuário
+description: Exclua um usuário de uma instância de forma permanente
+---
+
+## DELETE /api/v1/users/:id
+
+Exclui um usuário e todas as identidades ligadas a ele de forma permanente. Esta ação não pode ser desfeita.
+
+## Requisição
+
+```bash
+curl -X DELETE https://myapp.clowk.dev/api/v1/users/a1b2c3d4-e5f6-7890-abcd-ef1234567890 \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+
+### Parâmetros de caminho
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-------------|
+| `id` | `string` | UUID do usuário |
+
+## Resposta
+
+### 200 — Excluído
+
+```json
+{
+  "deleted": true,
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+```
+
+### 404 — Usuário não encontrado
+
+```json
+{ "error": "User not found" }
+```

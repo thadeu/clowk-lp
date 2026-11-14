@@ -1,0 +1,140 @@
+---
+title: React
+description: Guia completo de integração do Clowk com React
+---
+
+## Instalação
+
+```bash
+pnpm add @clowk/react
+```
+
+`@clowk/react` já traz `@clowk/core` como dependência.
+
+## Configurar o provider
+
+Envolva seu app com `ClowkProvider`:
+
+```tsx title="src/main.tsx"
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { ClowkProvider } from '@clowk/react'
+import App from './App'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ClowkProvider publishableKey={import.meta.env.VITE_CLOWK_PUBLISHABLE_KEY}>
+      <App />
+    </ClowkProvider>
+  </StrictMode>
+)
+```
+
+### Props do ClowkProvider
+
+| Prop | Tipo | Descrição |
+|------|------|-------------|
+| `publishableKey` | `string` | Sua publishable key do Clowk |
+| `secretKey` | `string` | Secret key (só no servidor) |
+| `tokenParam` | `string` | Nome do parâmetro de query do token (padrão: `"token"`) |
+| `afterSignOutPath` | `string` | Caminho de redirect após sair (padrão: `"/"`) |
+
+## Acessar o usuário
+
+Use o hook `useAuth`:
+
+```tsx title="src/App.tsx"
+import { useAuth } from '@clowk/react'
+
+function App() {
+  const { user, signedIn, isLoading, signOut } = useAuth()
+
+  if (isLoading) return <div>Loading...</div>
+  if (!signedIn) return <div>Not signed in</div>
+
+  return (
+    <div>
+      <p>Hello, {user?.name}</p>
+      <button onClick={signOut}>Sign out</button>
+    </div>
+  )
+}
+```
+
+### Tipo de retorno de `useAuth()`
+
+```typescript
+interface ClowkAuthState {
+  user: JwtPayload | null
+  token: string | null
+  signedIn: boolean
+  isLoading: boolean
+  signOut: () => void
+}
+```
+
+O objeto `user` contém todas as claims do JWT: `sub`, `email`, `name`, `avatar_url`, `provider`, `instance_id`, `app_id`.
+
+## Botões de autenticação
+
+```tsx title="src/App.tsx"
+import { SignInButton, SignUpButton, SignOutButton, useAuth } from '@clowk/react'
+
+function App() {
+  const { signedIn, user, isLoading } = useAuth()
+
+  if (isLoading) return <div>Loading...</div>
+
+  if (!signedIn) {
+    return (
+      <div>
+        <SignInButton />
+        <SignUpButton />
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <p>Hello, {user?.name}</p>
+      <SignOutButton />
+    </div>
+  )
+}
+```
+
+Todos os componentes de botão estendem `ButtonHTMLAttributes` e aceitam a prop `redirectUri`:
+
+```tsx
+<SignInButton redirectUri="https://myapp.com/auth/callback">
+  Sign in with Clowk
+</SignInButton>
+```
+
+## Hooks disponíveis
+
+| Hook | Retorna | Descrição |
+|------|---------|-------------|
+| `useAuth()` | `{ user, token, signedIn, isLoading, signOut }` | Estado e ações de autenticação |
+| `useToken()` | `string \| null` | A string JWT bruta |
+| `useClowk()` | `ClowkClient` | Instância do cliente de API para chamadas ao backend |
+
+## Rotas protegidas
+
+```tsx title="src/components/ProtectedRoute.tsx"
+import { useAuth } from '@clowk/react'
+import { Navigate } from 'react-router-dom'
+
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { signedIn, isLoading } = useAuth()
+
+  if (isLoading) return <div>Loading...</div>
+  if (!signedIn) return <Navigate to="/sign-in" />
+
+  return children
+}
+```
+
+## Como funciona
+
+O `ClowkProvider` procura um parâmetro de query `?token=` ao montar. Quando encontra (depois do redirect de callback do OAuth), ele guarda o JWT, decodifica o usuário e limpa o parâmetro da URL. Nas próximas cargas, ele lê o token do cookie `clowk_token`.

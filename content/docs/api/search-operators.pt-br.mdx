@@ -1,0 +1,128 @@
+---
+title: Operadores de pesquisa
+description: Referência de todos os operadores de consulta aceitos nos endpoints de pesquisa do Clowk
+---
+
+## Visão geral
+
+Todos os endpoints de pesquisa do Clowk (`/users/search`, `/sessions/search`) aceitam um parâmetro `query` com uma linguagem de consulta estruturada, inspirada no Zendesk Search.
+
+Os filtros são **tokens separados por espaço**. Cada token tem um `field`, um `operator` e um `value`:
+
+```
+field:value
+field:value* field:*value field:*value*
+field>value field<value field>=value field<=value
+-field:value
+```
+
+Vários tokens são combinados com **AND** por padrão. Repetir o mesmo campo gera um **OR**.
+
+## Referência de operadores
+
+| Operador | Tipo | Comportamento | Exemplo |
+|----------|------|----------|---------|
+| `field:value` | Exato | Retorna registros em que `field` é exatamente igual a `value` | `provider:google` |
+| `field:value*` | Começa com | Retorna registros em que `field` começa com `value` | `email:alice*` |
+| `field:*value` | Termina com | Retorna registros em que `field` termina com `value` | `email:*@gmail.com` |
+| `field:*value*` | Contém | Retorna registros em que `field` contém `value` | `name:*Silva*` |
+| `field>value` | Maior que | Retorna registros em que `field` é depois de/acima de `value` | `created_at>2026-01-01` |
+| `field<value` | Menor que | Retorna registros em que `field` é antes de/abaixo de `value` | `created_at<2026-01-01` |
+| `field>=value` | Maior ou igual | Limite inferior inclusivo | `created_at>=2026-01-01` |
+| `field<=value` | Menor ou igual | Limite superior inclusivo | `created_at<=2026-03-31` |
+| `-field:value` | Negação | Exclui os registros que correspondem ao token | `-provider:twitter` |
+
+Wildcards (`*`) só fazem sentido em campos string. Em campos de data/hora e numéricos, use `>`, `<`, `>=`, `<=`.
+
+## OR — mesmo campo, vários tokens
+
+Repetir o **mesmo campo** em uma consulta combina os valores com `OR`:
+
+```
+provider:google provider:github
+```
+
+→ sessões do Google **ou** do GitHub.
+
+```
+email:alice@example.com email:bob@example.com
+```
+
+→ usuários com exatamente um dos dois e-mails.
+
+Campos diferentes são sempre combinados com `AND`:
+
+```
+email:*@gmail.com created_at>2026-01-01
+```
+
+→ usuários do Gmail **e** criados depois de janeiro de 2026.
+
+## Negação
+
+Coloque `-` antes de qualquer token para excluir as correspondências:
+
+```
+-provider:twitter
+```
+
+→ todas as sessões, menos as do Twitter.
+
+```
+-email:*test* -email:*staging*
+```
+
+→ usuários cujo e-mail não contém `test` nem `staging`.
+
+A negação vale por token e é sempre combinada com AND com o resto da consulta.
+
+## Padrões de wildcard
+
+A posição do `*` define o padrão de correspondência:
+
+| Token | Padrão | SQL |
+|-------|---------|-----|
+| `email:alice*` | Começa com `alice` | `email ILIKE 'alice%'` |
+| `email:*@gmail.com` | Termina com `@gmail.com` | `email ILIKE '%@gmail.com'` |
+| `email:*gmail*` | Contém `gmail` | `email ILIKE '%gmail%'` |
+| `email:alice@example.com` | Exato (sem wildcard) | `email = 'alice@example.com'` |
+
+> Espaços separam tokens — valores com espaço exigem wildcards. Use `name:*Doe*` em vez de `name:Jane Doe`.
+
+## Valores de data e hora
+
+Use datas no formato ISO 8601 para comparar datas e horas:
+
+```
+created_at>2026-01-01
+last_signin_at>=2026-03-01
+logged_in_at<2026-01-01T12:00:00Z
+```
+
+## Exemplos combinados
+
+**Usuários do Gmail ou Yahoo criados no 1º trimestre de 2026:**
+```
+email:*@gmail.com email:*@yahoo.com created_at>=2026-01-01 created_at<=2026-03-31
+```
+
+**Sessões ativas do Google ou GitHub com login depois de 1º de março:**
+```
+provider:google provider:github last_signin_at>2026-03-01
+```
+
+**Todas as sessões, menos as do Twitter, de uma faixa de IP específica:**
+```
+-provider:twitter ip_address:10.0.*
+```
+
+**Usuários com "silva" no nome, sem contas de teste:**
+```
+name:*silva* -email:*test*
+```
+
+## Tokens ignorados
+
+- Tokens sem um operador válido são ignorados sem aviso.
+- Campos que não existem no recurso são ignorados sem aviso.
+- Campos sensíveis (`password_digest`, `secret_key`, `kv`) ficam sempre de fora, seja qual for a consulta.

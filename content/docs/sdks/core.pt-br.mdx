@@ -1,0 +1,58 @@
+---
+title: "@clowk/core"
+description: Base independente de runtime para todos os SDKs do Clowk
+---
+
+## Instalação
+
+```bash
+npm install @clowk/core
+```
+
+## Visão geral
+
+O pacote base. Não depende de runtime: funciona em Node.js, Bun, Deno, Cloudflare Workers e navegadores.
+
+**O que ele oferece:**
+
+- Singleton de configuração com padrões sensatos
+- Hierarquia de erros (`ClowkError`, `ConfigurationError`, `InvalidStateError`, `InvalidTokenError`)
+- Cliente HTTP sobre o `fetch` nativo, com pilha de middleware (timeout, retry, logger)
+- SDK Client com API orientada a recursos: `users`, `sessions`, `subdomains`, `tokens`
+- Verificação de JWT (HS256 via jose) com validação de issuer e checagem de expiração
+- Extração de token (params, header bearer, cookie)
+
+## Configuração
+
+```typescript
+import { configure } from '@clowk/core'
+
+configure({
+  publishableKey: 'pk_live_...',
+  secretKey: 'sk_live_...',
+})
+```
+
+## Verificar um token
+
+```typescript
+import { verifyToken } from '@clowk/core'
+
+const user = await verifyToken(token)
+// => { id, email, name, provider, iat, exp }
+```
+
+## Arquitetura
+
+Todos os SDKs do Clowk dependem de `@clowk/core`:
+
+```
+@clowk/core
+   ├── @clowk/sdk
+   ├── @clowk/react
+   ├── @clowk/express
+   ├── @clowk/hono
+   └── @clowk/nextjs
+```
+
+Os pacotes de framework são camadas finas que adaptam o core às convenções de cada framework.

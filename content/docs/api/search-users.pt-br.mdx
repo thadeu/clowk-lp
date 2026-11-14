@@ -1,0 +1,151 @@
+---
+title: Pesquisar usuários
+description: Pesquise usuários com operadores de campo, wildcards, negação e comparação de datas
+---
+
+## GET /api/v1/users/search
+
+Pesquisa usuários da instância com uma linguagem de consulta estruturada. Os filtros são tokens separados por espaço e aceitam correspondência exata, wildcards, negação, lógica OR e comparação de intervalos de data.
+
+## Requisição
+
+```bash
+curl "https://myapp.clowk.dev/api/v1/users/search?query=email:*%40gmail.com%20-email:*test*" \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+
+### Parâmetros de query
+
+| Parâmetro | Tipo | Descrição |
+|-----------|------|-------------|
+| `query` | `string` | Tokens de pesquisa separados por espaço |
+
+Veja a [referência completa de operadores de pesquisa](/pt-br/docs/api/search-operators) para toda a sintaxe aceita.
+
+## Sintaxe da consulta
+
+### Operadores
+
+| Sintaxe | Comportamento | Exemplo |
+|--------|----------|---------|
+| `field:value` | Correspondência exata | `email:jane@example.com` |
+| `field:value*` | Começa com | `email:jane*` |
+| `field:*value` | Termina com | `email:*@gmail.com` |
+| `field:*value*` | Contém | `email:*gmail*` |
+| `field>value` | Maior que | `created_at>2026-01-01` |
+| `field<value` | Menor que | `created_at<2026-01-01` |
+| `field>=value` | Maior ou igual | `created_at>=2026-01-01` |
+| `field<=value` | Menor ou igual | `created_at<=2026-01-01` |
+| `-field:value` | Negação (NOT) | `-email:*test*` |
+
+### OR — mesmo campo repetido
+
+Repetir o mesmo campo gera um `OR` entre os valores:
+
+```
+email:alice@example.com email:bob@example.com
+```
+
+→ retorna usuários com qualquer um dos dois e-mails.
+
+### Campos aceitos
+
+Qualquer coluna da tabela `users` pode ser usada como filtro. Campos sensíveis como `password_digest` ficam sempre de fora.
+
+| Campo | Tipo | Notas |
+|-------|------|-------|
+| `email` | string | Aceita wildcards |
+| `name` | string | Aceita wildcards |
+| `created_at` | datetime | Aceita `>`, `<`, `>=`, `<=` |
+| `updated_at` | datetime | Aceita `>`, `<`, `>=`, `<=` |
+| `email_verified_at` | datetime | Filtra pela data de verificação |
+
+> Espaços separam tokens. Valores com várias palavras exigem wildcards — use `name:*Doe*` em vez de `name:Jane Doe`.
+
+## Exemplos
+
+**E-mail exato:**
+```
+?query=email:jane@example.com
+```
+
+**Todos os usuários do Gmail:**
+```
+?query=email:*@gmail.com
+```
+
+**Usuários com "Silva" no nome:**
+```
+?query=name:*Silva*
+```
+
+**Usuários do Gmail ou Yahoo criados depois de janeiro de 2026:**
+```
+?query=email:*@gmail.com email:*@yahoo.com created_at>2026-01-01
+```
+
+**Excluir e-mails de teste/staging:**
+```
+?query=-email:*test* -email:*staging*
+```
+
+## Resposta
+
+### 200 — Sucesso
+
+Retorna um array filtrado. Mesmo formato de [Listar usuários](/pt-br/docs/api/list-users).
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "resource": "user",
+    "data": {
+      "email": "jane@example.com",
+      "name": "Jane Doe",
+      "avatar_url": "https://lh3.googleusercontent.com/...",
+      "email_verified": true,
+      "providers": ["google"],
+      "created_at": "2026-03-20T10:30:00Z"
+    }
+  }
+]
+```
+
+Retorna um array vazio `[]` quando nenhum usuário corresponde à consulta.
+
+### 401 — Não autorizado
+
+```json
+{ "error": "Unauthorized" }
+```
+
+## Uso no SDK
+
+```ruby
+# Ruby — correspondência exata com hash
+client.users.search(email: "jane@example.com")
+
+# Ruby — query string pura
+client.users.search("email:*@gmail.com created_at>2026-01-01")
+
+# Ruby — excluir e-mails de teste
+client.users.search("-email:*test*")
+```
+
+```typescript
+// JavaScript — correspondência exata com objeto
+await client.users.search({ email: 'jane@example.com' })
+
+// JavaScript — query string pura
+await client.users.search('email:*@gmail.com created_at>2026-01-01')
+
+// JavaScript — excluir e-mails de teste
+await client.users.search('-email:*test*')
+```

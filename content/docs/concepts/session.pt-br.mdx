@@ -1,0 +1,133 @@
+---
+title: Sessão
+description: Como o Clowk gerencia sessões no Rails
+---
+
+## Visão geral
+
+Quando um usuário se autentica pelo Clowk, seu app Rails recebe um JWT. A gem `clowk` gerencia a sessão automaticamente: ela verifica o token, guarda os dados do usuário na sessão do Rails e define um cookie HTTP-only.
+
+## O fluxo de callback
+
+Depois que o usuário se autentica na página hospedada do Clowk, ele é redirecionado de volta para o seu app:
+
+```
+GET /clowk/oauth/callback?token=eyJ...&state=abc123
+```
+
+O controller de callback da gem `clowk`:
+
+1. **Valida o state**: compara o parâmetro `state` com o valor guardado na sessão antes do redirect (proteção CSRF)
+2. **Verifica o JWT**: decodifica o token com a sua secret key (HS256) e confere o emissor e a expiração
+3. **Reinicia a sessão**: limpa dados de sessões anteriores para evitar session fixation
+4. **Persiste a nova sessão**: guarda o token e o payload decodificado na sessão do Rails e define um cookie
+
+## O que fica guardado
+
+### Sessão do Rails
+
+```ruby
+session[:clowk] = {
+  token: "eyJ...",
+  user: {
+    sub: "user-uuid",
+    email: "jane@example.com",
+    name: "Jane Doe",
+    avatar_url: "https://...",
+    provider: "google",
+    instance_id: "inst_abc123",
+    app_id: "app_xyz789"
+  },
+  signed_in_at: 1711152000
+}
+```
+
+A chave da sessão é configurável via `config.session_key` (padrão: `:clowk`).
+
+### Cookie HTTP-only
+
+```
+Set-Cookie: clowk_token=eyJ...; HttpOnly; SameSite=Lax; Secure
+```
+
+O cookie guarda o JWT bruto como fallback. Ele é:
+- **HttpOnly**: não pode ser acessado por JavaScript
+- **SameSite=Lax**: protege contra CSRF
+- **Secure**: só é enviado por HTTPS (quando a requisição é SSL)
+
+O nome do cookie é configurável via `config.cookie_key` (padrão: `"clowk_token"`).
+
+## Leitura da sessão
+
+Quando você chama `current_clowk`, a gem lê a sessão nesta ordem:
+
+1. **Sessão do Rails primeiro**: confere `session[:clowk][:user]` para usar o payload em cache
+2. **Extração do token como fallback**: se a sessão estiver vazia, extrai o token de:
+   - Query parameter (`?token=eyJ...`)
+   - Header Authorization (`Bearer eyJ...`)
+   - Cookie (`clowk_token`)
+3. **Verifica e persiste de novo**: se encontrar um token pela extração, verifica e salva de volta na sessão
+
+```ruby
+current_clowk         # => objeto Clowk::Current ou nil
+current_clowk.email   # => "jane@example.com"
+current_clowk.name    # => "Jane Doe"
+current_clowk.id      # => "user-uuid" (da claim "sub")
+```
+
+O resultado fica em cache em `@clowk_current_resource` durante a requisição.
+
+## Logout
+
+Quando o usuário sai (via `/clowk/sign_out`):
+
+```ruby
+def clowk_sign_out!
+  session.delete(:clowk)           # Remove os dados da sessão
+  cookies.delete('clowk_token')    # Remove o cookie
+  @clowk_current_resource = nil    # Limpa o cache da requisição
+end
+```
+
+Depois do logout, `current_clowk` retorna `nil` e `clowk_signed_in?` retorna `false`.
+
+## Expiração do token
+
+Os JWTs do Clowk expiram depois de **1 hora**. Quando um token expira:
+
+- `current_clowk` retorna `nil` (o `JwtVerifier` lança `InvalidTokenError`, que é capturado e retorna `nil`)
+- `authenticate_clowk!` redireciona para a página de login (ou retorna 401 em requisições JSON)
+- O usuário precisa entrar de novo pela página hospedada do Clowk
+
+Os dados da sessão (guardados na sessão do Rails) não têm TTL próprio. A validade depende da expiração do JWT.
+
+## Diagrama do fluxo de sessão
+
+```
+Login:
+  1. O usuário clica em entrar → redirect para o Clowk
+  2. O Clowk autentica → redirect de volta com ?token=eyJ...
+  3. O controller de callback verifica o JWT
+  4. Guarda { token, user, signed_in_at } em session[:clowk]
+  5. Define o cookie clowk_token (HttpOnly, Secure, SameSite=Lax)
+  6. Redireciona para after_sign_in_path
+
+Requisições seguintes:
+  1. current_clowk lê session[:clowk][:user]
+  2. Retorna um objeto Clowk::Current com id, email, name etc.
+
+Logout:
+  1. O usuário acessa /clowk/sign_out
+  2. Apaga session[:clowk] e o cookie clowk_token
+  3. Redireciona para after_sign_out_path
+```
+
+## SDKs JavaScript
+
+Os SDKs JavaScript (`@clowk/react`, `@clowk/nextjs`) gerenciam sessões de outro jeito:
+
+- **React**: o `ClowkProvider` observa o `?token=` ao montar, guarda o JWT em um cookie (`clowk_token`) e decodifica o payload do usuário no estado do React
+- **Next.js**: o `clowkMiddleware` lê o token dos cookies ou headers em cada requisição. O `auth()` verifica o token no servidor e retorna `{ user, token, signedIn }`
+- **Express / Hono**: o `clowkMiddleware` extrai e verifica o token em cada requisição. Não há sessão no servidor: o próprio JWT é a sessão
+
+Em todos os casos, o token é a única fonte da verdade. Quando ele expira, o usuário precisa se autenticar de novo.

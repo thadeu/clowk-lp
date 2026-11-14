@@ -1,27 +1,15 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import ProductPage from '@/components/product/ProductPage';
-import { productMetadata } from '@/lib/metadata';
-import { findProduct, products } from '@/lib/products';
+import OtherProductPage, { otherProductMetadata, productParams } from '@/components/pages/OtherProductPage';
+
+type Props = { params: Promise<{ product: string }> };
 
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return products.filter(product => product.slug !== 'auth').map(product => ({ product: product.slug }));
+export const generateStaticParams = productParams;
+
+export function generateMetadata({ params }: Props) {
+  return otherProductMetadata(params, 'en');
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ product: string }> }): Promise<Metadata> {
-  const product = findProduct((await params).product);
-
-  if (!product) return {};
-
-  return productMetadata(product);
-}
-
-export default async function Page({ params }: { params: Promise<{ product: string }> }) {
-  const product = findProduct((await params).product);
-
-  if (!product) notFound();
-
-  return <ProductPage product={product} />;
+export default function Page({ params }: Props) {
+  return <OtherProductPage params={params} locale="en" />;
 }

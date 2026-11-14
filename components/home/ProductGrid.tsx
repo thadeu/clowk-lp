@@ -2,17 +2,21 @@ import Link from 'next/link';
 import InstallLine from '@/components/InstallLine';
 import ProductMark from '@/components/ProductMark';
 import StatusBadge from '@/components/StatusBadge';
-import { products } from '@/lib/products';
+import { localePath, t, type Locale } from '@/lib/i18n';
+import { localizedProducts } from '@/lib/localized';
 
-export default function ProductGrid() {
+export default function ProductGrid({ locale }: { locale: Locale }) {
+  const text = t(locale).home;
+  const products = localizedProducts(locale);
+
   return (
     <section id="products" aria-labelledby="products-title" className="scroll-mt-24 max-w-6xl mx-auto px-4 sm:px-6 pt-6 pb-14 md:pt-8 md:pb-20 flex flex-col gap-6 md:gap-7">
       <div className="flex flex-col gap-2">
         <h2 id="products-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white">
-          The products
+          {text.productsTitle}
         </h2>
 
-        <p className="text-[17px] text-[#C9C3D4]">Each product has its own page here and its own docs.</p>
+        <p className="text-[17px] text-[#C9C3D4]">{text.productsLead}</p>
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(min(330px,100%),1fr))] gap-4">
@@ -47,17 +51,17 @@ export default function ProductGrid() {
                 <InstallLine command={product.install} />
               ) : (
                 <p className="rounded-xl border border-dashed border-white/[0.14] px-3.5 py-3 text-[13px] text-[#C9C3D4]">
-                  Runs inside the Clowk apps first. Opens to the public later.
+                  {text.notPublic}
                 </p>
               )}
             </div>
 
             <div className="flex flex-wrap gap-x-5 text-[15px] font-bold">
-              <Link href={`/${product.slug}`} className="min-h-11 inline-flex items-center text-[#FB7185] hover:text-white">
-                About {product.name} →
+              <Link href={localePath(locale, `/${product.slug}`)} className="min-h-11 inline-flex items-center text-[#FB7185] hover:text-white">
+                {text.about(product.name)}
               </Link>
 
-              <Link href={product.docsUrl} className="min-h-11 inline-flex items-center text-[#C9C3D4] hover:text-white">
+              <Link href={localePath(locale, product.docsUrl)} className="min-h-11 inline-flex items-center text-[#C9C3D4] hover:text-white">
                 {product.docsLabel} ↗
               </Link>
             </div>

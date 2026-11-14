@@ -1,0 +1,5 @@
+{
+  "title": "Início rápido",
+  "icon": "Rocket",
+  "pages": ["rails", "react", "nextjs", "express", "hono"]
+}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SiNpm, SiYarn, SiPnpm, SiBun } from "react-icons/si";
+import { t, type Locale } from "@/lib/i18n";
 
 const managers = [
   { id: "npm", label: "npm", icon: SiNpm, color: "#CB3837", cmd: "npm install" },
@@ -10,40 +11,10 @@ const managers = [
   { id: "bun", label: "bun", icon: SiBun, color: "#FBF0DF", cmd: "bun add" },
 ];
 
-const packages = [
-  {
-    name: "@clowk/core",
-    description:
-      "Runtime-agnostic foundation. JWT verification, HTTP client, SDK resources. Works on Node.js, Bun, Deno, and Cloudflare Workers.",
-  },
-  {
-    name: "@clowk/sdk",
-    description:
-      "User-facing convenience package. Re-exports everything from @clowk/core under a clean import path.",
-  },
-  {
-    name: "@clowk/react",
-    description:
-      "ClowkProvider, SignInButton, SignUpButton, SignOutButton, useAuth hook. Redirect-based — no embedded UI.",
-  },
-  {
-    name: "@clowk/nextjs",
-    description:
-      "Server-side middleware for route protection, auth() helper for Server Components, plus React components re-exported.",
-  },
-  {
-    name: "@clowk/express",
-    description:
-      "Express middleware. Extracts and verifies JWT from query param, cookie, or Authorization header.",
-  },
-  {
-    name: "@clowk/hono",
-    description:
-      "Hono middleware. Same behavior as Express, adapted for Hono's API. Works on Workers, Bun, Deno, and Node.js.",
-  },
-];
 
-export default function SDKSection() {
+export default function SDKSection({ locale = "en" }: { locale?: Locale }) {
+  const text = t(locale).sdk;
+  const packages = Object.entries(text.packages).map(([name, description]) => ({ name, description }));
   const [manager, setManager] = useState("npm");
 
   const currentCmd = managers.find((m) => m.id === manager)!.cmd;
@@ -57,12 +28,11 @@ export default function SDKSection() {
             SDKs
           </p>
           <h2 id="sdk-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white leading-tight mb-4">
-            One broker, every runtime
+            {text.title}
           </h2>
           <p className="text-[#A9A1B6] text-[17px] max-w-2xl">
-            All packages depend on <code className="text-white font-mono text-sm bg-white/5 px-1.5 py-0.5 rounded">@clowk/core</code> for
-            token verification. Framework packages are thin wrappers that adapt
-            core to each framework&apos;s conventions.
+            {text.leadBefore} <code className="text-white font-mono text-sm bg-white/5 px-1.5 py-0.5 rounded">@clowk/core</code>{" "}
+            {text.leadAfter}
           </p>
         </div>
 

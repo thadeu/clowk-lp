@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+import { localePath, type Locale } from '@/lib/i18n';
 import {
   Rocket,
   Gem,
@@ -104,3 +105,34 @@ export const contents: SidebarSection[] = [
     ],
   },
 ];
+
+const ptTitles: Record<string, string> = {
+  'Getting Started': 'Primeiros passos',
+  Concepts: 'Conceitos',
+  Session: 'Sessão',
+  Authentication: 'Autenticação',
+  'How it works': 'Como funciona',
+  'Email & Password': 'Email e senha',
+  Integrations: 'Integrações',
+  Overview: 'Visão geral',
+  'Verify Token': 'Verificar token',
+  'Get User': 'Buscar usuário',
+  Reference: 'Referência',
+  FAQ: 'Perguntas frequentes',
+  Security: 'Segurança',
+  Contributing: 'Como contribuir',
+  Errors: 'Erros',
+};
+
+/** The sidebar in `locale`: titles translated and links under the locale prefix. */
+export function localizedContents(locale: Locale): SidebarSection[] {
+  if (locale === 'en') return contents;
+
+  const title = (text: string) => ptTitles[text] ?? text;
+
+  return contents.map(section => ({
+    ...section,
+    title: title(section.title),
+    list: section.list.map(item => ({ ...item, title: title(item.title), href: localePath(locale, item.href) })),
+  }));
+}

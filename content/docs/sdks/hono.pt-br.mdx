@@ -1,0 +1,102 @@
+---
+title: "@clowk/hono"
+description: Middleware Hono para autenticação com Clowk
+---
+
+## Instalação
+
+```bash
+npm install @clowk/hono @clowk/core
+```
+
+## Visão geral
+
+Middleware Hono que verifica JWTs e coloca o usuário autenticado no contexto. Funciona em todo runtime que o Hono suporta: Cloudflare Workers, Bun, Deno e Node.js.
+
+**O que ele oferece:**
+
+- `clowkAuth()` — factory de middleware
+- `c.get('clowkUser')` — o usuário decodificado após a verificação
+
+## clowkAuth
+
+```typescript
+import { clowkAuth } from '@clowk/hono'
+
+app.use('*', clowkAuth())
+```
+
+### Opções
+
+| Opção | Tipo | Padrão | Descrição |
+|--------|------|---------|-------------|
+| `onError` | `(err, c) => Response` | Retorna 401 em JSON | Handler de erro personalizado |
+| `extractToken` | `(c) => string \| null` | Detecção automática | Extrator de token personalizado |
+
+### Ordem de extração do token
+
+O middleware procura o JWT nesta ordem:
+
+1. Parâmetro de query: `?token=eyJ...`
+2. Cookie: `clowk_token`
+3. Header Authorization: `Bearer eyJ...`
+
+## Variáveis de contexto
+
+Após uma verificação bem-sucedida:
+
+```typescript
+app.get('/me', (c) => {
+  const user = c.get('clowkUser')
+  // => { id, email, name, provider, iat, exp }
+
+  return c.json({ user })
+})
+```
+
+### Tipo do usuário
+
+```typescript
+interface ClowkUser {
+  id: string
+  email: string
+  name: string
+  provider: string
+  iat: number
+  exp: number
+}
+```
+
+## Tratamento de erros
+
+Por padrão, tokens inválidos ou ausentes retornam:
+
+```json
+{ "error": "Unauthorized" }
+```
+
+Personalize com `onError`:
+
+```typescript
+const auth = clowkAuth({
+  onError: (err, c) => {
+    return c.json({ error: err.message }, 401)
+  },
+})
+```
+
+## Runtimes
+
+| Runtime | Alvo de deploy |
+|---------|--------------|
+| Cloudflare Workers | `wrangler deploy` |
+| Bun | `bun run src/index.ts` |
+| Deno | `deno run src/index.ts` |
+| Node.js | `node src/index.ts` |
+
+O pacote `@clowk/core` usa `fetch` nativo e as APIs Web Crypto — sem dependências específicas do Node.js.
+
+## Próximos passos
+
+- [Quickstart do Hono](/pt-br/docs/quickstart/hono) — guia para começar
+- [Referência do @clowk/core](/pt-br/docs/sdks/core) — pacote base

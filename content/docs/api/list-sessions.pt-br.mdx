@@ -1,0 +1,69 @@
+---
+title: Listar sessões
+description: Liste todas as sessões de uma instância
+---
+
+## GET /api/v1/sessions
+
+Retorna todas as sessões (ativas e revogadas) da instância ligada à sua secret key, ordenadas pelo login mais recente.
+
+## Requisição
+
+```bash
+curl https://myapp.clowk.dev/api/v1/sessions \
+  -H "X-Clowk-Secret-Key: sk_live_..."
+```
+
+### Headers
+
+| Header | Obrigatório | Descrição |
+|--------|----------|-------------|
+| `X-Clowk-Secret-Key` | Sim | A secret key da sua instância |
+
+## Resposta
+
+### 200 — Sucesso
+
+```json
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "resource": "session",
+    "data": {
+      "session_id": "clk_session_a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "user_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "provider": "google",
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "ip_address": "203.0.113.42",
+      "geo_data": {},
+      "logged_in_at": "2026-03-20T10:30:00Z",
+      "last_signin_at": "2026-03-20T10:30:00Z",
+      "revoked_at": null,
+      "active": true
+    }
+  }
+]
+```
+
+### Campos
+
+| Campo | Tipo | Descrição |
+|-------|------|-------------|
+| `session_id` | `string` | Identificador único da sessão (`clk_session_UUID`) |
+| `user_id` | `string` | UUID do usuário dono da sessão |
+| `provider` | `string` | Provedor de autenticação usado: `google`, `github`, `twitter`, `password` |
+| `name` | `string` | Nome de exibição do usuário no momento do login |
+| `email` | `string` | E-mail do usuário no momento do login |
+| `ip_address` | `string` | Endereço IP de onde a sessão foi criada |
+| `geo_data` | `object` | Dados geográficos obtidos a partir do IP (se houver) |
+| `logged_in_at` | `string` | Timestamp ISO 8601 do primeiro login |
+| `last_signin_at` | `string` | Timestamp ISO 8601 do login mais recente |
+| `revoked_at` | `string \| null` | Timestamp ISO 8601 da revogação, ou `null` se ativa |
+| `active` | `boolean` | `true` se a sessão não foi revogada |
+
+### 401 — Não autorizado
+
+```json
+{ "error": "Unauthorized" }
+```

@@ -1,0 +1,63 @@
+---
+title: Twitter
+description: Configure a autenticação OAuth do Twitter (X) com o Clowk
+---
+
+## Visão geral
+
+O Clowk suporta OAuth 2.0 do Twitter com PKCE. Como o Twitter nem sempre fornece um email, o Clowk gera um email provisório para usuários do Twitter.
+
+## Configuração
+
+### 1. Ative o Twitter no Clowk
+
+Abra o dashboard do Clowk e ative o provedor Twitter na sua instância.
+
+### 2. Crie as credenciais OAuth do Twitter
+
+1. Acesse o [Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard)
+2. Crie um projeto e um app
+3. Ative o **OAuth 2.0** nas configurações do app
+4. Defina a URL de callback como: `https://clowk.in/oauth/twitter/callback`
+5. Copie o **Client ID** e o **Client Secret** para o dashboard do Clowk
+
+### 3. Scopes
+
+O Clowk pede estes scopes:
+
+| Scope | Finalidade |
+|-------|---------|
+| `tweet.read` | Acesso básico de leitura |
+| `users.read` | Ler o perfil do usuário |
+| `offline.access` | Suporte a refresh token |
+
+## PKCE
+
+O Twitter exige PKCE (Proof Key for Code Exchange). O Clowk cuida disso automaticamente: ele gera um `code_verifier` e um `code_challenge` para cada requisição OAuth e os guarda no registro `OAuthState`.
+
+## Tratamento de email
+
+O Twitter nem sempre retorna o email do usuário. Quando não há email, o Clowk gera um provisório:
+
+```
+{twitter_uid}@clowk.noemail
+```
+
+Você pode checar esse padrão no seu app se precisar de um email real dos usuários do Twitter.
+
+## Payload do JWT
+
+```json
+{
+  "iss": "clowk",
+  "sub": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "email": "123456789@clowk.noemail",
+  "name": "janedoe",
+  "avatar_url": "https://pbs.twimg.com/profile_images/...",
+  "provider": "twitter",
+  "instance_id": "inst_abc123",
+  "app_id": "app_xyz789",
+  "iat": 1711152000,
+  "exp": 1711155600
+}
+```

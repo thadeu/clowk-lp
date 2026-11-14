@@ -1,0 +1,62 @@
+---
+title: Express
+description: Adicione autenticação ao seu app Express com o Clowk
+---
+
+## Instalação
+
+```bash
+pnpm add @clowk/express @clowk/core
+```
+
+## Configuração
+
+```typescript title="app.ts"
+import express from 'express'
+import { clowkMiddleware, requireAuth } from '@clowk/express'
+
+const app = express()
+```
+
+## Proteja todas as rotas
+
+Aplique o middleware de forma global. O JWT decodificado fica disponível em `req.auth`:
+
+```typescript
+app.use(clowkMiddleware({
+  secretKey: process.env.CLOWK_SECRET_KEY,
+}))
+
+app.get('/dashboard', (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+## Proteja rotas específicas
+
+Use `requireAuth()` para proteger rotas individuais. Ele retorna 401 se não houver token válido:
+
+```typescript
+app.get('/public', (req, res) => {
+  res.json({ message: 'This is public' })
+})
+
+app.get('/protected', requireAuth(), (req, res) => {
+  res.json({ user: req.auth })
+})
+```
+
+## Como funciona
+
+O middleware extrai e verifica o JWT a partir de (nesta ordem):
+
+1. **Query parameter** — `?token=eyJ...`
+2. **Header Authorization** — `Bearer eyJ...`
+3. **Cookie** — `clowk_token`
+
+Com `clowkMiddleware`, `req.auth` é `null` se nenhum token for encontrado (auth opcional). Com `requireAuth`, a requisição é rejeitada com 401 antes de chegar ao seu handler.
+
+## Próximos passos
+
+- [Quickstart do Hono](/pt-br/docs/quickstart/hono) — para Workers, Bun, Deno
+- [Integração completa com Express](/pt-br/docs/integrations/express) — referência completa da API
