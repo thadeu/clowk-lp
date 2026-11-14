@@ -22,7 +22,10 @@ const lines = [
   '',
   ...products
     .filter(p => !p.status)
-    .map(p => `- [${p.name} ${p.slug === 'cronota' ? 'app' : 'docs'}](${p.docsUrl.startsWith('/') ? SITE_URL + p.docsUrl + '/' : p.docsUrl})`),
+    .flatMap(p => [
+      `- [${p.name} docs](${p.docsUrl.startsWith('/') ? SITE_URL + p.docsUrl + '/' : p.docsUrl})`,
+      ...(p.llmsUrl ? [`- [${p.name} docs in Markdown, for agents](${p.llmsUrl})`] : []),
+    ]),
   `- [auth in depth for agents](${SITE_URL}/llm.txt)`,
   '',
 ];

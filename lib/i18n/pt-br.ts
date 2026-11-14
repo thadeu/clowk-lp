@@ -65,7 +65,6 @@ export const ptBr: Dictionary = {
     features: 'O que você ganha',
     more: 'Mais da Clowk',
     questions: 'Perguntas',
-    openCronota: 'Abrir o cronota ↗',
     readDocs: 'Ler a documentação',
     endTitle: (name: string) => `Pronto para testar o ${name}?`,
   },

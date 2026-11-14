@@ -249,6 +249,20 @@ return worker.Run(ctx)`,
 
   cronota: {
     primaryCta: { label: 'Abrir o cronota', href: 'https://cronota.clowk.in' },
+    example: {
+      caption: 'Emita uma NFS-e pelo seu sistema',
+      lang: 'bash',
+      code: `curl https://cronota.clowk.in/api/v1/invoices \\
+  -H "Authorization: Bearer sk_test_..." \\
+  -H "Idempotency-Key: pedido-1234" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+  "customer": { "document": "12345678000195", "name": "Acme Ltda" },
+  "amount": "1188.00",
+  "description": "Licença do sistema",
+  "service_code_national": "010501"
+}'`,
+    },
     seoTitle: 'cronota — emita NFS-e com agendamento pelo Emissor Nacional',
     seoDescription:
       'O cronota emite NFS-e pelo Emissor Nacional: notas avulsas, modelos e agendamentos recorrentes com aprovação. Certificado A1 criptografado e auditado.',
@@ -272,6 +286,7 @@ return worker.Run(ctx)`,
       { q: 'Para quem é o cronota?', a: 'Para empresas no Brasil que emitem NFS-e pelo Emissor Nacional.' },
       { q: 'Posso conferir uma nota antes de ela sair?', a: 'Sim. Um agendamento pode pedir aprovação antes de cada nota.' },
       { q: 'Posso testar sem emitir notas reais?', a: 'Sim. Troque para Sandbox para usar a produção restrita.' },
+      { q: 'Como integro meu sistema com o cronota?', a: 'Crie uma chave de API no console e envie POST /api/v1/invoices com ela. O cronota responde 202, emite a nota em segundo plano e chama o seu webhook com invoice.authorized. Os passos estão em cronota.clowk.in/docs.' },
     ],
   },
 

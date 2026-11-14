@@ -19,6 +19,7 @@ export type Product = {
   primaryCta?: { label: string; href: string };
   docsUrl: string;
   docsLabel: string;
+  llmsUrl?: string;
   githubUrl?: string;
   category: string;
   platform?: string;
@@ -329,8 +330,23 @@ return worker.Run(ctx)`,
       'A1 certificate encrypted, every opening audited',
     ],
     primaryCta: { label: 'Open cronota', href: 'https://cronota.clowk.in' },
-    docsUrl: 'https://cronota.clowk.in',
-    docsLabel: 'cronota.clowk.in',
+    docsUrl: 'https://cronota.clowk.in/docs',
+    docsLabel: 'cronota.clowk.in/docs',
+    llmsUrl: 'https://cronota.clowk.in/llms-full.txt',
+    example: {
+      caption: 'Emit one NFS-e from your system',
+      lang: 'bash',
+      code: `curl https://cronota.clowk.in/api/v1/invoices \\
+  -H "Authorization: Bearer sk_test_..." \\
+  -H "Idempotency-Key: pedido-1234" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+  "customer": { "document": "12345678000195", "name": "Acme Ltda" },
+  "amount": "1188.00",
+  "description": "Licença do sistema",
+  "service_code_national": "010501"
+}'`,
+    },
     category: 'BusinessApplication',
     platform: 'Web',
     features: [
@@ -345,6 +361,7 @@ return worker.Run(ctx)`,
       { q: 'Who is cronota for?', a: 'Companies in Brazil that emit NFS-e through the Emissor Nacional.' },
       { q: 'Can I check a note before it goes out?', a: 'Yes. A schedule can ask for approval before each note.' },
       { q: 'Can I test without emitting real notes?', a: 'Yes. Switch to Sandbox to use produção restrita.' },
+      { q: 'How do I connect my system to cronota?', a: 'Create an API key in the console and send POST /api/v1/invoices with it. cronota answers 202, emits the note in the background and calls your webhook with invoice.authorized. The steps are at cronota.clowk.in/docs.' },
     ],
   },
   {

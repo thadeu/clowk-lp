@@ -63,7 +63,6 @@ export const en = {
     features: 'What you get',
     more: 'More from Clowk',
     questions: 'Questions',
-    openCronota: 'Open cronota ↗',
     readDocs: 'Read the docs',
     endTitle: (name: string) => `Ready to try ${name}?`,
   },

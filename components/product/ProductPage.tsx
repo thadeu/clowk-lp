@@ -172,8 +172,6 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
 function docsCta(product: Product, locale: Locale) {
   const text = t(locale).product;
 
-  if (product.slug === 'cronota') return text.openCronota;
-
   if (product.status) return `${product.docsLabel} ↗`;
 
   return `${text.readDocs} ${product.docsUrl.startsWith('/') ? '→' : '↗'}`;

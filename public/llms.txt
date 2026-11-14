@@ -21,5 +21,6 @@ Product names are lowercase: auth, ndb, voodu, anway, cronota, 1billion.
 - [ndb docs](https://ndb.clowk.in)
 - [voodu docs](https://voodu.clowk.in/docs)
 - [anway docs](https://anway.clowk.in)
-- [cronota app](https://cronota.clowk.in)
+- [cronota docs](https://cronota.clowk.in/docs)
+- [cronota docs in Markdown, for agents](https://cronota.clowk.in/llms-full.txt)
 - [auth in depth for agents](https://clowk.in/llm.txt)
