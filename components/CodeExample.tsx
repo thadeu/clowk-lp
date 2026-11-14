@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { atomOneDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -124,19 +125,19 @@ export default function CodeExample() {
   const [active, setActive] = useState('ruby');
 
   return (
-    <section className="py-24 px-6 bg-[#FAFAFA]">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-12">
+    <section aria-labelledby="code-title" className="py-14 md:py-20 border-t border-white/[0.08]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="mb-8">
           <p className="text-sm font-semibold text-[#F43F5E] tracking-widest uppercase mb-3">Integrate in minutes</p>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#18181B] leading-tight mb-4">
+          <h2 id="code-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white leading-tight mb-4">
             From zero to auth in 5 lines
           </h2>
-          <p className="text-[#71717A] text-lg max-w-xl mx-auto">
+          <p className="text-[#A9A1B6] text-[17px]">
             Works with your existing stack. No new abstractions to learn.
           </p>
         </div>
 
-        <div className="rounded-2xl overflow-hidden border border-[#E4E4E7] shadow-xl shadow-black/5">
+        <div className="rounded-2xl overflow-hidden border border-white/[0.09] border-white/[0.09]">
           <div className="bg-[#1C1C1E] px-4 py-3 flex items-center gap-2">
             <div className="hidden sm:flex gap-1.5">
               <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
@@ -184,11 +185,11 @@ export default function CodeExample() {
           </div>
         </div>
 
-        <p className="text-center text-sm text-[#71717A] mt-6">
+        <p className="text-sm text-[#A9A1B6] mt-6">
           Need more detail?{' '}
-          <a href="/docs" className="text-[#F43F5E] font-medium hover:underline">
+          <Link href="/docs" className="text-[#FB7185] font-medium hover:underline">
             Read the docs →
-          </a>
+          </Link>
         </p>
       </div>
     </section>

@@ -1,12 +1,14 @@
 import Link from 'next/link';
+import type { ReactNode } from 'react';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import InstallLine from '@/components/InstallLine';
 import JsonLd from '@/components/JsonLd';
 import ProductMark from '@/components/ProductMark';
+import StatusBadge from '@/components/StatusBadge';
 import { products, SITE_URL, type Product } from '@/lib/products';
 
-export default function ProductPage({ product }: { product: Product }) {
+export default function ProductPage({ product, children }: { product: Product; children?: ReactNode }) {
   const others = products.filter(other => other.slug !== product.slug);
 
   return (
@@ -28,7 +30,10 @@ export default function ProductPage({ product }: { product: Product }) {
 
               <div className="flex flex-col gap-0.5">
                 <h1 className="text-[clamp(40px,5vw,56px)] leading-none tracking-tight font-bold">{product.name}</h1>
-                <span className="text-sm text-[#A9A1B6]">by Clowk</span>
+                <span className="flex items-center gap-2 text-sm text-[#A9A1B6]">
+                  by Clowk
+                  {product.status && <StatusBadge status={product.status} />}
+                </span>
               </div>
             </div>
 
@@ -36,8 +41,19 @@ export default function ProductPage({ product }: { product: Product }) {
             <p className="max-w-[620px] text-[17px] leading-relaxed text-[#C9C3D4]">{product.summary}</p>
 
             <div className="flex flex-wrap gap-3">
-              <Link href={product.docsUrl} className="inline-flex items-center min-h-12 px-6 rounded-xl bg-[#F43F5E] hover:bg-[#E8385A] font-bold transition-colors">
-                {product.slug === 'cronota' ? 'Open cronota' : 'Read the docs'} ↗
+              {product.primaryCta && (
+                <Link href={product.primaryCta.href} className="inline-flex items-center min-h-12 px-6 rounded-xl bg-[#F43F5E] hover:bg-[#E8385A] font-bold transition-colors">
+                  {product.primaryCta.label} →
+                </Link>
+              )}
+
+              <Link
+                href={product.docsUrl}
+                className={`inline-flex items-center min-h-12 px-6 rounded-xl font-bold transition-colors ${
+                  product.primaryCta ? 'border border-white/[0.18] hover:bg-white/5' : 'bg-[#F43F5E] hover:bg-[#E8385A]'
+                }`}
+              >
+                {docsCta(product)}
               </Link>
 
               {product.githubUrl && (
@@ -56,7 +72,7 @@ export default function ProductPage({ product }: { product: Product }) {
           )}
         </section>
 
-        {product.slug !== 'cronota' && (
+        {product.install && (
           <section aria-labelledby="install-title" className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 md:pb-16">
             <div className="rounded-[18px] bg-[#140D1C] border border-white/[0.09] p-5 sm:px-6 flex flex-wrap items-center gap-x-6 gap-y-3">
               <h2 id="install-title" className="text-base font-bold">Install</h2>
@@ -83,11 +99,13 @@ export default function ProductPage({ product }: { product: Product }) {
           </div>
         </section>
 
+        {children}
+
         <section aria-labelledby="more-title" className="border-t border-white/[0.08] bg-[#110A18]">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16 flex flex-col gap-5">
             <h2 id="more-title" className="text-2xl font-bold">More from Clowk</h2>
 
-            <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(220px,100%),1fr))] gap-3">
+            <ul className="grid grid-cols-[repeat(auto-fit,minmax(min(170px,100%),1fr))] gap-3">
               {others.map(other => (
                 <li key={other.slug}>
                   <Link href={`/${other.slug}`} className="flex items-center gap-3 px-4 py-3.5 rounded-[14px] bg-[#1A1222] border border-white/[0.09] hover:border-white/25 transition-colors">
@@ -121,6 +139,14 @@ export default function ProductPage({ product }: { product: Product }) {
   );
 }
 
+function docsCta(product: Product) {
+  if (product.slug === 'cronota') return 'Open cronota ↗';
+
+  if (product.status) return `${product.docsLabel} ↗`;
+
+  return product.docsUrl.startsWith('/') ? 'Read the docs →' : 'Read the docs ↗';
+}
+
 function structuredData(product: Product) {
   return {
     '@context': 'https://schema.org',
@@ -131,7 +157,7 @@ function structuredData(product: Product) {
         description: product.seoDescription,
         url: `${SITE_URL}/${product.slug}`,
         applicationCategory: product.category,
-        operatingSystem: 'Linux, macOS',
+        operatingSystem: product.platform ?? 'Linux, macOS',
         publisher: { '@type': 'Organization', name: 'Clowk', url: SITE_URL },
       },
       {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import ProductPage from '@/components/product/ProductPage';
+import { productMetadata } from '@/lib/metadata';
 import { findProduct, products } from '@/lib/products';
 
 export const dynamicParams = false;
@@ -14,13 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ product: 
 
   if (!product) return {};
 
-  return {
-    title: { absolute: product.seoTitle },
-    description: product.seoDescription,
-    alternates: { canonical: `/${product.slug}/` },
-    openGraph: { title: product.seoTitle, description: product.seoDescription, url: `/${product.slug}/` },
-    twitter: { title: product.seoTitle, description: product.seoDescription },
-  };
+  return productMetadata(product);
 }
 
 export default async function Page({ params }: { params: Promise<{ product: string }> }) {

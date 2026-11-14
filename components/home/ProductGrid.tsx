@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import InstallLine from '@/components/InstallLine';
 import ProductMark from '@/components/ProductMark';
+import StatusBadge from '@/components/StatusBadge';
 import { products } from '@/lib/products';
 
 export default function ProductGrid() {
@@ -21,7 +22,10 @@ export default function ProductGrid() {
               <ProductMark product={product} />
 
               <div className="flex flex-col gap-0.5 min-w-0">
-                <h3 className="text-[22px] font-bold tracking-tight text-white">{product.name}</h3>
+                <h3 className="flex items-center gap-2 text-[22px] font-bold tracking-tight text-white">
+                  {product.name}
+                  {product.status && <StatusBadge status={product.status} />}
+                </h3>
                 <span className="text-[13px] text-[#A9A1B6]">clowk.in/{product.slug}</span>
               </div>
             </div>
@@ -39,7 +43,13 @@ export default function ProductGrid() {
             </ul>
 
             <div className="mt-auto">
-              <InstallLine command={product.install} />
+              {product.install ? (
+                <InstallLine command={product.install} />
+              ) : (
+                <p className="rounded-xl border border-dashed border-white/[0.14] px-3.5 py-3 text-[13px] text-[#C9C3D4]">
+                  Runs inside the Clowk apps first. Opens to the public later.
+                </p>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-x-5 text-[15px] font-bold">

@@ -49,26 +49,26 @@ export default function SDKSection() {
   const currentCmd = managers.find((m) => m.id === manager)!.cmd;
 
   return (
-    <section className="py-24 px-6 bg-white">
-      <div className="max-w-6xl mx-auto">
+    <section aria-labelledby="sdk-title" className="py-14 md:py-20 border-t border-white/[0.08]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div className="mb-8">
           <p className="text-sm font-semibold text-[#F43F5E] tracking-widest uppercase mb-3">
             SDKs
           </p>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#18181B] leading-tight mb-4">
+          <h2 id="sdk-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white leading-tight mb-4">
             One broker, every runtime
           </h2>
-          <p className="text-[#71717A] text-lg max-w-2xl mx-auto">
-            All packages depend on <code className="text-[#18181B] font-mono text-sm bg-[#F4F4F5] px-1.5 py-0.5 rounded">@clowk/core</code> for
+          <p className="text-[#A9A1B6] text-[17px] max-w-2xl">
+            All packages depend on <code className="text-white font-mono text-sm bg-white/5 px-1.5 py-0.5 rounded">@clowk/core</code> for
             token verification. Framework packages are thin wrappers that adapt
             core to each framework&apos;s conventions.
           </p>
         </div>
 
         {/* Package manager selector */}
-        <div className="flex justify-center mb-10">
-          <div className="inline-flex gap-1 p-1 rounded-lg bg-[#F4F4F5] border border-[#E4E4E7]">
+        <div className="flex mb-8">
+          <div className="inline-flex gap-1 p-1 rounded-lg bg-white/5 border border-white/[0.09]">
             {managers.map((m) => {
               const Icon = m.icon;
 
@@ -78,8 +78,8 @@ export default function SDKSection() {
                   onClick={() => setManager(m.id)}
                   className={`flex items-center gap-1.5 px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
                     manager === m.id
-                      ? "bg-white text-[#18181B] shadow-sm"
-                      : "text-[#71717A] hover:text-[#18181B]"
+                      ? "bg-white/10 text-white"
+                      : "text-[#A9A1B6] hover:text-white"
                   }`}
                   title={m.label}
                 >
@@ -92,7 +92,7 @@ export default function SDKSection() {
         </div>
 
         {/* Architecture diagram */}
-        <div className="flex justify-center mb-14">
+        <div className="flex mb-10">
           <div className="inline-flex flex-col gap-4 px-10 py-8 rounded-2xl bg-[#0C0014] border border-white/10 font-mono text-sm">
             <div className="flex items-center gap-3 mb-1">
               <span className="w-2.5 h-2.5 rounded-full bg-[#F43F5E] shadow-sm shadow-[#F43F5E]/50" />
@@ -118,7 +118,7 @@ export default function SDKSection() {
           {packages.map((pkg) => (
             <div
               key={pkg.name}
-              className="group p-6 rounded-2xl border border-[#E4E4E7] hover:border-[#FBCCD3] hover:shadow-lg hover:shadow-[#F43F5E]/5 transition-all duration-300"
+              className="group p-6 rounded-[18px] bg-[#140D1C] border border-white/[0.09] hover:border-white/25 transition-all duration-300"
             >
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-[#F43F5E]">
@@ -126,14 +126,14 @@ export default function SDKSection() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
                 </span>
-                <h3 className="font-mono text-sm font-semibold text-[#18181B]">
+                <h3 className="font-mono text-sm font-semibold text-white">
                   {pkg.name}
                 </h3>
               </div>
-              <p className="text-sm text-[#71717A] leading-relaxed mb-4">
+              <p className="text-sm text-[#A9A1B6] leading-relaxed mb-4">
                 {pkg.description}
               </p>
-              <code className="block text-xs text-[#71717A] font-mono bg-[#F4F4F5] px-3 py-2 rounded-lg">
+              <code className="block text-xs text-[#A9A1B6] font-mono bg-white/5 px-3 py-2 rounded-lg">
                 {currentCmd} {pkg.name}
               </code>
             </div>

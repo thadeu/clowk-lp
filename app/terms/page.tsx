@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
 
 export const metadata: Metadata = {
   title: { absolute: "Terms of Service — Clowk" },
@@ -9,25 +10,17 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <main className="min-h-screen bg-white">
-      {/* Header */}
-      <div className="bg-[#0C0014] py-20 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <Link href="/" className="text-white/40 text-sm hover:text-white/70 transition-colors mb-6 inline-block">
-            ← Back to home
-          </Link>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Terms of Service
-          </h1>
-          <p className="text-white/50 text-base">
-            Last updated: March 22, 2026
-          </p>
-        </div>
+    <>
+      <Header />
+
+      <main className="min-h-screen bg-[#0C0014]">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-28 md:pt-36 pb-4">
+        <h1 className="text-[clamp(36px,5vw,52px)] leading-tight tracking-tight font-bold text-white mb-3">Terms of Service</h1>
+        <p className="text-[#A9A1B6] text-base">Last updated: March 22, 2026</p>
       </div>
 
-      {/* Content */}
-      <div className="max-w-3xl mx-auto px-6 py-16">
-        <div className="prose prose-zinc max-w-none [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#18181B] [&_h2]:mt-12 [&_h2]:mb-4 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#18181B] [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:text-[#71717A] [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:text-[#71717A] [&_ul]:leading-relaxed [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-2 [&_strong]:text-[#18181B]">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16 md:pb-24">
+        <div className="prose prose-invert max-w-none [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-white [&_h2]:mt-12 [&_h2]:mb-4 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-white [&_h3]:mt-8 [&_h3]:mb-3 [&_p]:text-[#C9C3D4] [&_p]:leading-relaxed [&_p]:mb-4 [&_ul]:text-[#C9C3D4] [&_ul]:leading-relaxed [&_ul]:mb-4 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:mb-2 [&_strong]:text-white">
 
           <h2>1. Agreement to Terms</h2>
           <p>
@@ -115,5 +108,8 @@ export default function TermsPage() {
         </div>
       </div>
     </main>
+
+      <Footer />
+    </>
   );
 }

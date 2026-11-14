@@ -28,6 +28,11 @@ pnpm build
 
 Static output goes to `out/`.
 
+## Generated files
+
+- `public/llms.txt` comes from `lib/products.ts`. `pnpm build` writes it, so it never drifts.
+- `public/og/<product>.png` are the social previews. Run `node --experimental-strip-types scripts/og.mjs` (needs Playwright) when a product name, tagline or mark changes, and commit the files.
+
 ## Release
 
 A `vX.Y.Z` tag publishes the site to Cloudflare Pages (`.github/workflows/release.yml`). Pushing to `main` alone does not deploy.

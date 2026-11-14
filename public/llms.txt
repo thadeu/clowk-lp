@@ -1,0 +1,23 @@
+# Clowk
+
+> Clowk makes small, self-hosted tools: sign-in, search on NDJSON, deploys, background jobs, NFS-e and email. Each product does one job, and they work well together.
+
+Product names are lowercase: auth, ndb, voodu, anway, cronota, 1billion.
+
+## Products
+
+- [auth](https://clowk.in/auth/): Broker, not provider. Sign-in that stays out of your UI. Clowk runs the OAuth dance with Google, GitHub, X and Apple, and hands your app a signed JWT. Your app keeps its own screens.
+- [ndb](https://clowk.in/ndb/): The API of Elasticsearch. The filters of MongoDB. One Go binary. ndb runs the routes you know from Elasticsearch and the query language you know from MongoDB on plain NDJSON. One daemon, one data directory. No JVM, no cluster, no schema.
+- [voodu](https://clowk.in/voodu/): Self-hosted PaaS. One HCL file. One voodu apply. Heroku-shaped deploys on your own boxes. The CLI streams the build over SSH: no commit, no push, no bare repo.
+- [anway](https://clowk.in/anway/): Background jobs for any language. One binary, no Redis. A Rails app pushes email.send, and a Go worker runs it. Storage is on disk, inside the binary.
+- [cronota](https://clowk.in/cronota/): NFS-e on a schedule, through the Emissor Nacional. For companies in Brazil: one-off notes, templates and recurring schedules, with approval before each note if you want it.
+- [1billion](https://clowk.in/1billion/): Transactional email with our own mail server. (in development) Send email from your app with one HTTP call. 1billion queues it, signs it with DKIM and delivers it over SMTP from its own server.
+
+## Docs
+
+- [auth docs](https://clowk.in/docs/)
+- [ndb docs](https://ndb.clowk.in)
+- [voodu docs](https://voodu.clowk.in/docs)
+- [anway docs](https://anway.clowk.in)
+- [cronota app](https://cronota.clowk.in)
+- [auth in depth for agents](https://clowk.in/llm.txt)

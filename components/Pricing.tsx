@@ -1,18 +1,3 @@
-import Link from 'next/link';
-
-// Numbers here come from the product, not from copywriting:
-//
-//   Free   subscriptions table defaults — max_apps 1, max_prod_instances 1,
-//          max_webhook_endpoints 1, allowed_providers ["google"]
-//   Pro    Subscription::PRO_LIMITS — all three limits -1 (unlimited),
-//          providers google/github/twitter/apple
-//
-// The Pro PRICE is deliberately absent. Subscription::Stripe.pro_price reads it
-// from Stripe at runtime and caches it for an hour, so a number typed here
-// would be a second source of truth that drifts the first time the price
-// changes in the dashboard — on the one page where being wrong costs a sale.
-// The card sends people to the app, which asks Stripe.
-
 const plans = [
   {
     name: 'Free',
@@ -53,7 +38,7 @@ const plans = [
 function Check({ muted }: { muted?: boolean }) {
   return (
     <svg
-      className={`w-5 h-5 shrink-0 mt-0.5 ${muted ? 'text-[#A1A1AA]' : 'text-[#F43F5E]'}`}
+      className={`w-5 h-5 shrink-0 mt-0.5 ${muted ? 'text-[#7E7690]' : 'text-[#F43F5E]'}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -67,12 +52,12 @@ function Check({ muted }: { muted?: boolean }) {
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="py-24 px-6 bg-[#FAFAFA] scroll-mt-24">
-      <div className="max-w-5xl mx-auto">
-        <div className="text-center mb-14">
+    <section id="pricing" aria-labelledby="pricing-title" className="py-14 md:py-20 border-t border-white/[0.08] scroll-mt-24">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="mb-8">
           <p className="text-sm font-semibold text-[#F43F5E] tracking-widest uppercase mb-3">Pricing</p>
-          <h2 className="text-3xl md:text-5xl font-bold text-[#18181B] leading-tight">Two plans. No per-user bill.</h2>
-          <p className="mt-4 text-lg text-[#52525B] max-w-2xl mx-auto">
+          <h2 id="pricing-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold text-white leading-tight">Two plans. No per-user bill.</h2>
+          <p className="mt-4 text-lg text-[#C9C3D4] max-w-2xl">
             Authentication priced by what you build, not by how many people sign in. Your user count never appears on
             the invoice.
           </p>
@@ -84,24 +69,24 @@ export default function Pricing() {
               key={plan.name}
               className={`rounded-2xl border p-8 h-full flex flex-col ${
                 plan.featured
-                  ? 'border-[#FBCCD3] bg-white shadow-sm ring-1 ring-[#FBCCD3]'
-                  : 'border-[#E4E4E7] bg-white'
+                  ? 'border-[#F43F5E]/45 bg-[#140D1C]'
+                  : 'border-white/[0.09] bg-[#140D1C]'
               }`}
             >
               <div className="flex items-center gap-3">
-                <h3 className="text-xl font-bold text-[#18181B]">{plan.name}</h3>
+                <h3 className="text-xl font-bold text-white">{plan.name}</h3>
                 {plan.featured && (
-                  <span className="rounded-full bg-[#FEF2F4] px-2.5 py-0.5 text-xs font-semibold text-[#F43F5E]">
+                  <span className="rounded-full bg-[#F43F5E]/15 px-2.5 py-0.5 text-xs font-semibold text-[#F43F5E]">
                     Most teams
                   </span>
                 )}
               </div>
 
-              <p className="mt-2 text-[#52525B]">{plan.tagline}</p>
+              <p className="mt-2 text-[#C9C3D4]">{plan.tagline}</p>
 
               <div className="mt-6 flex items-baseline gap-2">
-                <span className="text-4xl font-bold text-[#18181B]">{plan.price}</span>
-                <span className="text-sm text-[#71717A]">{plan.cadence}</span>
+                <span className="text-4xl font-bold text-white">{plan.price}</span>
+                <span className="text-sm text-[#A9A1B6]">{plan.cadence}</span>
               </div>
 
               <a
@@ -109,13 +94,13 @@ export default function Pricing() {
                 className={`mt-6 inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold transition-colors ${
                   plan.featured
                     ? 'bg-[#F43F5E] text-white hover:bg-[#E11D48]'
-                    : 'border border-[#E4E4E7] text-[#18181B] hover:border-[#FBCCD3] hover:bg-[#FEF2F4]'
+                    : 'border border-white/[0.09] text-white hover:border-white/25 hover:bg-white/5'
                 }`}
               >
                 {plan.cta.label}
               </a>
 
-              <ul className="mt-8 space-y-3 text-[#3F3F46]">
+              <ul className="mt-8 space-y-3 text-[#E4DFEA]">
                 {plan.features.map(feature => (
                   <li key={feature} className="flex gap-3">
                     <Check muted={!plan.featured} />
@@ -127,11 +112,11 @@ export default function Pricing() {
           ))}
         </div>
 
-        <p className="mt-10 text-center text-sm text-[#71717A]">
-          Self-hosting Clowk is another thing entirely — it is open source, and running it yourself costs nothing.{' '}
-          <Link href="/docs" className="font-medium text-[#F43F5E] hover:underline">
-            Read the docs
-          </Link>
+        <p className="mt-8 text-sm text-[#A9A1B6]">
+          Questions about the plans? Write to{' '}
+          <a href="mailto:support@clowk.in" className="font-medium text-[#FB7185] hover:underline">
+            support@clowk.in
+          </a>
           .
         </p>
       </div>

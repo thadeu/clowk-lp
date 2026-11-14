@@ -6,7 +6,7 @@ export default function HomeHero() {
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-10 md:pt-40 md:pb-14 flex flex-col items-start gap-5 md:gap-6">
       <span className="inline-flex items-center px-3 py-1.5 rounded-full border border-white/[0.12] text-[13px] text-[#C9C3D4]">
-        Five products · one family · self-hosted
+        Six products · one family · self-hosted
       </span>
 
       <h1 className="max-w-[880px] text-[clamp(40px,6.4vw,76px)] leading-[1.02] tracking-[-0.035em] font-bold text-white">
@@ -14,8 +14,8 @@ export default function HomeHero() {
       </h1>
 
       <p className="max-w-[660px] text-[clamp(17px,1.6vw,20px)] leading-relaxed text-[#C9C3D4]">
-        Sign-in for every stack, search on plain NDJSON, deploys from one HCL file, background jobs without Redis, and
-        NFS-e on a schedule. Each one does one job, and they work well together.
+        Sign-in for every stack, search on plain NDJSON, deploys from one HCL file, background jobs without Redis,
+        NFS-e on a schedule and, soon, email. Each one does one job, and they work well together.
       </p>
 
       <div className="flex flex-wrap gap-3">

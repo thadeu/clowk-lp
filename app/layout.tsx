@@ -13,7 +13,7 @@ const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 const TITLE = 'Clowk — Small tools you run on your own servers';
 const DESCRIPTION =
-  'Clowk makes self-hosted tools: auth for sign-in, ndb for search on NDJSON, voodu for deploys, anway for background jobs and cronota for NFS-e.';
+  'Clowk makes self-hosted tools: auth for sign-in, ndb for search on NDJSON, voodu for deploys, anway for background jobs, cronota for NFS-e and 1billion for email.';
 
 export const metadata: Metadata = {
   title: { default: TITLE, template: '%s · Clowk' },

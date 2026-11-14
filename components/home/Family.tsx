@@ -14,7 +14,7 @@ export default function Family() {
           </h2>
 
           <p className="text-[17px] leading-relaxed text-[#C9C3D4]">
-            cronota is a real app, and it runs on three of the products. You can mix them the same way, or use only one.
+            cronota is a real app, and it runs on four of the products. You can mix them the same way, or use only one.
           </p>
         </div>
 

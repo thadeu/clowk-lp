@@ -11,12 +11,15 @@ export type Product = {
   tagline: string;
   summary: string;
   bullets: string[];
-  install: string;
+  install?: string;
   installNote?: string;
+  status?: string;
+  primaryCta?: { label: string; href: string };
   docsUrl: string;
   docsLabel: string;
   githubUrl?: string;
   category: string;
+  platform?: string;
   example?: { caption: string; code: string };
   features: Feature[];
   faq: Question[];
@@ -42,11 +45,61 @@ export const products: Product[] = [
       'No per-MAU billing',
     ],
     install: 'bundle add clowk',
+    installNote: 'JavaScript SDKs: npm install @clowk/sdk',
+    primaryCta: { label: 'Get started free', href: 'https://app.clowk.in/sign-up' },
     docsUrl: '/docs',
     docsLabel: 'clowk.in/docs',
+    githubUrl: 'https://github.com/thadeu/clowk-ruby',
     category: 'SecurityApplication',
-    features: [],
-    faq: [],
+    platform: 'Web',
+    features: [
+      {
+        title: 'No embedded UI',
+        text: 'Clowk runs the whole sign-in flow on its own domain. Your app redirects and gets a JWT back: no forms or iframes in your pages.',
+      },
+      {
+        title: 'Every stack',
+        text: 'SDKs for React, Next.js, Express, Hono and Rails. @clowk/core runs on Node.js, Bun, Deno and Workers.',
+      },
+      {
+        title: 'Many providers',
+        text: 'Google, GitHub, X and Apple, plus email and password, magic links and TOTP.',
+      },
+      {
+        title: 'Security by isolation',
+        text: 'Credentials and OAuth tokens never touch your pages. The flow runs on the Clowk domain and returns a signed JWT.',
+      },
+      {
+        title: 'Many apps',
+        text: 'One Clowk account, many apps. Each app has its own keys, redirect URIs and users.',
+      },
+      {
+        title: 'No per-MAU billing',
+        text: 'The Free plan has what you need to ship sign-in. Your user count never shows on the invoice.',
+      },
+    ],
+    faq: [
+      {
+        q: 'How is Clowk different from Clerk or Auth0?',
+        a: 'Clerk and Auth0 render the sign-in forms inside your app. Clowk brokers the sign-in through a redirect: your app sends the user to Clowk, the user signs in, and your app gets a signed JWT back. There is no embedded UI to keep up to date.',
+      },
+      {
+        q: 'What does broker mean?',
+        a: 'Your app → Clowk (runs OAuth) → your app (gets a signed JWT). OAuth redirects the user anyway, so an embedded UI only adds a step. Clowk removes it.',
+      },
+      {
+        q: 'Which providers are supported?',
+        a: 'Google, GitHub, X and Apple, plus email and password, magic links and TOTP.',
+      },
+      {
+        q: 'Does Clowk work outside Rails?',
+        a: 'Yes. @clowk/react, @clowk/nextjs, @clowk/express and @clowk/hono cover most JavaScript stacks, and @clowk/core runs on Node.js, Bun, Deno and Cloudflare Workers.',
+      },
+      {
+        q: 'Is Clowk free?',
+        a: 'The Free plan has what you need to ship sign-in. Pro adds more apps, instances, providers and webhook endpoints. There is no per-MAU billing.',
+      },
+    ],
     usedBy: 'sign-in',
   },
   {
@@ -222,6 +275,7 @@ export const products: Product[] = [
     docsUrl: 'https://cronota.clowk.in',
     docsLabel: 'cronota.clowk.in',
     category: 'BusinessApplication',
+    platform: 'Web',
     features: [
       { title: 'Notes', text: 'The same form as the Emissor Nacional. Start from a template, clone any note, or save a draft.' },
       { title: 'Schedules', text: 'Recurring notes, with an optional approval before each one is emitted.' },
@@ -235,6 +289,53 @@ export const products: Product[] = [
       { q: 'Can I check a note before it goes out?', a: 'Yes. A schedule can ask for approval before each note.' },
       { q: 'Can I test without emitting real notes?', a: 'Yes. Switch to Sandbox to use produção restrita.' },
     ],
+  },
+  {
+    slug: '1billion',
+    name: '1billion',
+    mark: '/products/1billion.svg',
+    seoTitle: '1billion — transactional email with our own mail server',
+    seoDescription:
+      '1billion is transactional email from Clowk, with its own mail server, DKIM and an HTTP API. In development: it runs inside the Clowk apps first and opens to the public later.',
+    tagline: 'Transactional email with our own mail server.',
+    summary:
+      'Send email from your app with one HTTP call. 1billion queues it, signs it with DKIM and delivers it over SMTP from its own server.',
+    bullets: [
+      'One HTTP call per email, with API keys',
+      'Queue workers with retries, DKIM signing and SMTP',
+      'Paid with credits, with no monthly fee',
+    ],
+    status: 'In development',
+    docsUrl: 'https://1billion.clowk.in',
+    docsLabel: '1billion.clowk.in',
+    category: 'CommunicationApplication',
+    platform: 'Web',
+    example: {
+      caption: 'Send one email',
+      code: `curl -X POST $BILLION_URL/send \
+  -H "Authorization: Bearer $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+  "from": "Acme <hi@acme.dev>",
+  "to": ["you@example.com"],
+  "subject": "Hello",
+  "body": { "text": "Hello" }
+}'`,
+    },
+    features: [
+      { title: 'Our own mail server', text: 'A Go mail server with an HTTP API, queue workers, SMTP and DKIM. No third-party email provider.' },
+      { title: 'One HTTP call', text: 'POST /send with an API key. The console checks the request and answers at once; the email goes out in the background.' },
+      { title: 'Retries', text: 'Every email goes through a queue with retries before the mail server sends it.' },
+      { title: 'Private by design', text: 'The mail server has no public address. Only the console talks to it, over the private network.' },
+      { title: 'Credits, no monthly fee', text: 'You buy a pack of credits once and use it until it ends.' },
+      { title: 'Used by our apps first', text: 'cronota is built to send its email through 1billion. The public opens later.' },
+    ],
+    faq: [
+      { q: 'Can I use 1billion now?', a: 'Not yet. 1billion runs inside the Clowk apps first, and it opens to the public later.' },
+      { q: 'How is it paid?', a: 'With credits that you buy once, with no monthly fee. The prices are not final yet.' },
+      { q: 'Does it use another email provider?', a: 'No. 1billion has its own mail server, with its own SMTP and DKIM.' },
+    ],
+    usedBy: 'email',
   },
 ];
 
