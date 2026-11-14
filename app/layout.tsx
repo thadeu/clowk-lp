@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     capable: true,
     title: 'Clowk',
     statusBarStyle: 'black-translucent',
-    startupImage: ['/icons/icon-512.png'],
+    startupImage: ['/icons/icon-512.png?v=2'],
   },
   other: {
     'mobile-web-app-capable': 'yes',

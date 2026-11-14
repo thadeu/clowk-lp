@@ -68,7 +68,7 @@ The wordmark is `clowk` in lowercase, Nunito Black, tracking -0.03 em. The lette
 | `svg/lockup-on-*.svg` | Mark and wordmark in a row: headers, footers |
 | `svg/lockup-stacked-on-*.svg` | Mark above the wordmark: splash screens, square spaces |
 | `svg/app-icon-night.svg`, `-coral`, `-light` | App icons with rounded corners |
-| `svg/app-icon-square.svg` | Square icon for PWA and Apple touch icons |
+| `svg/app-icon-square.svg` | The home screen icon (iOS, PWA): the whole tile is the hood and only the face shows |
 | `svg/favicon-tile.svg`, `favicon.ico` | Browser tabs |
 | `svg/social-preview.svg` | Open Graph and social cards, 1200 × 630 |
 | `png/` | PNG renders of all of the above |

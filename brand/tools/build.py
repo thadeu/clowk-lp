@@ -142,11 +142,26 @@ def icon(background, body, scale=0.74):
     )
 
 
+def face_icon():
+    """The home screen icon: the whole tile is the hood, and only the face shows."""
+    return '\n  '.join([
+        f'<rect width="1024" height="1024" fill="{CORAL}"/>',
+        f'<ellipse cx="512" cy="560" rx="330" ry="285" fill="{CREAM}" stroke="{INK}" stroke-width="22"/>',
+        f'<circle cx="392" cy="545" r="50" fill="{INK}"/>',
+        f'<circle cx="632" cy="545" r="50" fill="{INK}"/>',
+        f'<circle cx="410" cy="527" r="16" fill="{WHITE}"/>',
+        f'<circle cx="650" cy="527" r="16" fill="{WHITE}"/>',
+        f'<ellipse cx="300" cy="655" rx="52" ry="30" fill="{CORAL}" opacity="0.55"/>',
+        f'<ellipse cx="724" cy="655" rx="52" ry="30" fill="{CORAL}" opacity="0.55"/>',
+        f'<path d="M460 662 Q512 712 564 662" fill="none" stroke="{INK}" stroke-width="28" stroke-linecap="round"/>',
+    ])
+
+
 def icons():
     write('app-icon-night', icon(NIGHT, mark(halo=WHITE)))
     write('app-icon-coral', icon(CORAL, mark(hood=NIGHT)))
     write('app-icon-light', icon(WHITE, mark()))
-    write('app-icon-square', svg('0 0 512 512', f'<rect width="512" height="512" fill="{NIGHT}"/>\n  <g transform="translate(66 72) scale(1.9)">\n  {mark(halo=WHITE)}\n  </g>'))
+    write('app-icon-square', svg('0 0 1024 1024', face_icon()))
     write('favicon-tile', svg('0 0 64 64', f'<rect width="64" height="64" rx="14" fill="{NIGHT}"/>\n  <g transform="translate(5 4) scale(0.27)">\n  {mark_tiny()}\n  </g>'))
 
 
