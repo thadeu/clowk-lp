@@ -50,9 +50,11 @@ export async function generateMetadata(props: { params: Promise<{ slug?: string[
   return {
     title: { absolute: title },
     description,
+    alternates: { canonical: `${page.url}/` },
     openGraph: {
       title,
       description,
+      url: `${page.url}/`,
       type: 'article',
       siteName: 'Clowk',
     },

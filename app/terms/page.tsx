@@ -4,6 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: { absolute: "Terms of Service — Clowk" },
   description: "Clowk terms of service, acceptable use policy, and legal information.",
+  alternates: { canonical: "/terms/" },
 };
 
 export default function TermsPage() {

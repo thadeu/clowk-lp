@@ -83,7 +83,7 @@ export function DocsSidebar() {
 
         <div className="px-5 py-3 border-t border-white/5 shrink-0">
           <a
-            href="https://github.com/clowk"
+            href="https://github.com/thadeu"
             className="flex items-center gap-2 text-xs text-white/25 hover:text-white/50 transition-colors"
             target="_blank"
             rel="noopener noreferrer"

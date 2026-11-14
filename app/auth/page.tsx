@@ -8,7 +8,6 @@ import Hero from '@/components/Hero';
 import JsonLd from '@/components/JsonLd';
 import Pricing from '@/components/Pricing';
 import SDKSection from '@/components/SDKSection';
-import VideoBlock from '@/components/VideoBlock';
 import { findProduct, SITE_URL } from '@/lib/products';
 
 const auth = findProduct('auth')!;
@@ -45,7 +44,6 @@ export default function AuthPage() {
         <Features />
         <CodeExample />
         <SDKSection />
-        <VideoBlock />
         <Pricing />
         <FAQ />
       </main>

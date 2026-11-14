@@ -186,7 +186,7 @@ export default function CodeExample() {
 
         <p className="text-center text-sm text-[#71717A] mt-6">
           Need more detail?{' '}
-          <a href="https://docs.clowk.in" className="text-[#F43F5E] font-medium hover:underline">
+          <a href="/docs" className="text-[#F43F5E] font-medium hover:underline">
             Read the docs →
           </a>
         </p>
