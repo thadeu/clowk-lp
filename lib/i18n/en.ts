@@ -133,6 +133,7 @@ export const en = {
   },
 
   docs: {
+    titleSuffix: 'Clowk auth docs',
     menu: 'Menu',
     openSidebar: 'Open sidebar',
     closeSidebar: 'Close sidebar',
@@ -147,7 +148,7 @@ export const en = {
 
   terms: {
     title: 'Terms of Service — Clowk',
-    description: 'Clowk terms of service, acceptable use policy, and legal information.',
+    description: 'The Clowk terms of service: what the auth service does, your account, acceptable use, data protection, payments and the legal information.',
   },
 };
 

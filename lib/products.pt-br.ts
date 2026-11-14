@@ -6,7 +6,7 @@ export const ptBr: Record<string, ProductText> = {
   auth: {
     seoTitle: 'auth by Clowk — broker de autenticação para qualquer stack',
     seoDescription:
-      'O Clowk faz o fluxo OAuth com Google, GitHub, X e Apple e devolve um JWT assinado. Sem UI embutida, sem cobrança por MAU. SDKs para React, Next.js, Express, Hono e Rails.',
+      'O Clowk faz o OAuth com Google, GitHub, X e Apple e devolve um JWT assinado. Sem UI embutida, sem cobrança por MAU. SDKs para React, Next.js, Express e Rails.',
     tagline: 'Broker, não provedor. Login que fica fora da sua UI.',
     summary:
       'O Clowk faz o fluxo OAuth com Google, GitHub, X e Apple e entrega um JWT assinado ao seu app. Seu app mantém as próprias telas.',
@@ -79,9 +79,9 @@ end`,
   },
 
   ndb: {
-    seoTitle: 'ndb — a API do Elasticsearch e os filtros do MongoDB sobre NDJSON puro',
+    seoTitle: 'ndb — API do Elasticsearch e filtros do MongoDB em NDJSON',
     seoDescription:
-      'O ndb roda rotas do Elasticsearch e filtros do MongoDB sobre NDJSON puro. Um binário Go, sem JVM, sem cluster, sem schema. SDKs para Go, Ruby, Rails e TypeScript.',
+      'O ndb roda rotas do Elasticsearch e filtros do MongoDB sobre NDJSON. Um binário Go, sem JVM, sem cluster, sem schema. SDKs para Go, Ruby, Rails e TypeScript.',
     tagline: 'A API do Elasticsearch. Os filtros do MongoDB. Um binário Go.',
     summary:
       'O ndb roda as rotas que você conhece do Elasticsearch e a linguagem de consulta que você conhece do MongoDB sobre NDJSON puro. Um daemon, um diretório de dados. Sem JVM, sem cluster, sem schema.',
@@ -140,7 +140,7 @@ end`,
   voodu: {
     seoTitle: 'voodu — PaaS self-hosted com um arquivo HCL e um voodu apply',
     seoDescription:
-      'O voodu é um PaaS self-hosted no estilo Heroku. Um arquivo HCL descreve apps, ingress com TLS e serviços com estado. O voodu apply faz build, envia, roteia e troca a versão por SSH.',
+      'O voodu é um PaaS self-hosted no estilo Heroku. Um arquivo HCL descreve apps, ingress com TLS e serviços com estado; um comando faz o deploy por SSH.',
     tagline: 'PaaS self-hosted. Um arquivo HCL. Um voodu apply.',
     summary:
       'Deploys no estilo Heroku nos seus próprios servidores. A CLI envia o build por SSH: sem commit, sem push, sem bare repo.',
@@ -204,9 +204,9 @@ ingress "acme" "web" {
   },
 
   anway: {
-    seoTitle: 'anway — background jobs para qualquer linguagem, um binário, sem Redis',
+    seoTitle: 'anway — background jobs para qualquer linguagem, sem Redis',
     seoDescription:
-      'O anway é um servidor de background jobs para qualquer linguagem. Um binário com armazenamento em disco embutido, sem Redis. Envie um job do Rails e rode em Go.',
+      'O anway é um servidor de background jobs para qualquer linguagem. Um binário com armazenamento em disco, sem Redis. Envie um job do Rails e rode em Go.',
     tagline: 'Background jobs para qualquer linguagem. Um binário, sem Redis.',
     summary: 'Um app Rails envia email.send, e um worker Go executa. O armazenamento fica em disco, dentro do binário.',
     bullets: [
@@ -278,7 +278,7 @@ return worker.Run(ctx)`,
   '1billion': {
     seoTitle: '1billion — email transacional com servidor de email próprio',
     seoDescription:
-      'O 1billion é o email transacional da Clowk, com servidor de email próprio, DKIM e uma API HTTP. Em desenvolvimento: roda primeiro dentro dos apps da Clowk e abre ao público depois.',
+      'O 1billion é o email transacional da Clowk, com servidor de email próprio, DKIM e API HTTP. Em desenvolvimento: roda primeiro dentro dos apps da Clowk.',
     tagline: 'Email transacional com servidor de email próprio.',
     summary:
       'Envie email do seu app com uma chamada HTTP. O 1billion coloca na fila, assina com DKIM e entrega por SMTP do próprio servidor.',

@@ -10,7 +10,7 @@ export const ptBr: Dictionary = {
   site: {
     title: 'Clowk — Ferramentas pequenas que fazem uma coisa bem feita',
     description:
-      'A Clowk faz ferramentas pequenas: auth para login, ndb para busca em NDJSON, voodu para deploys, anway para jobs em background, cronota para NFS-e e 1billion para email.',
+      'A Clowk faz ferramentas pequenas: auth para login, ndb para busca em NDJSON, voodu para deploys, anway para jobs, cronota para NFS-e e 1billion para email.',
   },
 
   nav: {
@@ -135,6 +135,7 @@ export const ptBr: Dictionary = {
   },
 
   docs: {
+    titleSuffix: 'Docs do Clowk auth',
     menu: 'Menu',
     openSidebar: 'Abrir menu lateral',
     closeSidebar: 'Fechar menu lateral',
@@ -149,6 +150,6 @@ export const ptBr: Dictionary = {
 
   terms: {
     title: 'Termos de Serviço — Clowk',
-    description: 'Termos de serviço da Clowk, política de uso aceitável e informações legais.',
+    description: 'Os termos de serviço da Clowk: o que o serviço auth faz, sua conta, uso aceitável, proteção de dados, pagamentos e as informações legais.',
   },
 };

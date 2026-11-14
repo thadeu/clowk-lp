@@ -22,8 +22,8 @@ from fontTools.ttLib import TTFont
 
 TEXTS = {
     'wordmark': ('black', 'clowk', -0.03),
-    'tagline': ('extra', 'Small tools you run on your own servers', -0.01),
-    'products': ('extra', 'auth · ndb · voodu · anway · cronota', 0),
+    'tagline': ('extra', 'Small tools that each do one job well', -0.01),
+    'products': ('extra', 'auth · ndb · voodu · anway · cronota · 1billion', 0),
 }
 
 

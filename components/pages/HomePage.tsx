@@ -10,6 +10,8 @@ import { alternates, localePath, t, type Locale } from '@/lib/i18n';
 import { SITE_URL } from '@/lib/products';
 import { localizedProducts } from '@/lib/localized';
 
+const OG_IMAGE = { url: '/og-image.png?v=3', width: 1200, height: 630, alt: 'Clowk' };
+
 export function homeMetadata(locale: Locale): Metadata {
   const { title, description } = t(locale).site;
 
@@ -17,8 +19,8 @@ export function homeMetadata(locale: Locale): Metadata {
     title: { absolute: title },
     description,
     alternates: alternates(locale, '/'),
-    openGraph: { title, description, url: localePath(locale, '/'), locale: t(locale).ogLocale },
-    twitter: { title, description },
+    openGraph: { title, description, url: localePath(locale, '/'), locale: t(locale).ogLocale, type: 'website', images: [OG_IMAGE] },
+    twitter: { card: 'summary_large_image', title, description, images: [OG_IMAGE.url] },
   };
 }
 

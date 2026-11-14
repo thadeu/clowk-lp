@@ -39,7 +39,7 @@ export const products: Product[] = [
     markFill: true,
     seoTitle: 'auth by Clowk — authentication broker for every stack',
     seoDescription:
-      'Clowk runs the OAuth dance with Google, GitHub, X and Apple and returns a signed JWT. No embedded UI, no per-MAU billing. SDKs for React, Next.js, Express, Hono and Rails.',
+      'Clowk runs OAuth with Google, GitHub, X and Apple and returns a signed JWT. No embedded UI, no per-MAU billing. SDKs for React, Next.js, Express, Hono, Rails.',
     tagline: 'Broker, not provider. Sign-in that stays out of your UI.',
     summary:
       'Clowk runs the OAuth dance with Google, GitHub, X and Apple, and hands your app a signed JWT. Your app keeps its own screens.',
@@ -122,7 +122,7 @@ end`,
     hosting: 'self',
     name: 'ndb',
     mark: '/products/ndb.svg',
-    seoTitle: 'ndb — the Elasticsearch API and MongoDB filters on plain NDJSON',
+    seoTitle: 'ndb — Elasticsearch API and MongoDB filters on NDJSON',
     seoDescription:
       'ndb runs Elasticsearch routes and MongoDB filters on plain NDJSON. One Go binary, no JVM, no cluster, no schema. SDKs for Go, Ruby, Rails and TypeScript.',
     tagline: 'The API of Elasticsearch. The filters of MongoDB. One Go binary.',
@@ -189,9 +189,9 @@ end`,
     hosting: 'self',
     name: 'voodu',
     mark: '/products/voodu.svg',
-    seoTitle: 'voodu — self-hosted PaaS with one HCL file and one voodu apply',
+    seoTitle: 'voodu — self-hosted PaaS, one HCL file, one command',
     seoDescription:
-      'voodu is a self-hosted, Heroku-shaped PaaS. One HCL file describes apps, ingress with TLS and stateful services. voodu apply builds, ships, routes and swaps over SSH.',
+      'voodu is a self-hosted, Heroku-shaped PaaS. One HCL file describes apps, TLS ingress and stateful services; one command builds and ships them over SSH.',
     tagline: 'Self-hosted PaaS. One HCL file. One voodu apply.',
     summary:
       'Heroku-shaped deploys on your own boxes. The CLI streams the build over SSH: no commit, no push, no bare repo.',
@@ -264,7 +264,7 @@ ingress "acme" "web" {
     hosting: 'self',
     name: 'anway',
     mark: '/products/anway.svg',
-    seoTitle: 'anway — background jobs for any language, one binary, no Redis',
+    seoTitle: 'anway — background jobs for any language, no Redis',
     seoDescription:
       'anway is a language-agnostic background job server. One binary with embedded disk storage, no Redis. Push a job from Rails and run it in Go.',
     tagline: 'Background jobs for any language. One binary, no Redis.',
@@ -317,7 +317,7 @@ return worker.Run(ctx)`,
     hosting: 'hosted',
     name: 'cronota',
     mark: '/products/cronota.svg',
-    seoTitle: 'cronota — emit NFS-e on a schedule through the Emissor Nacional',
+    seoTitle: 'cronota — scheduled NFS-e through the Emissor Nacional',
     seoDescription:
       'cronota emits NFS-e through the Emissor Nacional: one-off notes, templates and recurring schedules with approval. A1 certificate encrypted and audited.',
     tagline: 'NFS-e on a schedule, through the Emissor Nacional.',
@@ -354,7 +354,7 @@ return worker.Run(ctx)`,
     mark: '/products/1billion.svg',
     seoTitle: '1billion — transactional email with our own mail server',
     seoDescription:
-      '1billion is transactional email from Clowk, with its own mail server, DKIM and an HTTP API. In development: it runs inside the Clowk apps first and opens to the public later.',
+      '1billion is transactional email from Clowk, with its own mail server, DKIM and an HTTP API. In development: it runs inside the Clowk apps first.',
     tagline: 'Transactional email with our own mail server.',
     summary:
       'Send email from your app with one HTTP call. 1billion queues it, signs it with DKIM and delivers it over SMTP from its own server.',

@@ -9,7 +9,7 @@ const dmSans = DM_Sans({
 });
 
 const SITE_URL = 'https://clowk.in';
-const OG_IMAGE = `${SITE_URL}/og-image.png?v=2`;
+const OG_IMAGE = `${SITE_URL}/og-image.png?v=3`;
 
 const TITLE = 'Clowk — Small tools that each do one job well';
 const DESCRIPTION =

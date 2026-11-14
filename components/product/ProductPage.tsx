@@ -179,6 +179,10 @@ function docsCta(product: Product, locale: Locale) {
   return `${text.readDocs} ${product.docsUrl.startsWith('/') ? '→' : '↗'}`;
 }
 
+function isFree(product: Product) {
+  return product.hosting === 'self' || product.slug === 'auth';
+}
+
 function structuredData(product: Product, locale: Locale) {
   const url = `${SITE_URL}${localePath(locale, `/${product.slug}`)}`;
 
@@ -194,6 +198,7 @@ function structuredData(product: Product, locale: Locale) {
         applicationCategory: product.category,
         operatingSystem: product.platform ?? 'Linux, macOS',
         publisher: { '@type': 'Organization', name: 'Clowk', url: SITE_URL },
+        ...(isFree(product) && { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } }),
       },
       {
         '@type': 'FAQPage',
