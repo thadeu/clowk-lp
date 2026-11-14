@@ -16,7 +16,7 @@ export default function TermsPage() {
       <main className="min-h-screen bg-[#0C0014]">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-28 md:pt-36 pb-4">
         <h1 className="text-[clamp(36px,5vw,52px)] leading-tight tracking-tight font-bold text-white mb-3">Terms of Service</h1>
-        <p className="text-[#A9A1B6] text-base">Last updated: March 22, 2026</p>
+        <p className="text-[#A9A1B6] text-base">Last updated: November 14, 2026</p>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pb-16 md:pb-24">
@@ -29,7 +29,10 @@ export default function TermsPage() {
 
           <h2>2. Description of Service</h2>
           <p>
-            Clowk is an authentication broker that handles OAuth authentication flows between your application and identity providers (Google, GitHub, Twitter). Clowk is not an authentication UI provider — it brokers the authentication through a redirect flow and returns a signed JWT to your application.
+            Clowk auth is an authentication broker that handles OAuth authentication flows between your application and identity providers (Google, GitHub, X and Apple), and also email and password, magic links and TOTP. Clowk is not an authentication UI provider — it brokers the authentication through a redirect flow and returns a signed JWT to your application.
+          </p>
+          <p>
+            These Terms cover Clowk auth at app.clowk.in. The other Clowk products come with their own terms: ndb and anway are under the GNU Affero General Public License, voodu is under the Elastic License 2.0, cronota has its own terms of service, and 1billion is not public yet.
           </p>
 
           <h2>3. Accounts</h2>
