@@ -3,7 +3,7 @@ import type { Product } from '@/lib/products';
 
 export function productMetadata(product: Product): Metadata {
   const url = `/${product.slug}/`;
-  const images = [{ url: `/og/${product.slug}.png`, width: 1200, height: 630, alt: `${product.name} — ${product.tagline}` }];
+  const images = [{ url: `/og/${product.slug}.png?v=2`, width: 1200, height: 630, alt: `${product.name} — ${product.tagline}` }];
 
   return {
     title: { absolute: product.seoTitle },
