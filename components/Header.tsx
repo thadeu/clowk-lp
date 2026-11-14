@@ -77,10 +77,10 @@ export default function Header({ locale = 'en' }: { locale?: Locale }) {
               <LanguageSwitch locale={locale} compact className="font-mono text-[12px] tracking-[0.12em] border border-white/10" />
 
               <a
-                href="https://app.clowk.in/sign-in"
+                href="https://app.clowk.in/sign-up"
                 className="hidden sm:inline-flex items-center min-h-10 px-4 rounded-xl text-sm font-semibold text-white bg-[#F43F5E] hover:bg-[#E8385A] transition-colors"
               >
-                {text.signIn}
+                {text.start}
               </a>
 
               <button

@@ -61,28 +61,6 @@ export default function SDKSection({ locale = "en" }: { locale?: Locale }) {
           </div>
         </div>
 
-        {/* Architecture diagram */}
-        <div className="flex mb-10">
-          <div className="inline-flex flex-col gap-4 px-10 py-8 rounded-2xl bg-[#0C0014] border border-white/10 font-mono text-sm">
-            <div className="flex items-center gap-3 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#F43F5E] shadow-sm shadow-[#F43F5E]/50" />
-              <span className="text-[#F43F5E] font-bold text-base">@clowk/core</span>
-            </div>
-            {[
-              "@clowk/sdk",
-              "@clowk/react",
-              "@clowk/express",
-              "@clowk/hono",
-              "@clowk/nextjs",
-            ].map((pkg, i, arr) => (
-              <div key={pkg} className="flex items-center gap-3 pl-1">
-                <span className="text-white/30">{i === arr.length - 1 ? "└──" : "├──"}</span>
-                <span className="text-white/70">{pkg}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Package grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {packages.map((pkg) => (

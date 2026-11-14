@@ -17,6 +17,16 @@ export const ptBr: Record<string, ProductText> = {
     ],
     installNote: 'SDKs JavaScript: npm install @clowk/sdk',
     primaryCta: { label: 'Comece grátis', href: 'https://app.clowk.in/sign-up' },
+    example: {
+      caption: 'Proteja um controller Rails',
+      code: `class DashboardController < ApplicationController
+  before_action :authenticate_clowk!
+
+  def index
+    @user = current_clowk
+  end
+end`,
+    },
     features: [
       {
         title: 'Sem UI embutida',
@@ -199,6 +209,7 @@ export const ptBr: Record<string, ProductText> = {
   },
 
   cronota: {
+    primaryCta: { label: 'Abrir o cronota', href: 'https://cronota.clowk.in' },
     seoTitle: 'cronota — emita NFS-e com agendamento pelo Emissor Nacional',
     seoDescription:
       'O cronota emite NFS-e pelo Emissor Nacional: notas avulsas, modelos e agendamentos recorrentes com aprovação. Certificado A1 criptografado e auditado.',
@@ -238,6 +249,7 @@ export const ptBr: Record<string, ProductText> = {
       'Pago com créditos, sem mensalidade',
     ],
     status: 'Em desenvolvimento',
+    primaryCta: { label: 'Avise-me quando abrir', href: 'mailto:support@clowk.in?subject=1billion' },
     example: {
       caption: 'Envie um email',
       code: `curl -X POST $BILLION_URL/send \

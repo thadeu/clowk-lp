@@ -30,12 +30,11 @@ export default function ProductGrid({ locale }: { locale: Locale }) {
                   {product.name}
                   {product.status && <StatusBadge status={product.status} />}
                 </h3>
-                <span className="text-[13px] text-[#A9A1B6]">clowk.in/{product.slug}</span>
+                <span className="text-[13px] text-[#A9A1B6]">{text.hosting[product.hosting]}</span>
               </div>
             </div>
 
             <p className="text-lg leading-snug font-bold text-white">{product.tagline}</p>
-            <p className="text-[15px] leading-relaxed text-[#C9C3D4]">{product.summary}</p>
 
             <ul className="flex flex-col gap-2">
               {product.bullets.map(bullet => (
@@ -51,20 +50,14 @@ export default function ProductGrid({ locale }: { locale: Locale }) {
                 <InstallLine command={product.install} />
               ) : (
                 <p className="rounded-xl border border-dashed border-white/[0.14] px-3.5 py-3 text-[13px] text-[#C9C3D4]">
-                  {text.notPublic}
+                  {product.status ? text.notPublic : product.docsLabel}
                 </p>
               )}
             </div>
 
-            <div className="flex flex-wrap gap-x-5 text-[15px] font-bold">
-              <Link href={localePath(locale, `/${product.slug}`)} className="min-h-11 inline-flex items-center text-[#FB7185] hover:text-white">
-                {text.about(product.name)}
-              </Link>
-
-              <Link href={localePath(locale, product.docsUrl)} className="min-h-11 inline-flex items-center text-[#C9C3D4] hover:text-white">
-                {product.docsLabel} ↗
-              </Link>
-            </div>
+            <Link href={localePath(locale, `/${product.slug}`)} className="min-h-11 inline-flex items-center text-[15px] font-bold text-[#FB7185] hover:text-white">
+              {text.about(product.name)}
+            </Link>
           </article>
         ))}
       </div>

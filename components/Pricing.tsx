@@ -1,4 +1,4 @@
-const hrefs = ['https://app.clowk.in', 'https://app.clowk.in'];
+const hrefs = ['https://app.clowk.in/sign-up', 'https://app.clowk.in/sign-up'];
 
 function Check({ muted }: { muted?: boolean }) {
   return (
@@ -62,8 +62,8 @@ export default function Pricing({ locale = 'en' }: { locale?: Locale }) {
                 href={plan.href}
                 className={`mt-6 inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold transition-colors ${
                   plan.featured
-                    ? 'bg-[#F43F5E] text-white hover:bg-[#E11D48]'
-                    : 'border border-white/[0.09] text-white hover:border-white/25 hover:bg-white/5'
+                    ? 'border border-white/[0.18] text-white hover:bg-white/5'
+                    : 'bg-[#F43F5E] text-white hover:bg-[#E11D48]'
                 }`}
               >
                 {plan.cta}

@@ -15,6 +15,7 @@ export type Product = {
   install?: string;
   installNote?: string;
   status?: string;
+  hosting: 'self' | 'hosted';
   primaryCta?: { label: string; href: string };
   docsUrl: string;
   docsLabel: string;
@@ -32,6 +33,7 @@ export const SITE_URL = 'https://clowk.in';
 export const products: Product[] = [
   {
     slug: 'auth',
+    hosting: 'hosted',
     name: 'auth',
     mark: '/brand/mark-tile.svg',
     markFill: true,
@@ -54,6 +56,16 @@ export const products: Product[] = [
     githubUrl: 'https://github.com/thadeu/clowk-ruby',
     category: 'SecurityApplication',
     platform: 'Web',
+    example: {
+      caption: 'Protect a Rails controller',
+      code: `class DashboardController < ApplicationController
+  before_action :authenticate_clowk!
+
+  def index
+    @user = current_clowk
+  end
+end`,
+    },
     features: [
       {
         title: 'No embedded UI',
@@ -106,6 +118,7 @@ export const products: Product[] = [
   },
   {
     slug: 'ndb',
+    hosting: 'self',
     name: 'ndb',
     mark: '/products/ndb.svg',
     seoTitle: 'ndb — the Elasticsearch API and MongoDB filters on plain NDJSON',
@@ -171,6 +184,7 @@ export const products: Product[] = [
   },
   {
     slug: 'voodu',
+    hosting: 'self',
     name: 'voodu',
     mark: '/products/voodu.svg',
     seoTitle: 'voodu — self-hosted PaaS with one HCL file and one voodu apply',
@@ -225,6 +239,7 @@ export const products: Product[] = [
   },
   {
     slug: 'anway',
+    hosting: 'self',
     name: 'anway',
     mark: '/products/anway.svg',
     seoTitle: 'anway — background jobs for any language, one binary, no Redis',
@@ -260,6 +275,7 @@ export const products: Product[] = [
   },
   {
     slug: 'cronota',
+    hosting: 'hosted',
     name: 'cronota',
     mark: '/products/cronota.svg',
     seoTitle: 'cronota — emit NFS-e on a schedule through the Emissor Nacional',
@@ -273,7 +289,7 @@ export const products: Product[] = [
       'Recurring notes with optional approval',
       'A1 certificate encrypted, every opening audited',
     ],
-    install: 'open https://cronota.clowk.in',
+    primaryCta: { label: 'Open cronota', href: 'https://cronota.clowk.in' },
     docsUrl: 'https://cronota.clowk.in',
     docsLabel: 'cronota.clowk.in',
     category: 'BusinessApplication',
@@ -294,6 +310,7 @@ export const products: Product[] = [
   },
   {
     slug: '1billion',
+    hosting: 'hosted',
     name: '1billion',
     mark: '/products/1billion.svg',
     seoTitle: '1billion — transactional email with our own mail server',
@@ -308,6 +325,7 @@ export const products: Product[] = [
       'Paid with credits, with no monthly fee',
     ],
     status: 'In development',
+    primaryCta: { label: 'Tell me when it opens', href: 'mailto:support@clowk.in?subject=1billion' },
     docsUrl: 'https://1billion.clowk.in',
     docsLabel: '1billion.clowk.in',
     category: 'CommunicationApplication',
