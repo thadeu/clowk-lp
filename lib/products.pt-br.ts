@@ -150,6 +150,26 @@ end`,
       'Servidor no Linux, cliente no macOS',
     ],
     installNote: 'Modo servidor no Linux, modo cliente no macOS',
+    example: {
+      caption: 'Um arquivo para o app, o domínio e o TLS. Envie com vd apply.',
+      lang: 'hcl',
+      code: `deployment "acme" "web" {
+  image    = "ghcr.io/acme/web:latest"
+  replicas = 2
+  ports    = ["8080"]
+}
+
+ingress "acme" "web" {
+  host    = "acme.com"
+  service = "web"
+
+  tls {
+    enabled  = true
+    provider = "letsencrypt"
+    email    = "ops@acme.com"
+  }
+}`,
+    },
     features: [
       {
         title: 'Um arquivo HCL',
@@ -195,6 +215,23 @@ end`,
       'SDKs para Ruby, Go e JavaScript',
     ],
     installNote: 'Binários para Linux e macOS em cada release',
+    example: {
+      caption: 'Um worker Go roda os jobs email.send que o Rails envia',
+      lang: 'go',
+      code: `worker := anway.NewWorker("", anway.WorkerOptions{Queues: []string{"default"}})
+
+worker.On("email.send", func(ctx context.Context, job *anway.Job) error {
+	var address, subject string
+
+	if err := job.Bind(&address, &subject); err != nil {
+		return err
+	}
+
+	return send(ctx, address, subject)
+})
+
+return worker.Run(ctx)`,
+    },
     features: [
       { title: 'Qualquer linguagem', text: 'Envie um job em uma linguagem e rode em outra. Por exemplo, o Rails envia e o Go executa.' },
       { title: 'Sem Redis', text: 'Um binário com armazenamento em disco embutido. Nada mais para rodar.' },

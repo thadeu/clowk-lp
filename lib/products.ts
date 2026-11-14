@@ -206,6 +206,26 @@ end`,
     docsLabel: 'voodu.clowk.in',
     githubUrl: 'https://github.com/thadeu/clowk-voodu',
     category: 'DeveloperApplication',
+    example: {
+      caption: 'One file for the app, its domain and TLS. Ship it with vd apply.',
+      lang: 'hcl',
+      code: `deployment "acme" "web" {
+  image    = "ghcr.io/acme/web:latest"
+  replicas = 2
+  ports    = ["8080"]
+}
+
+ingress "acme" "web" {
+  host    = "acme.com"
+  service = "web"
+
+  tls {
+    enabled  = true
+    provider = "letsencrypt"
+    email    = "ops@acme.com"
+  }
+}`,
+    },
     features: [
       {
         title: 'One HCL file',
@@ -260,6 +280,23 @@ end`,
     docsLabel: 'anway.clowk.in',
     githubUrl: 'https://github.com/thadeu/anway',
     category: 'DeveloperApplication',
+    example: {
+      caption: 'A Go worker runs the email.send jobs that Rails pushes',
+      lang: 'go',
+      code: `worker := anway.NewWorker("", anway.WorkerOptions{Queues: []string{"default"}})
+
+worker.On("email.send", func(ctx context.Context, job *anway.Job) error {
+	var address, subject string
+
+	if err := job.Bind(&address, &subject); err != nil {
+		return err
+	}
+
+	return send(ctx, address, subject)
+})
+
+return worker.Run(ctx)`,
+    },
     features: [
       { title: 'Any language', text: 'Push a job from one language and run it in another, for example Rails pushes and Go runs.' },
       { title: 'No Redis', text: 'One binary with embedded disk storage. Nothing else to run.' },

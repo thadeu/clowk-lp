@@ -97,7 +97,7 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
           </section>
         )}
 
-        <section aria-labelledby="features-title" className="max-w-6xl mx-auto px-4 sm:px-6 pb-14 md:pb-20 flex flex-col gap-6">
+        <section aria-labelledby="features-title" className="max-w-6xl mx-auto px-4 sm:px-6 pb-12 md:pb-14 flex flex-col gap-6">
           <h2 id="features-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold">{text.features}</h2>
 
           <div className="grid grid-cols-[repeat(auto-fit,minmax(min(280px,100%),1fr))] gap-4">
@@ -112,18 +112,18 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
 
         {children}
 
-        <section aria-labelledby="faq-title" className="max-w-[820px] mx-auto px-4 sm:px-6 py-14 md:py-18 flex flex-col gap-3">
+        <section aria-labelledby="faq-title" className="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-14 flex flex-col gap-3">
           <h2 id="faq-title" className="text-[clamp(28px,3.4vw,40px)] tracking-tight font-bold mb-2">{text.questions}</h2>
 
           {product.faq.map(item => (
-            <details key={item.q} className="group rounded-[14px] border border-white/[0.09] px-5 py-4">
+            <details key={item.q} className="group max-w-[820px] rounded-[14px] border border-white/[0.09] px-5 py-4">
               <summary className="cursor-pointer text-[17px] font-bold min-h-7">{item.q}</summary>
               <p className="mt-2.5 text-[15px] leading-relaxed text-[#C9C3D4]">{item.a}</p>
             </details>
           ))}
         </section>
 
-        <FinalCta title={text.endTitle(product.name)} lead={product.tagline}>
+        <FinalCta title={text.endTitle(product.name)} lead={product.install ? undefined : product.summary} install={product.install}>
           {product.primaryCta && (
             <Link href={product.primaryCta.href} className="inline-flex items-center min-h-12 px-6 rounded-xl bg-[#F43F5E] hover:bg-[#E8385A] font-bold transition-colors">
               {product.primaryCta.label} →
