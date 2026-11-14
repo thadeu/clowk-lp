@@ -53,11 +53,10 @@ export default function Header({ locale = 'en' }: { locale?: Locale }) {
         }`}
       >
         <div
-          className={`max-w-6xl mx-auto rounded-2xl p-px bg-gradient-to-r from-[#F43F5E]/60 via-white/10 to-[#8B5CF6]/60 transition-shadow duration-300 ${
-            scrolled ? 'shadow-[0_8px_40px_-12px_rgba(244,63,94,0.55)]' : 'shadow-[0_8px_32px_-16px_rgba(139,92,246,0.45)]'
+          className={`max-w-6xl mx-auto h-14 px-4 sm:px-5 rounded-2xl border bg-[#0C0014]/80 backdrop-blur-xl flex items-center justify-between gap-6 transition-colors duration-300 ${
+            scrolled ? 'border-white/15' : 'border-white/[0.08]'
           }`}
         >
-          <div className="h-14 px-4 sm:px-5 rounded-[15px] bg-[#0C0014]/75 backdrop-blur-xl flex items-center justify-between gap-6">
             <Link href={localePath(locale, '/')} aria-label="Clowk" className="inline-flex items-center min-h-11">
               <Image src="/brand/wordmark-on-dark.svg?v=1" alt="Clowk" width={87} height={24} priority />
             </Link>
@@ -67,7 +66,7 @@ export default function Header({ locale = 'en' }: { locale?: Locale }) {
                 <Link
                   key={item.label}
                   href={item.href}
-                  className="relative px-3 py-2 font-mono text-[12px] uppercase tracking-[0.16em] text-white/60 hover:text-white transition-colors after:absolute after:left-3 after:right-3 after:-bottom-px after:h-px after:bg-gradient-to-r after:from-[#F43F5E] after:to-[#8B5CF6] after:scale-x-0 hover:after:scale-x-100 after:transition-transform"
+                  className="relative px-3 py-2 font-mono text-[12px] uppercase tracking-[0.16em] text-white/60 hover:text-white transition-colors after:absolute after:left-3 after:right-3 after:-bottom-px after:h-px after:bg-[#F43F5E] after:scale-x-0 hover:after:scale-x-100 after:transition-transform"
                 >
                   {item.label}
                 </Link>
@@ -79,7 +78,7 @@ export default function Header({ locale = 'en' }: { locale?: Locale }) {
 
               <a
                 href="https://app.clowk.in/sign-in"
-                className="hidden sm:inline-flex items-center min-h-10 px-4 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#F43F5E] to-[#C026D3] shadow-[0_0_24px_-6px_rgba(244,63,94,0.8)] hover:shadow-[0_0_32px_-4px_rgba(244,63,94,0.95)] transition-shadow"
+                className="hidden sm:inline-flex items-center min-h-10 px-4 rounded-xl text-sm font-semibold text-white bg-[#F43F5E] hover:bg-[#E8385A] transition-colors"
               >
                 {text.signIn}
               </a>
@@ -96,7 +95,6 @@ export default function Header({ locale = 'en' }: { locale?: Locale }) {
                 <span className={`block w-5 h-0.5 bg-white transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-2.25' : ''}`} />
               </button>
             </div>
-          </div>
         </div>
       </header>
 
