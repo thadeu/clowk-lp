@@ -8,7 +8,7 @@ export default function HomeHero({ locale }: { locale: Locale }) {
   const products = localizedProducts(locale);
 
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-10 md:pt-40 md:pb-14 flex flex-col items-start gap-5 md:gap-6">
+    <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-28 pb-10 md:pt-40 md:pb-14 flex flex-col items-start gap-5 md:gap-6">
       <span className="inline-flex items-center px-3 py-1.5 rounded-full border border-white/[0.12] text-[13px] text-[#C9C3D4]">
         {text.pill}
       </span>

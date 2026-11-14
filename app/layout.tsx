@@ -11,9 +11,9 @@ const dmSans = DM_Sans({
 const SITE_URL = 'https://clowk.in';
 const OG_IMAGE = `${SITE_URL}/og-image.png?v=2`;
 
-const TITLE = 'Clowk — Small tools you run on your own servers';
+const TITLE = 'Clowk — Small tools that each do one job well';
 const DESCRIPTION =
-  'Clowk makes self-hosted tools: auth for sign-in, ndb for search on NDJSON, voodu for deploys, anway for background jobs, cronota for NFS-e and 1billion for email.';
+  'Clowk makes small tools: auth for sign-in, ndb for search on NDJSON, voodu for deploys, anway for background jobs, cronota for NFS-e and 1billion for email.';
 
 export const metadata: Metadata = {
   title: { default: TITLE, template: '%s · Clowk' },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
         url: OG_IMAGE,
         width: 1200,
         height: 630,
-        alt: 'Clowk — Small tools you run on your own servers',
+        alt: TITLE,
         type: 'image/png',
       },
     ],

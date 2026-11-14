@@ -8,7 +8,9 @@ import { products, SITE_URL } from '../lib/products.ts';
 const lines = [
   '# Clowk',
   '',
-  '> Clowk makes small, self-hosted tools: sign-in, search on NDJSON, deploys, background jobs, NFS-e and email. Each product does one job, and they work well together.',
+  '> Clowk makes small tools: sign-in, search on NDJSON, deploys, background jobs, NFS-e and email. Each product does one job, and they work well together.',
+  '',
+  'ndb, voodu and anway run on your own servers. auth, cronota and 1billion are hosted by Clowk.',
   '',
   'Product names are lowercase: auth, ndb, voodu, anway, cronota, 1billion.',
   '',

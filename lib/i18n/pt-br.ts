@@ -8,9 +8,9 @@ export const ptBr: Dictionary = {
   switchAria: 'View in English',
 
   site: {
-    title: 'Clowk — Ferramentas pequenas que rodam nos seus servidores',
+    title: 'Clowk — Ferramentas pequenas que fazem uma coisa bem feita',
     description:
-      'A Clowk faz ferramentas self-hosted: auth para login, ndb para busca em NDJSON, voodu para deploys, anway para jobs em background, cronota para NFS-e e 1billion para email.',
+      'A Clowk faz ferramentas pequenas: auth para login, ndb para busca em NDJSON, voodu para deploys, anway para jobs em background, cronota para NFS-e e 1billion para email.',
   },
 
   nav: {
@@ -23,7 +23,7 @@ export const ptBr: Dictionary = {
   },
 
   footer: {
-    tagline: 'Ferramentas pequenas que rodam nos seus servidores.',
+    tagline: 'Ferramentas pequenas que fazem uma coisa bem feita.',
     products: 'Produtos',
     docs: 'Docs',
     company: 'Empresa',
@@ -33,9 +33,9 @@ export const ptBr: Dictionary = {
   },
 
   home: {
-    pill: 'Seis produtos · uma família · self-hosted',
-    title: 'Ferramentas pequenas que rodam nos seus servidores.',
-    lead: 'Login para qualquer stack, busca em NDJSON puro, deploys a partir de um arquivo HCL, jobs em background sem Redis, NFS-e agendada e, em breve, email. Cada uma faz uma coisa só, e todas funcionam bem juntas.',
+    pill: 'Seis produtos · uma família',
+    title: 'Ferramentas pequenas que fazem uma coisa bem feita.',
+    lead: 'Login para qualquer stack, busca em NDJSON puro, deploys a partir de um arquivo HCL, jobs em background sem Redis, NFS-e agendada e, em breve, email. ndb, voodu e anway rodam nos seus servidores. auth, cronota e 1billion rodam nos nossos, então não há nada para instalar.',
     seeProducts: 'Ver os produtos',
     startAuth: 'Começar pelo auth',
     productsTitle: 'Os produtos',
@@ -48,7 +48,7 @@ export const ptBr: Dictionary = {
     usedBy: { 'sign-in': 'login', deploys: 'deploys', jobs: 'jobs', email: 'email' },
     waysTitle: 'Um jeito de trabalhar',
     ways: [
-      { title: 'Seus servidores', text: 'Rode cada produto em uma máquina que você controla. Instale com um comando.' },
+      { title: 'Seus servidores ou os nossos', text: 'ndb, voodu e anway instalam com um comando em uma máquina que você controla. auth, cronota e 1billion ficam hospedados na Clowk.' },
       { title: 'Pequeno de propósito', text: 'Um binário ou um app, configurado em um arquivo. Nenhum cluster para cuidar.' },
       { title: 'Docs para pessoas e agentes', text: 'Páginas curtas em palavras simples, escritas para devs e para agentes de IA.' },
     ],

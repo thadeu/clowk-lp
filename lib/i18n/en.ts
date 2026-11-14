@@ -6,9 +6,9 @@ export const en = {
   switchAria: 'Ver em português',
 
   site: {
-    title: 'Clowk — Small tools you run on your own servers',
+    title: 'Clowk — Small tools that each do one job well',
     description:
-      'Clowk makes self-hosted tools: auth for sign-in, ndb for search on NDJSON, voodu for deploys, anway for background jobs, cronota for NFS-e and 1billion for email.',
+      'Clowk makes small tools: auth for sign-in, ndb for search on NDJSON, voodu for deploys, anway for background jobs, cronota for NFS-e and 1billion for email.',
   },
 
   nav: {
@@ -21,7 +21,7 @@ export const en = {
   },
 
   footer: {
-    tagline: 'Small tools you run on your own servers.',
+    tagline: 'Small tools that each do one job well.',
     products: 'Products',
     docs: 'Docs',
     company: 'Company',
@@ -31,9 +31,9 @@ export const en = {
   },
 
   home: {
-    pill: 'Six products · one family · self-hosted',
-    title: 'Small tools you run on your own servers.',
-    lead: 'Sign-in for every stack, search on plain NDJSON, deploys from one HCL file, background jobs without Redis, NFS-e on a schedule and, soon, email. Each one does one job, and they work well together.',
+    pill: 'Six products · one family',
+    title: 'Small tools that each do one job well.',
+    lead: 'Sign-in for every stack, search on plain NDJSON, deploys from one HCL file, background jobs without Redis, NFS-e on a schedule and, soon, email. ndb, voodu and anway run on your own servers. auth, cronota and 1billion run on ours, so there is nothing to install.',
     seeProducts: 'See the products',
     startAuth: 'Start with auth',
     productsTitle: 'The products',
@@ -46,7 +46,7 @@ export const en = {
     usedBy: { 'sign-in': 'sign-in', deploys: 'deploys', jobs: 'jobs', email: 'email' } as Record<string, string>,
     waysTitle: 'One way of working',
     ways: [
-      { title: 'Your servers', text: 'Run each product on a box you control. Install with one command.' },
+      { title: 'Your servers or ours', text: 'ndb, voodu and anway install with one command on a box you control. auth, cronota and 1billion are hosted by Clowk.' },
       { title: 'Small on purpose', text: 'One binary or one app, configured in one file. No cluster to babysit.' },
       { title: 'Docs for people and agents', text: 'Short pages in plain words, written for developers and for AI agents.' },
     ],

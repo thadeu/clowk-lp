@@ -1,7 +1,7 @@
 {
   "name": "Clowk",
   "short_name": "Clowk",
-  "description": "Small tools you run on your own servers",
+  "description": "Small tools that each do one job well",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0C0014",
