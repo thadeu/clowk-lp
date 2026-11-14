@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import FinalCta from '@/components/FinalCta';
+import Code from '@/components/Code';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import InstallLine from '@/components/InstallLine';
@@ -75,7 +76,9 @@ export default function ProductPage({ product, locale = 'en', children }: Props)
           {product.example && (
             <figure className="flex-[1_1_380px] min-w-0 rounded-[18px] bg-[#0A0610] border border-white/[0.09] overflow-hidden">
               <figcaption className="px-4 py-2.5 border-b border-white/[0.08] text-[13px] text-[#A9A1B6]">{product.example.caption}</figcaption>
-              <pre className="p-4 font-mono text-[13px] leading-relaxed text-[#E4DFEA] overflow-x-auto">{product.example.code}</pre>
+              <div className="p-4 overflow-x-auto">
+                <Code code={product.example.code} lang={product.example.lang} />
+              </div>
             </figure>
           )}
         </section>

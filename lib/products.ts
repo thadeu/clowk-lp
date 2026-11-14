@@ -22,7 +22,7 @@ export type Product = {
   githubUrl?: string;
   category: string;
   platform?: string;
-  example?: { caption: string; code: string };
+  example?: { caption: string; code: string; lang: string };
   features: Feature[];
   faq: Question[];
   usedBy?: string;
@@ -58,6 +58,7 @@ export const products: Product[] = [
     platform: 'Web',
     example: {
       caption: 'Protect a Rails controller',
+      lang: 'ruby',
       code: `class DashboardController < ApplicationController
   before_action :authenticate_clowk!
 
@@ -140,6 +141,7 @@ end`,
     category: 'DeveloperApplication',
     example: {
       caption: 'Search the missed and busy calls of the last day',
+      lang: 'bash',
       code: `curl --unix-socket /run/ndb/ndb.sock \\
   http://ndb/calls/_search -d '{
   "query": {
@@ -332,9 +334,10 @@ end`,
     platform: 'Web',
     example: {
       caption: 'Send one email',
-      code: `curl -X POST $BILLION_URL/send \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
+      lang: 'bash',
+      code: `curl -X POST $BILLION_URL/send \\
+  -H "Authorization: Bearer $API_KEY" \\
+  -H "Content-Type: application/json" \\
   -d '{
   "from": "Acme <hi@acme.dev>",
   "to": ["you@example.com"],

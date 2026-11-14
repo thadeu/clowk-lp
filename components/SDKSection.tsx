@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SiNpm, SiYarn, SiPnpm, SiBun } from "react-icons/si";
+import Code from "@/components/Code";
 import { t, type Locale } from "@/lib/i18n";
 
 const managers = [
@@ -81,9 +82,9 @@ export default function SDKSection({ locale = "en" }: { locale?: Locale }) {
               <p className="text-sm text-[#A9A1B6] leading-relaxed mb-4">
                 {pkg.description}
               </p>
-              <code className="block text-xs text-[#A9A1B6] font-mono bg-white/5 px-3 py-2 rounded-lg">
-                {currentCmd} {pkg.name}
-              </code>
+              <div className="bg-white/5 px-3 py-2 rounded-lg overflow-x-auto">
+                <Code code={`${currentCmd} ${pkg.name}`} lang="bash" fontSize="12px" />
+              </div>
             </div>
           ))}
         </div>

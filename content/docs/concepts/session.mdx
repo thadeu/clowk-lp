@@ -11,7 +11,7 @@ When a user authenticates through Clowk, your Rails app receives a JWT. The `clo
 
 After the user authenticates on Clowk's hosted page, they are redirected back to your app:
 
-```
+```http
 GET /clowk/oauth/callback?token=eyJ...&state=abc123
 ```
 
@@ -46,7 +46,7 @@ The session key is configurable via `config.session_key` (default: `:clowk`).
 
 ### HTTP-only cookie
 
-```
+```http
 Set-Cookie: clowk_token=eyJ...; HttpOnly; SameSite=Lax; Secure
 ```
 

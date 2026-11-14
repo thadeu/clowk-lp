@@ -19,6 +19,7 @@ export const ptBr: Record<string, ProductText> = {
     primaryCta: { label: 'Comece grátis', href: 'https://app.clowk.in/sign-up' },
     example: {
       caption: 'Proteja um controller Rails',
+      lang: 'ruby',
       code: `class DashboardController < ApplicationController
   before_action :authenticate_clowk!
 
@@ -92,6 +93,7 @@ end`,
     installNote: 'Linux e macOS, amd64 e arm64',
     example: {
       caption: 'Busque as chamadas perdidas e ocupadas do último dia',
+      lang: 'bash',
       code: `curl --unix-socket /run/ndb/ndb.sock \\
   http://ndb/calls/_search -d '{
   "query": {
@@ -252,9 +254,10 @@ end`,
     primaryCta: { label: 'Avise-me quando abrir', href: 'mailto:support@clowk.in?subject=1billion' },
     example: {
       caption: 'Envie um email',
-      code: `curl -X POST $BILLION_URL/send \
-  -H "Authorization: Bearer $API_KEY" \
-  -H "Content-Type: application/json" \
+      lang: 'bash',
+      code: `curl -X POST $BILLION_URL/send \\
+  -H "Authorization: Bearer $API_KEY" \\
+  -H "Content-Type: application/json" \\
   -d '{
   "from": "Acme <hi@acme.dev>",
   "to": ["you@example.com"],

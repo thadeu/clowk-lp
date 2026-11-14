@@ -47,7 +47,7 @@ O Clowk usa o fluxo authorization code:
 3. Em caso de sucesso, o Clowk redireciona de volta para o seu `redirect_uri` com o parâmetro de query `token`
 4. Verifique o token com `POST /api/v1/tokens/verify` ou decodifique-o localmente com a sua secret key
 
-```
+```http
 GET /oauth/authorize?provider=google&redirect_uri=https://app.example.com/auth/callback
 ```
 
