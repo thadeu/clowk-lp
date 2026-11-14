@@ -28,14 +28,22 @@ pnpm build
 
 Static output goes to `out/`.
 
-## Deploy
+## Release
 
-Deployed to Cloudflare Pages:
+A `vX.Y.Z` tag publishes the site to Cloudflare Pages (`.github/workflows/release.yml`). Pushing to `main` alone does not deploy.
 
-```bash
-pnpm build
-npx wrangler pages deploy out --project-name clowk-lp
+A commit on `main` whose subject starts with `tag(...)` makes the tag for you:
+
 ```
+tag(patch): fix a typo on the ndb page
+tag(minor): add a page for a new product
+tag(major): new site
+tag(0.3.0): an exact version
+```
+
+`.github/workflows/tag.yml` reads every commit subject since the last tag (merged commits count, the most recent prefix wins), runs `script/tag`, publishes a GitHub release with the commits since the previous tag, and then runs the deploy for that tag.
+
+From a clean, up-to-date `main` on a machine, `make tag patch|minor|major` does the same. Tags are lightweight; do not create annotated tags.
 
 Live at **https://clowk-lp.pages.dev**
 

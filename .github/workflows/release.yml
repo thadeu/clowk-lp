@@ -11,6 +11,15 @@ on:
   push:
     tags: ['v*']
 
+  # The Tag workflow calls this one with the tag it just pushed: a tag pushed
+  # with the workflow token does not start other workflows on its own.
+  workflow_call:
+    inputs:
+      ref:
+        description: The tag to publish
+        required: true
+        type: string
+
 # One deploy at a time, and never cancel one in flight: wrangler uploading a
 # half-finished set of files is worse than waiting. Two tags pushed together
 # publish in order.
@@ -28,6 +37,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
 
       # pnpm before Node: setup-node's pnpm cache needs the package manager to
       # already exist, and it reads the version from `packageManager` in
