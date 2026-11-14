@@ -54,7 +54,7 @@ export function DocsSidebar() {
       >
         <div className="flex items-center justify-between px-5 h-14 border-b border-white/5 shrink-0">
           <Link href="/docs" className="flex items-center gap-2">
-            <Image src="/brand/lockup-on-dark.svg" alt="Clowk" width={84} height={27} />
+            <Image src="/brand/lockup-on-dark.svg" alt="Clowk" width={107} height={24} />
             <span className="text-[10px] font-medium text-white/30 bg-white/5 px-1.5 py-0.5 rounded">Docs</span>
           </Link>
 

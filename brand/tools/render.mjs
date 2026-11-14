@@ -22,9 +22,8 @@ for (const size of [64, 128, 256, 512, 1024]) {
 
 jobs.push(['mark-ink', 512, 'mark-ink-512'], ['mark-white', 512, 'mark-white-512']);
 
-for (const name of ['night', 'coral', 'light']) {
-  jobs.push([`app-icon-${name}`, 1024, `app-icon-${name}-1024`], [`app-icon-${name}`, 512, `app-icon-${name}-512`]);
-}
+jobs.push(['app-icon', 1024, 'app-icon-1024'], ['app-icon', 512, 'app-icon-512']);
+jobs.push(['mark-tile', 512, 'mark-tile-512'], ['mascot-on-light', 512, 'mascot-on-light-512'], ['mascot-on-dark', 512, 'mascot-on-dark-512']);
 
 jobs.push(
   ['app-icon-square', 180, 'apple-touch-icon'],

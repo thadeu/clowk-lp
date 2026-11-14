@@ -1,7 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Clowk">
-  <path d="M100 10 C130 34 172 80 176 136 C179 172 164 190 140 190 L60 190 C36 190 21 172 24 136 C28 80 70 34 100 10 Z" fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linejoin="round"/>
-  <path d="M100 10 C130 34 172 80 176 136 C179 172 164 190 140 190 L60 190 C36 190 21 172 24 136 C28 80 70 34 100 10 Z" fill="#F43F5E" stroke="#0B0B0F" stroke-width="14" stroke-linejoin="round"/>
-  <ellipse cx="100" cy="132" rx="50" ry="42" fill="#FFF4EC" stroke="#0B0B0F" stroke-width="14"/>
-  <circle cx="80" cy="130" r="13" fill="#0B0B0F"/>
-  <circle cx="120" cy="130" r="13" fill="#0B0B0F"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-92 -80 184 160" role="img" aria-label="Clowk">
+  <ellipse cx="0" cy="0" rx="86" ry="74" fill="#FFF4EC" stroke="#0B0B0F" stroke-width="10"/>
+    <circle cx="-31.3" cy="-3.9" r="16" fill="#0B0B0F"/>
+    <circle cx="31.3" cy="-3.9" r="16" fill="#0B0B0F"/>
+    <ellipse cx="-55.3" cy="24.7" rx="13.5" ry="7.8" fill="#F43F5E" opacity="0.55"/>
+    <ellipse cx="55.3" cy="24.7" rx="13.5" ry="7.8" fill="#F43F5E" opacity="0.55"/>
+    <path d="M-13.6 26.5 Q0 39.5 13.6 26.5" fill="none" stroke="#0B0B0F" stroke-width="10" stroke-linecap="round"/>
 </svg>

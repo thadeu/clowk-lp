@@ -6,6 +6,7 @@ export type Product = {
   slug: string;
   name: string;
   mark: string;
+  markFill?: boolean;
   seoTitle: string;
   seoDescription: string;
   tagline: string;
@@ -32,7 +33,8 @@ export const products: Product[] = [
   {
     slug: 'auth',
     name: 'auth',
-    mark: '/brand/mark-on-light.svg',
+    mark: '/brand/mark-tile.svg',
+    markFill: true,
     seoTitle: 'auth by Clowk — authentication broker for every stack',
     seoDescription:
       'Clowk runs the OAuth dance with Google, GitHub, X and Apple and returns a signed JWT. No embedded UI, no per-MAU billing. SDKs for React, Next.js, Express, Hono and Rails.',

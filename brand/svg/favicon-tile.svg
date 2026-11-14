@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Clowk">
-  <rect width="64" height="64" rx="14" fill="#0C0014"/>
-  <g transform="translate(5 4) scale(0.27)">
-  <path d="M100 10 C130 34 172 80 176 136 C179 172 164 190 140 190 L60 190 C36 190 21 172 24 136 C28 80 70 34 100 10 Z" fill="#F43F5E"/>
-  <ellipse cx="100" cy="134" rx="56" ry="46" fill="#FFF4EC"/>
-  <circle cx="78" cy="132" r="15" fill="#0B0B0F"/>
-  <circle cx="122" cy="132" r="15" fill="#0B0B0F"/>
+  <rect width="64" height="64" rx="14.0" fill="#F43F5E"/>
+  <g transform="translate(32.00 35.01) scale(0.3051)">
+    <ellipse cx="0" cy="0" rx="86" ry="74" fill="#FFF4EC"/>
+    <circle cx="-31.3" cy="-3.9" r="18" fill="#0B0B0F"/>
+    <circle cx="31.3" cy="-3.9" r="18" fill="#0B0B0F"/>
+    <path d="M-13.6 26.5 Q0 39.5 13.6 26.5" fill="none" stroke="#0B0B0F" stroke-width="12" stroke-linecap="round"/>
   </g>
 </svg>

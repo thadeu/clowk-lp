@@ -8,40 +8,43 @@ This folder holds the Clowk visual identity: the mark, the wordmark, the lockups
 
 Clowk is the family name. ndb, voodu, anway and cronota keep their own marks, and they sit next to Clowk as "by Clowk".
 
-## The mark: Hood
+## The mark: the face
 
 <p>
-  <img src="png/mark-on-light-256.png" alt="The Clowk hood" width="160">
+  <img src="png/mark-on-light-256.png" alt="The Clowk face" width="160">
+  <img src="png/app-icon-512.png" alt="The Clowk tile" width="160">
 </p>
 
-The name sounds like "cloak", so the mark is a small figure in a coral hood. It has the same drawing language as the rest of the family (the ndb bowl, the cronota note): a dark outline, flat fills, and a friendly face.
+The name sounds like "cloak". The mark is the face of the small figure inside the coral hood. It has the same drawing language as the rest of the family (the ndb bowl, the cronota note): a dark outline, flat fills, and a friendly face.
+
+Use it in two forms:
+
+- **The face** next to the wordmark: headers, footers, the lockups.
+- **The tile**: the face on a coral square. The coral is the hood. Use it where the mark stands alone: favicons, app icons, the home screen, avatars, the social preview.
 
 ### Construction
 
-The mark is built on a 200 unit grid. `tools/build.py` holds every value.
+The face is drawn around (0, 0). `tools/build.py` holds every value.
 
 | Part | Rule |
 |---|---|
-| Hood | A drop shape from the tip at (100, 14) down to a flat bottom at y 186, x 28 to 172. Fill coral `#F43F5E`, outline 6 units of ink `#0B0B0F`, round joins. |
-| Fold | One curve from the tip down the left side, 4 units of ink at 28% opacity. |
-| Face | An ellipse at (100, 128), 44 by 38, fill cream `#FFF4EC`, outline 6 units. |
-| Eyes | Two ink dots of radius 7 at x 84 and 116, each with a white highlight of radius 2.2. |
-| Cheeks | Two coral ellipses, 7 by 4, at 50% opacity. |
-| Smile | A small curve of 4 units, round ends. |
+| Face | An ellipse of 172 × 148 units, fill cream `#FFF4EC`, outline 5.7 units of ink `#0B0B0F`. |
+| Eyes | Two ink dots of radius 13 at x ±31.3, each with a white highlight of radius 4.2. |
+| Cheeks | Two coral ellipses, 27 × 15.6, at 55% opacity. |
+| Smile | A small curve of 7.3 units, round ends. |
+| Tile | A coral `#F43F5E` square. The face covers 64.5% of its width, a little below the middle (54.7% of the height). Corner radius 22.5% of the side; none for the home screen icon, which iOS rounds. |
 
 ### Small drawings
 
-At 32 px and below, use the small drawing (`mark-small-*`, `favicon.svg`): a heavier outline of 14 units, a bigger face, bigger eyes, and no fold, cheeks or smile.
-
-At 16 px, the favicon tile uses the tiny drawing: flat coral hood, cream face and two ink eyes, with no outline at all.
-
-### Dark surfaces
-
-The mark keeps its coral hood and its ink outline on dark surfaces. The on-dark files (`mark-on-dark`, `mark-small-on-dark`, `lockup-*-on-dark`, the night app icon) add a white halo of 6 units around the hood, so the edge does not vanish. Do not turn the hood dark.
+At 32 px and below, use the small face (`mark-small-*`, `favicon.svg`): a heavier outline, bigger eyes, no highlights. At 16 px the favicon tile uses the tiny face: no outline and no cheeks, so the eyes and the smile stay clear.
 
 ### One color
 
-`mark-ink` and `mark-white` are for one-color uses (print, stamps, embroidery): the hood with the face cut out and the eyes inside the cut.
+`mark-ink` and `mark-white` are for one-color uses (print, stamps, embroidery): the outline of the face, the eyes and the smile.
+
+### The mascot
+
+The full drawing with the hood (`mascot-on-light`, `mascot-on-dark`) is kept for large illustrations, such as a 404 page. It is not the logo: do not use it in headers, icons or favicons.
 
 ## Wordmark
 
@@ -61,15 +64,17 @@ The wordmark is `clowk` in lowercase, Nunito Black, tracking -0.03 em. The lette
 
 | File | Use |
 |---|---|
-| `svg/mark-on-light.svg`, `svg/mark-on-dark.svg` | The mark, 33 px and up |
-| `svg/mark-small-on-*.svg`, `svg/favicon.svg` | The mark, 32 px and below |
+| `svg/mark-on-light.svg`, `svg/mark-on-dark.svg` | The face, 33 px and up |
+| `svg/mark-small-on-*.svg` | The face, 32 px and below |
 | `svg/mark-ink.svg`, `svg/mark-white.svg` | One color |
+| `svg/mark-tile.svg` | The face on the coral tile |
 | `svg/wordmark-on-*.svg` | The wordmark alone |
-| `svg/lockup-on-*.svg` | Mark and wordmark in a row: headers, footers |
-| `svg/lockup-stacked-on-*.svg` | Mark above the wordmark: splash screens, square spaces |
-| `svg/app-icon-night.svg`, `-coral`, `-light` | App icons with rounded corners |
-| `svg/app-icon-square.svg` | The home screen icon (iOS, PWA): the whole tile is the hood and only the face shows |
-| `svg/favicon-tile.svg`, `favicon.ico` | Browser tabs |
+| `svg/lockup-on-*.svg` | Face and wordmark in a row: headers, footers |
+| `svg/lockup-stacked-on-*.svg` | Face above the wordmark: splash screens, square spaces |
+| `svg/app-icon.svg` | App icon with rounded corners |
+| `svg/app-icon-square.svg` | The home screen icon (iOS, PWA), full bleed |
+| `svg/favicon.svg`, `svg/favicon-tile.svg`, `favicon.ico` | Browser tabs |
+| `svg/mascot-on-*.svg` | The full hood drawing, for large illustrations only |
 | `svg/social-preview.svg` | Open Graph and social cards, 1200 × 630 |
 | `png/` | PNG renders of all of the above |
 

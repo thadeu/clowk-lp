@@ -27,6 +27,8 @@ function html(product) {
   .head { display: flex; align-items: center; gap: 32px; }
   .tile { width: 148px; height: 148px; border-radius: 36px; background: #fff; display: grid; place-items: center; }
   .tile img { width: 112px; height: 112px; }
+  .tile.fill { background: none; overflow: hidden; }
+  .tile.fill img { width: 100%; height: 100%; }
   h1 { margin: 0; font-family: Nunito, sans-serif; font-weight: 900; font-size: 132px; letter-spacing: -0.03em; line-height: 1; }
   .status { margin-left: 8px; padding: 6px 16px; border: 2px solid rgba(232, 147, 12, 0.6); border-radius: 999px; color: #F2C06C; font-size: 26px; font-weight: 700; }
   p { margin: 48px 0 0; font-size: 50px; line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; max-width: 1000px; }
@@ -37,7 +39,7 @@ function html(product) {
 <body>
   <div class="page">
     <div class="head">
-      <div class="tile"><img src="${dataUri(product.mark)}"></div>
+      <div class="tile${product.markFill ? ' fill' : ''}"><img src="${dataUri(product.mark)}"></div>
       <h1>${product.name}</h1>
       ${product.status ? `<span class="status">${product.status}</span>` : ''}
     </div>

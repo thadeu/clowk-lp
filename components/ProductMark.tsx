@@ -10,6 +10,14 @@ const SIZES = {
 export default function ProductMark({ product, size = 'md' }: { product: Product; size?: keyof typeof SIZES }) {
   const { box, image } = SIZES[size];
 
+  if (product.markFill) {
+    return (
+      <span className={`${box} overflow-hidden flex-none`}>
+        <Image src={product.mark} alt="" width={128} height={128} className="w-full h-full" />
+      </span>
+    );
+  }
+
   return (
     <span className={`${box} bg-white grid place-items-center flex-none`}>
       <Image src={product.mark} alt="" width={image} height={image} />
